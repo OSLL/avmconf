@@ -4,17 +4,16 @@
 #include <QMessageBox>
 
 #include "configurator-window.h"
-#include "container-view.h"
+#include "container-widget.h"
 #include "new-container-dialog.h"
 
 ConfiguratorWindow::ConfiguratorWindow(AndroidDevice *device, QWidget *parent)
-    : m_device(device), QWidget(parent), m_containerListLayout(new QVBoxLayout) {
+    : m_device(device), QWidget(parent), m_containersWidget(new QWidget(this)) {
 
     this->setWindowTitle("Configurator");
  // TODO: desable height resize // resizeMode to fixed?
     this->setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     this->setFixedWidth(500);
-
 
     QPushButton *m_addContainerButton = new QPushButton("Create container", this);
     m_addContainerButton->setFixedWidth(140);
@@ -23,11 +22,12 @@ ConfiguratorWindow::ConfiguratorWindow(AndroidDevice *device, QWidget *parent)
     QObject::connect(m_addContainerButton, SIGNAL(clicked()), this, SLOT(startAddContainer()));
 
     setLayout(new QVBoxLayout);
-    layout()->addItem(m_containerListLayout);
+    m_containersWidget->setLayout(new QVBoxLayout);
+    m_containersWidget->layout()->setContentsMargins(0, 0, 0, 0);
+    layout()->addWidget(m_containersWidget);
     layout()->addWidget(m_addContainerButton);
 
-    ContainerView *cont = new ContainerView(m_device, "Android 1", this);
-    m_containerListLayout->addWidget(cont, 1, Qt::AlignLeft);
+    m_containersWidget->layout()->addWidget(new ContainerWidget(m_device, "Android 1", this)); //, 1, Qt::AlignLeft);
 }
 
 void ConfiguratorWindow::startAddContainer() {
@@ -37,13 +37,14 @@ void ConfiguratorWindow::startAddContainer() {
 }
 
 void ConfiguratorWindow::addContainerWidget() {
-    ContainerView *cont = new ContainerView(m_device, "Android 1", this);
-    m_containerListLayout->addWidget(cont, 1, Qt::AlignLeft);
-    cont->updateGeometry();
-    cont->update();
-    m_containerListLayout->update();
-    layout()->update();
-    updateGeometry();
-    update();
+    m_containersWidget->layout()->addWidget(new ContainerWidget(m_device, "Android 1", this)); //, 1, Qt::AlignLeft);
+
+//    cont->updateGeometry();
+//    cont->update();
+//    cont->layout()->update();
+//    m_containerListLayout->update();
+//    layout()->update();
+//    updateGeometry();
+//    update();
 }
 

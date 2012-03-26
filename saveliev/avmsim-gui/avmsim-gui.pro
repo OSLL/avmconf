@@ -12,23 +12,27 @@ TEMPLATE = app
 SOURCES += \
     new-container-dialog.cpp \
     main.cpp \
-    container-view.cpp \
     configurator-window.cpp \
     api/Container.cpp \
-    api/AndroidDevice.cpp
+    api/AndroidDevice.cpp \
+    container-widget.cpp
 
 HEADERS  += \
     new-container-dialog.h \
     interfaceimpl.h \
-    container-view.h \
     configurator-window.h \
     api/StorageDescriptor.h \
     api/Container.h \
-    api/AndroidDevice.h
+    api/AndroidDevice.h \
+    container-widget.h
 
 FORMS    +=
 
 OTHER_FILES +=
+
+
+
+
 
 
 

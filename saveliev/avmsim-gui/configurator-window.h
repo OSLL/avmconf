@@ -9,8 +9,7 @@
 class ConfiguratorWindow : public QWidget {
     Q_OBJECT
 
-    QVBoxLayout *m_containerListLayout;
-
+    QWidget *m_containersWidget;
     AndroidDevice *m_device;
 
 public:
