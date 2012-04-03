@@ -2,13 +2,16 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QFile>
+#include <QTextStream>
 
 #include "configurator-window.h"
 #include "container-widget.h"
 #include "new-container-dialog.h"
 
 ConfiguratorWindow::ConfiguratorWindow(AndroidDevice *device, QWidget *parent)
-    : m_device(device), QWidget(parent), m_containersWidget(new QWidget(this)) {
+    : m_device(device), QWidget(parent), m_containersWidget(new QWidget(this)),
+      m_storageFileName("storage"){
 
     this->setWindowTitle("Configurator");
  // TODO: desable height resize // resizeMode to fixed?
@@ -24,10 +27,30 @@ ConfiguratorWindow::ConfiguratorWindow(AndroidDevice *device, QWidget *parent)
     setLayout(new QVBoxLayout);
     m_containersWidget->setLayout(new QVBoxLayout);
     m_containersWidget->layout()->setContentsMargins(0, 0, 0, 0);
+ // this->setStyleSheet("ConfiguratorWindow > QWidget { margin-left: -10px; }");
     layout()->addWidget(m_containersWidget);
     layout()->addWidget(m_addContainerButton);
 
+    loadFromFile(m_device);
+}
+
+void ConfiguratorWindow::loadFromFile(AndroidDevice *device) {
     m_containersWidget->layout()->addWidget(new ContainerWidget(m_device, "Android 1", this)); //, 1, Qt::AlignLeft);
+
+    QFile file(m_storageFileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return;
+    }
+
+    QTextStream in(&file);
+    QString line = in.readLine();
+    while (!line.isNull()) {
+
+        // ?
+
+        line = in.readLine();
+    }
+    file.close(); // when your done.
 }
 
 void ConfiguratorWindow::startAddContainer() {
@@ -38,7 +61,6 @@ void ConfiguratorWindow::startAddContainer() {
 
 void ConfiguratorWindow::addContainerWidget() {
     m_containersWidget->layout()->addWidget(new ContainerWidget(m_device, "Android 1", this)); //, 1, Qt::AlignLeft);
-
 //    cont->updateGeometry();
 //    cont->update();
 //    cont->layout()->update();

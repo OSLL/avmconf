@@ -9,8 +9,12 @@
 class ConfiguratorWindow : public QWidget {
     Q_OBJECT
 
+private:
     QWidget *m_containersWidget;
     AndroidDevice *m_device;
+    QString m_storageFileName;
+
+    void loadFromFile(AndroidDevice *device);
 
 public:
     explicit ConfiguratorWindow(AndroidDevice *device, QWidget *parent = 0);
