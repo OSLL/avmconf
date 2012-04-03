@@ -70,7 +70,7 @@ static struct file_operations snapfs_file_ops = {
 	.llseek       = generic_file_llseek,
 };
 
-static struct address_space_operations snapfs_a
+//static struct address_space_operations snapfs_a
 
 static int snapfs_mknod(struct inode *dir, struct dentry *dentry,
 		    umode_t mode, dev_t dev)
