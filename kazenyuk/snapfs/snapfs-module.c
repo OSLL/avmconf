@@ -9,6 +9,8 @@
 #include <linux/time.h>		/* CURRENT_TIME */
 #include <linux/pagemap.h>	/* PAGE_CACHE_SIZE, PAGE_CACHE_SHIFT */
 
+#include "snapfs-mgmt.h"
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sergey Kazenyuk");
 MODULE_DESCRIPTION("Snapshotting filesystem skeleton");
@@ -200,28 +202,53 @@ snapfs_fill_super_fail:
 struct dentry *snapfs_mount(struct file_system_type *fs_type, 
 			    int flags, const char *dev_name, void *data)
 {
+	int result;
 	printk(KERN_INFO "snapfs_mount\n");
+
+	result = setup_snapfs_mount_point_mgmt();
+	if (result) {
+		printk(KERN_ERR "Can't setup SnapFS mount point management interface\n");
+		return NULL;
+	}
+
 	return mount_nodev(fs_type, flags, data, snapfs_fill_super);
 }
 
 void snapfs_kill_sb(struct super_block *sb)
 {
 	printk(KERN_INFO "snapfs_kill_sb\n");
+	cleanup_snapfs_mount_point_mgmt();
 	kill_litter_super(sb);
 }
 
 static int __init init_mod(void)
 {
+	int result;
 	printk(KERN_INFO "FS INIT\n");
+
+	result = setup_snapfs_mgmt();
+	if (result) {
+		printk(KERN_ERR "Can't setup SnapFS management interface\n");
+		return result;
+	}
+
 	return register_filesystem(&snapfs_fs_type);
 }
 
 static void __exit cleanup_mod(void)
 {
 	printk(KERN_INFO "FS CLEANUP\n");
+	cleanup_snapfs_mgmt();
 	unregister_filesystem(&snapfs_fs_type);
 }
 
+static int mod_int_param1 = 4242;
+static bool mod_bool_param1 = true;
+
 module_init(init_mod);
 module_exit(cleanup_mod);
+
+module_param(mod_int_param1, int, 0644);
+module_param(mod_bool_param1, bool, 0644);
+MODULE_PARM_DESC(mod_int_param1, "Test Parameter 1 of type int");
 
