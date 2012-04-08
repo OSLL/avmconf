@@ -203,15 +203,22 @@ struct dentry *snapfs_mount(struct file_system_type *fs_type,
 			    int flags, const char *dev_name, void *data)
 {
 	int result;
+	struct dentry *mnt_point;
 	printk(KERN_INFO "snapfs_mount\n");
 
-	result = setup_snapfs_mount_point_mgmt();
+	mnt_point = mount_nodev(fs_type, flags, data, snapfs_fill_super);
+	if (!mnt_point) {
+		printk(KERN_ERR "Can't do mount_nodev\n");
+		return NULL;
+	}
+
+	result = setup_snapfs_mount_point_mgmt(mnt_point);
 	if (result) {
 		printk(KERN_ERR "Can't setup SnapFS mount point management interface\n");
 		return NULL;
 	}
 
-	return mount_nodev(fs_type, flags, data, snapfs_fill_super);
+	return mnt_point;
 }
 
 void snapfs_kill_sb(struct super_block *sb)
