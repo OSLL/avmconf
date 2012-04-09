@@ -2,9 +2,10 @@
 #define CONTAINERLIST_H
 
 #include <QWidget>
+#include <QListView>
+#include <QPushButton>
 
-class ContainerList : public QWidget
-{
+class ContainerList : public QWidget {
     Q_OBJECT
 
     QListView   *m_view;

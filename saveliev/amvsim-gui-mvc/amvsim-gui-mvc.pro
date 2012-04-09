@@ -16,7 +16,12 @@ SOURCES += main.cpp\
     container-list.cpp \
     container-edit-delegate.cpp \
     container-delegate.cpp \
-    main-window.cpp
+    main-window.cpp \
+    api/StorageDescriptor.cpp \
+    api/Container.cpp \
+    api/AndroidDevice.cpp \
+    new-container-dialog.cpp \
+    container-info.cpp
 
 HEADERS  += \
     device-model.h \
@@ -24,7 +29,26 @@ HEADERS  += \
     container-list.h \
     container-edit-delegate.h \
     container-delegate.h \
-    main-window.h
+    main-window.h \
+    api/StorageDescriptor.h \
+    api/Container.h \
+    api/AndroidDevice.h \
+    new-container-dialog.h \
+    container-info.h
+
+OTHER_FILES +=
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
