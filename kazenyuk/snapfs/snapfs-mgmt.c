@@ -63,11 +63,12 @@ int setup_snapfs_mgmt()
 int setup_snapfs_mount_point_mgmt(struct dentry *dentry)
 {
 	int result;
+	int next_snapfs_mnt_point_number;
 	const int mnt_point_name_length = 30;
 	struct snapfs_mnt_point *mnt_point;
 	
-	++snapfs_mnt_point_number;
-	mnt_point = &snapfs_mnt_points[snapfs_mnt_point_number];
+	next_snapfs_mnt_point_number = snapfs_mnt_point_number + 1;
+	mnt_point = &snapfs_mnt_points[next_snapfs_mnt_point_number];
 
 	mnt_point->name = kmalloc(mnt_point_name_length, GFP_KERNEL);
 	if (!mnt_point->name) {
@@ -75,17 +76,20 @@ int setup_snapfs_mount_point_mgmt(struct dentry *dentry)
 		return -ENOMEM;
 	}
 	snprintf(mnt_point->name, mnt_point_name_length, 
-			"mnt_point_%d", snapfs_mnt_point_number);
+			"mnt_point_%d", next_snapfs_mnt_point_number);
 	
 	mnt_point->kobj = kobject_create_and_add(mnt_point->name, snapfs_kobj);
         if (!mnt_point->kobj) {
 		printk(KERN_ERR "Can't create SnapFS mount point KObject\n");
+		kfree(mnt_point->name);
 		return -ENOMEM;
 	}
 	
 	mnt_point->attrs = kmalloc(sizeof(*(mnt_point->attrs)), GFP_KERNEL);
 	if (!mnt_point->attrs) {
 		printk(KERN_ERR "Can't do kmalloc\n");
+		kfree(mnt_point->name);
+		kobject_put(mnt_point->kobj);
 		return -ENOMEM;
 	}
 	memset(mnt_point->attrs, 0, sizeof(*mnt_point->attrs));
@@ -96,16 +100,27 @@ int setup_snapfs_mount_point_mgmt(struct dentry *dentry)
 	result = sysfs_create_group(mnt_point->kobj, mnt_point->attrs);
 	if (result) {
 		printk(KERN_ERR "Can't create sysfs group");
+		kfree(mnt_point->name);
+		kobject_put(mnt_point->kobj);
+		kfree(mnt_point->attrs);
+		return result;
 	}
+
+	snapfs_mnt_point_number = next_snapfs_mnt_point_number;
 	return result;
 }
 
 void cleanup_snapfs_mgmt()
 {
 	int i;
+	struct snapfs_mnt_point *mnt_point;
+
 	kobject_put(snapfs_kobj);
 	for (i = 0; i <= snapfs_mnt_point_number; ++i) {
-		kobject_put(snapfs_mnt_points[i].kobj);
+		mnt_point = &snapfs_mnt_points[i];
+		kfree(mnt_point->name);
+		kfree(mnt_point->attrs);
+		kobject_put(mnt_point->kobj);	//do we really need to do it here?
 	}
 }
 
