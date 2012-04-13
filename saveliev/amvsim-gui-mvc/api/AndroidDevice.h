@@ -23,6 +23,8 @@ struct AndroidDevice {
 
     virtual int syncContainerImage(const std::string&  containerName);
 
+    // added by Vlad Saveliev
+
     virtual int getContainersNumber() const;
 
     virtual ContainerInfo getContainerInfoAt(int n) const;
@@ -30,6 +32,8 @@ struct AndroidDevice {
     virtual const std::string& getContainerNameAt(int n) const;
 
     virtual ContainerInfo getContainerInfo(const std::string& name) const;
+
+    virtual const std::string& getActiveContainer() const;
 
     AndroidDevice();
 
@@ -40,8 +44,6 @@ private:
     std::map<std::string, Container*> myContainers;
 
     Container* activeContainer;
-
-    friend class Tests;
 
 };
 

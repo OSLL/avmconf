@@ -11,14 +11,19 @@ ContainerWidget::ContainerWidget(QString contName, DeviceModel* model, QObject *
     : m_contName(contName), m_model(model) {
     setLayout(new QHBoxLayout);
 
-    m_powerButton = new QPushButton("Stop");
+    m_powerButton = new QPushButton("Run");
     m_powerButton->setFixedWidth(70);
+    QObject::connect(m_powerButton, SIGNAL(pressed()), this, SLOT(powerPressed()));
+
     m_nameLabel = new QLabel(contName);
 
-    QObject::connect(m_powerButton, SIGNAL(pressed()), this, SLOT(powerPressed()));
+    m_switchButton = new QPushButton("Switch here");
+    m_switchButton->setVisible(false);
+    QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchHerePressed()));
 
     layout()->addWidget(m_powerButton);
     layout()->addWidget(m_nameLabel);
+    ((QHBoxLayout*)layout())->addWidget(m_switchButton, 0, Qt::AlignRight);
 
     setAutoFillBackground(true);
 }
@@ -40,9 +45,30 @@ ContainerWidget::ContainerWidget(QString contName, DeviceModel* model, QObject *
 void ContainerWidget::powerPressed() {
     if (m_model->device()->getContainerInfo(m_contName.toStdString()).state == StateStopped) {
         m_model->device()->startContainer(m_contName.toStdString());
-        m_powerButton->setText("Run");
+        m_powerButton->setText("Stop");
+        m_switchButton->setVisible(true);
+
+//        if (m_model->device()->getActiveContainer() == m_contName.toStdString()) {
+//            highlightAsActive();
+//        }
     } else {
         m_model->device()->stopContainer(m_contName.toStdString());
-        m_powerButton->setText("Stop");
+        m_powerButton->setText("Run");
+        m_switchButton->setVisible(false);
     }
 }
+
+void ContainerWidget::switchHerePressed() {
+    if (m_model->device()->getContainerInfo(m_contName.toStdString()).state == StateRunning) {
+        m_model->device()->switchToContainer(m_contName.toStdString());
+        highlightAsActive();
+    }
+}
+
+void ContainerWidget::highlightAsActive() {
+    setPalette(QPalette( Qt::blue ) );
+}
+
+
+
+

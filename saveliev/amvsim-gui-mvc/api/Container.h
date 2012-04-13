@@ -10,9 +10,9 @@ using std::string;
 
 struct Container {
 
-    virtual const ContainerState&  getState() const; //Maybe should chang to isStarted() and isStopped()?
+    virtual const ContainerState& getState() const; //Maybe should chang to isStarted() and isStopped()?
 
-    virtual void  setState(const ContainerState& inpState); //Maybe should chang to setStarted() and setStopped()?
+    virtual void setState(const ContainerState& inpState); //Maybe should chang to setStarted() and setStopped()?
 
     virtual const string& getName() const;
 

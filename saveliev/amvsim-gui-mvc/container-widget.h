@@ -16,6 +16,9 @@ private:
 
     QPushButton *m_powerButton;
     QLabel *m_nameLabel;
+    QPushButton *m_switchButton;
+
+    void highlightAsActive();
 
 public:
     ContainerWidget(QString contName, DeviceModel* model, QObject *parent);
@@ -26,6 +29,7 @@ signals:
 
 public slots:    
     void powerPressed();
+    void switchHerePressed();
 };
 
 #endif // CONTAINEREDITDELEGATE_H

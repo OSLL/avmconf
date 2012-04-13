@@ -45,13 +45,13 @@ int AndroidDevice::startContainer(const string& containerName){
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
         containerIter->second->setState(StateRunning); //Do same stuff about starting container.
+        /* added by Vlad Saveliev */ if (activeContainer == 0) switchToContainer(containerName);
         status = 0;
     } else {
         status = -1;
     }
     return status;
 }
-
 
 int AndroidDevice::stopContainer(const string& containerName){
     int status = 0;
@@ -152,6 +152,10 @@ ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const {
     } else {
         throw NoSuchContainer(name);
     }
+}
+
+const std::string & AndroidDevice::getActiveContainer() const {
+    return activeContainer->getName();
 }
 
 
