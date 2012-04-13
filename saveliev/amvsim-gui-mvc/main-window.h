@@ -7,6 +7,7 @@
 
 #include "device-model.h"
 #include "container-delegate.h"
+#include "containers-list-view.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -16,7 +17,7 @@ public:
 
 private:
     DeviceModel *m_model;
-    QListView   *m_view;
+    ContainersListView *m_view;
     QPushButton *m_createContainerButton;
 
 public slots:

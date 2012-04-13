@@ -3,12 +3,12 @@
 
 #include <string>
 #include "StorageDescriptor.h"
+//#include "container-info.h"
+#include "ContainerState.h"
 
 using std::string;
 
 struct Container {
-
-    enum ContainerState { StateRunning, StateStopped };
 
     virtual const ContainerState&  getState() const; //Maybe should chang to isStarted() and isStopped()?
 
@@ -16,13 +16,16 @@ struct Container {
 
     virtual const string& getName() const;
 
-    Container(const string&  containerName, const StorageDescriptor& inpTemplate);
+ // virtual ContainerInfo getInfo() const;
+
+    Container(const string& containerName, const StorageDescriptor& inpTemplate);
     virtual ~Container();
 
 private:
 
     ContainerState myState;
     const string& myName;
+    StorageDescriptor myDescriptor;
 
     virtual void init(const StorageDescriptor& inpTemplate);
 

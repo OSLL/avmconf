@@ -1,14 +1,25 @@
 #include <stdexcept>
+#include <exception>
 #include "AndroidDevice.h"
 
 using std::string;
 using std::map;
 using std::pair;
 
+class NoSuchContainer : std::exception {
+    std::string msg;
+
+public:
+    NoSuchContainer(const std::string& msg) : msg(msg) { }
+
+    virtual const char* what() const throw() {
+        return msg.c_str();
+    }
+
+    virtual ~NoSuchContainer() throw() {}
+};
+
 AndroidDevice::AndroidDevice() : myContainers(), activeContainer(0) {
-
-    myContainers.insert(std::make_pair("Android container 1", new Container("Android container 1", StorageDescriptor("address"))));
-
 }
 
 AndroidDevice::~AndroidDevice(){
@@ -32,7 +43,7 @@ int AndroidDevice::startContainer(const string&  containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
-        containerIter->second->setState(Container::StateRunning); //Do same stuff about starting container.
+        containerIter->second->setState(StateRunning); //Do same stuff about starting container.
         status = 0;
     } else {
         status = -1;
@@ -45,7 +56,7 @@ int AndroidDevice::stopContainer(const string&  containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
-        containerIter->second->setState(Container::StateStopped); //Do same stuff about stopping container.
+        containerIter->second->setState(StateStopped); //Do same stuff about stopping container.
         status = 0;
     } else {
         status = -1;
@@ -113,15 +124,25 @@ int AndroidDevice::getContainersNumber() const {
     return myContainers.size();
 }
 
-const std::string& AndroidDevice::getContainerNameAt(int n) const {
+ContainerInfo AndroidDevice::getContainerInfoAt(int n) const {
     int k = 0;
     for(map<std::string, Container*>::const_iterator it = myContainers.begin(); it != myContainers.end(); ++it) {
         if (k == n) {
-            return it->first;
+            Container* cont = ((Container*)(it->second));
+            return ContainerInfo(cont->getName(), StorageDescriptor("dd"), cont->getState());
         }
         ++k;
     }
     throw std::out_of_range("");
+}
+
+ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const {
+    if (myContainers.find(name) != myContainers.end()) {
+        Container* cont = ((Container*)(myContainers.at(name)));
+        return ContainerInfo(cont->getName(), StorageDescriptor("dd"), cont->getState());
+    } else {
+        throw NoSuchContainer(name);
+    }
 }
 
 

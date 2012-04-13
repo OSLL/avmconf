@@ -1,26 +1,32 @@
 #include <QVBoxLayout>
+#include <iostream>
 #include "main-window.h"
-#include "container-delegate.h"
+#include "container-widget.h"
 #include "new-container-dialog.h"
+#include "containers-list-view.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
-
     setWindowTitle("Configurator");
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
-    setLayout(new QVBoxLayout());
     setFixedWidth(400);
 
-    m_view = new QListView(this);
+    m_view = new ContainersListView(this);
     m_model = new DeviceModel(this);
     m_view->setModel(m_model);
-    m_view->setItemDelegate(new ContainerDelegate(this));
+
+    // TEST
+    m_model->createContainer("name", StorageDescriptor("address"));
+    // TEST
 
     m_createContainerButton = new QPushButton("Create new container", this);
     QObject::connect(m_createContainerButton, SIGNAL(clicked()), this, SLOT(startAddingContainer()));
 
-    layout()->addWidget(m_view);
-    layout()->addWidget(m_createContainerButton);
+    QWidget *central = new QWidget;
+    central->setLayout(new QVBoxLayout);
+    central->layout()->addWidget(m_view);
+    central->layout()->addWidget(m_createContainerButton);
+    setCentralWidget(central);
 
  // item->setFlags( item->flags() & ~Qt::ItemIsSelectable );
 
@@ -38,5 +44,3 @@ void MainWindow::startAddingContainer() {
     QObject::connect(dialog, SIGNAL(done(ContainerInfo)), this, SLOT(finishAddingContainer(ContainerInfo)));
     dialog->show();
 }
-
-

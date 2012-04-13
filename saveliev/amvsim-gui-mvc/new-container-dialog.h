@@ -7,7 +7,6 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "api/AndroidDevice.h"
 #include "container-delegate.h"
 #include "device-model.h"
 

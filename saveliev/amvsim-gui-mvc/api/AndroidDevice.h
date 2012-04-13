@@ -3,8 +3,9 @@
 
 #include <string>
 #include <map>
-#include "StorageDescriptor.h"
 #include "Container.h"
+#include "ContainerInfo.h"
+#include "StorageDescriptor.h"
 
 struct AndroidDevice {
 
@@ -24,7 +25,9 @@ struct AndroidDevice {
 
     virtual int getContainersNumber() const;
 
-    virtual const std::string& getContainerNameAt(int i) const;
+    virtual ContainerInfo getContainerInfoAt(int i) const;
+
+    virtual ContainerInfo getContainerInfo(const std::string& name) const;
 
     AndroidDevice();
 

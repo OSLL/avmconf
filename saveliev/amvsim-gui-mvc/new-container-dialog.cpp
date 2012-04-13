@@ -37,8 +37,8 @@ void NewContainerDialog::tryCreateHttpFtp() {
             return;
         }
 
-        ContainerInfo contInfo(m_nameEdit->text(), storage);
-        if (m_model->createContainer(contInfo)) {
+        // ContainerInfo contInfo(m_nameEdit->text(), storage);
+        if (m_model->createContainer(m_nameEdit->text(), storage)) {
             accept();
         }
 
