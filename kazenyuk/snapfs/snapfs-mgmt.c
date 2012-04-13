@@ -22,7 +22,7 @@ static ssize_t mnt_point_show(struct kobject *kobj,
 		printk(KERN_INFO "mnt_point_show for '%s' kobject\n", 
 			kobject_name(kobj));
 	} else {
-		printk(KERN_INFO "mnt_point_show for unknown kobject\n");
+		printk(KERN_WARNING "mnt_point_show for unknown kobject\n");
 	}
 
 	return sprintf(buf, "%s\n", mnt_point_path);
@@ -33,10 +33,10 @@ static ssize_t mnt_point_store(struct kobject *kobj,
 				const char *buf, size_t count)
 {
 	if (kobj) {
-		printk(KERN_INFO "mnt_point_show for '%s' kobject\n", 
+		printk(KERN_INFO "mnt_point_store for '%s' kobject\n", 
 			kobject_name(kobj));
 	} else {
-		printk(KERN_INFO "mnt_point_show for unknown kobject\n");
+		printk(KERN_WARNING "mnt_point_store for unknown kobject\n");
 	}
 
 	sscanf(buf, "%s\n", mnt_point_path);
