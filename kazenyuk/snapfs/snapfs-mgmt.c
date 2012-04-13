@@ -15,17 +15,63 @@ static struct snapfs_mnt_point snapfs_mnt_points[max_snapfs_mnt_points];
 static char mnt_point_path[256];
 static struct kobject *snapfs_kobj = NULL;
 
-static ssize_t mnt_point_show(struct kobject *kobj, 
+static struct snapfs_mnt_point *snapfs_mnt_point_for_kobj(struct kobject *kobj)
+{
+	int i;
+	struct snapfs_mnt_point *mnt_point;
+
+	printk(KERN_DEBUG "snapfs_mnt_point_for_kobj\n");
+
+	i = 0;
+	mnt_point = snapfs_mnt_points;
+	if (snapfs_mnt_point_number < 0) {
+		return NULL;
+	}
+
+	while (i <= snapfs_mnt_point_number) {
+		if (mnt_point[i].kobj == kobj) {
+			return &mnt_point[i];
+		}
+		++i;
+	}
+
+	return NULL;
+}
+
+static ssize_t mnt_point_show_path(struct kobject *kobj, 
 				struct kobj_attribute *attr, char *buf)
 {
+	struct snapfs_mnt_point *mnt_point;
+	
 	if (kobj) {
 		printk(KERN_INFO "mnt_point_show for '%s' kobject\n", 
 			kobject_name(kobj));
 	} else {
 		printk(KERN_WARNING "mnt_point_show for unknown kobject\n");
+		return 0;
 	}
 
-	return sprintf(buf, "%s\n", mnt_point_path);
+	mnt_point = snapfs_mnt_point_for_kobj(kobj);
+	if (!mnt_point) {
+		printk(KERN_ERR "Can't find mount point for kobject\n");
+		return 0;
+	}
+
+	if (!mnt_point->dentry) {
+		printk(KERN_ERR "No dentry in mnt_point structure\n");
+		return 0;
+	}
+
+	if (!mnt_point->dentry->d_name.name) {
+		printk(KERN_ERR "No name specified in mount point dentry\n");
+		return 0;
+	}
+
+	printk(KERN_ERR "d_name.len = %d\n", mnt_point->dentry->d_name.len);
+	printk(KERN_ERR "d_name.name = %s\n", mnt_point->dentry->d_name.name);
+	//return snprintf(buf, mnt_point->dentry->d_name.len, 
+	//		"%s\n", mnt_point->dentry->d_name.name);
+	return sprintf(buf, "%s\n", mnt_point->dentry->d_name.name);
 }
 
 static ssize_t mnt_point_store(struct kobject *kobj, 
@@ -43,9 +89,11 @@ static ssize_t mnt_point_store(struct kobject *kobj,
 	return count;
 }
 
-static struct kobj_attribute mnt_point_attr = __ATTR(mnt_point_path, 0666, mnt_point_show, mnt_point_store);
+static struct kobj_attribute mnt_point_path_attr = __ATTR(path, 0444, mnt_point_show_path, NULL);
+static struct kobj_attribute mnt_point_attr = __ATTR(mnt_point_path, 0666, mnt_point_show_path, mnt_point_store);
 
 static struct attribute *snapfs_mnt_attrs[] = {
+	&mnt_point_path_attr.attr,
 	&mnt_point_attr.attr,
 	NULL,
 };
