@@ -1,7 +1,7 @@
 #include "Container.h"
 
 Container::Container(const string&  containerName, const StorageDescriptor& inpTemplate)
-    : myName(containerName), myDescriptor(inpTemplate) {
+    : myName(containerName) {
     this->myState = StateStopped;    //Maybe should use as parameter?
     this->init(inpTemplate);
 }

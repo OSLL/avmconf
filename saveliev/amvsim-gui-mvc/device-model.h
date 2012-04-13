@@ -3,7 +3,7 @@
 
 #include <QAbstractTableModel>
 #include "api/AndroidDevice.h"
-#include "api/container-info.h"
+#include "api/ContainerInfo.h"
 
 class DeviceModel : public QAbstractListModel {
     Q_OBJECT
@@ -16,6 +16,8 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     bool createContainer(QString name, StorageDescriptor descriptor);
 
+    AndroidDevice * device();
+
  // QModelIndex index(int row, int column, const QModelIndex &parent) const;
  // QModelIndex parent(const QModelIndex &child) const;
 
@@ -23,7 +25,7 @@ private:
     AndroidDevice m_device;
 
 signals:
-    void created(ContainerInfo);
+    void created(QString);
  // void rowsInserted ( const QModelIndex & parent, int start, int end );
 
 public slots:

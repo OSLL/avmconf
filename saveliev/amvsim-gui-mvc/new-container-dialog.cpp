@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QRegExpValidator>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "container-delegate.h"
 #include "new-container-dialog.h"
@@ -59,47 +60,64 @@ void NewContainerDialog::initNameEdit() {
 }
 
 void NewContainerDialog::initUrlEdit() {
-    m_urlEdit = new QLineEdit(this);
-    m_urlLoadButton = new QPushButton("Load image by HTTP ir FTP", this);
-    m_urlError = new QLabel(this);
-
     QLabel *urlLabel = new QLabel("HTTP or FTP address of image");
     urlLabel->setStyleSheet("margin: 15px 0px 0px -4px");
-    layout()->addWidget(urlLabel);
-    layout()->addWidget(m_urlEdit);
+
+    m_urlEdit = new QLineEdit(this);
+
+    m_urlLoadButton = new QPushButton("Load image by HTTP ir FTP", this);
     m_urlLoadButton->setFixedWidth(200);
+    QObject::connect(m_urlLoadButton, SIGNAL(clicked()), this, SLOT(tryCreateHttpFtp()));
+
+    m_urlError = new QLabel(this);
     m_urlError->setStyleSheet("color: red");
-    WidgetButtonWithError *widgetButtonWithError = new WidgetButtonWithError(this);
+
+    MyWidget *widgetButtonWithError = new MyWidget(this);
     widgetButtonWithError->setLayout(new QHBoxLayout);
     widgetButtonWithError->layout()->addWidget(m_urlLoadButton);
     widgetButtonWithError->layout()->addWidget(m_urlError);
     widgetButtonWithError->layout()->setContentsMargins(0, 0, 0, 0);
     widgetButtonWithError->layout()->setMargin(0);
-    widgetButtonWithError->setStyleSheet("WidgetButtonWithError { margin-left: -10px; padding-left: 0px; }");
-    layout()->addWidget(widgetButtonWithError);
+    widgetButtonWithError->setStyleSheet("MyWidget { margin-left: -10px; padding-left: 0px; }");
 
-    QObject::connect(m_urlLoadButton, SIGNAL(clicked()), this, SLOT(tryCreateHttpFtp()));
+    layout()->addWidget(urlLabel);
+    layout()->addWidget(m_urlEdit);
+    layout()->addWidget(widgetButtonWithError);
 }
 
-void NewContainerDialog::initLocalEdit() {
-    m_localAddressEdit = new QLineEdit(this);
- // m_chooseFileButton(new QPushButton("Choose", this)),
-    m_localLoadButton = new QPushButton("Install image from local disk", this);
-    m_localError = new QLabel(this);
-
+void NewContainerDialog::initLocalEdit() {    
     QLabel *localLabel = new QLabel("Local address of image");
     localLabel->setStyleSheet("margin: 15px 0px 0px -4px");
-    layout()->addWidget(localLabel);
-    layout()->addWidget(m_localAddressEdit);
+
+    m_localAddressEdit = new QLineEdit(this);
+
+    m_chooseFileButton = new QPushButton("Choose", this);
+    QObject::connect(m_chooseFileButton, SIGNAL(clicked()), this, SLOT(chooseFile()));
+
+    MyWidget *chooseFileWidget = new MyWidget(this);
+    chooseFileWidget->setStyleSheet("MyWidget#chooseFileWidget { margin: 0px 0px 0px -10px; padding-left: 0px; }");
+    chooseFileWidget->setContentsMargins(0, 0, 0 ,0);
+    chooseFileWidget->setLayout(new QHBoxLayout);
+    chooseFileWidget->layout()->addWidget(m_localAddressEdit);
+    chooseFileWidget->layout()->addWidget(m_chooseFileButton);
+
+    m_localLoadButton = new QPushButton("Install image from local disk", this);
     m_localLoadButton->setFixedWidth(210);
+
+    m_localError = new QLabel(this);
     m_localError->setStyleSheet("color: red");
-    WidgetButtonWithError *loadBwE = new WidgetButtonWithError(this);
+
+    MyWidget *loadBwE = new MyWidget(this);
     loadBwE->setLayout(new QHBoxLayout);
     loadBwE->layout()->addWidget(m_localLoadButton);
     loadBwE->layout()->addWidget(m_localError);
     loadBwE->layout()->setContentsMargins(0, 0, 0, 0);
     loadBwE->layout()->setMargin(0);
+
     loadBwE->setStyleSheet("WidgetButtonWithError { margin-left: -10px; padding-left: 0px; }");
+
+    layout()->addWidget(localLabel);
+    layout()->addWidget(chooseFileWidget);
     layout()->addWidget(loadBwE);
 
     // QHBoxLayout *localFileLayout = new QHBoxLayout();
@@ -109,4 +127,8 @@ void NewContainerDialog::initLocalEdit() {
     // localFileLayout->setGeometry(10, 400, 10, 500);
 
     // QObject::connect(m_localLoadButton, SIGNAL(clicked()), this, SLOT(tryCreate()));
+}
+
+void NewContainerDialog::chooseFile() {
+    m_localAddressEdit->setText(QFileDialog::getOpenFileName(this, "Choose Image", "", "Files (*.*)"));
 }

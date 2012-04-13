@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <exception>
+#include <iostream>
 #include "AndroidDevice.h"
 
 using std::string;
@@ -28,7 +29,7 @@ AndroidDevice::~AndroidDevice(){
     }
 }
 
-int AndroidDevice::createContainer(const string&  containerName, const StorageDescriptor& inpTemplate){
+int AndroidDevice::createContainer(const string& containerName, const StorageDescriptor& inpTemplate){
     int status = 0;
     if (this->myContainers.find(containerName) == this->myContainers.end()){
         this->myContainers.insert(pair<string, Container*>(containerName, new Container(containerName, inpTemplate)));
@@ -39,7 +40,7 @@ int AndroidDevice::createContainer(const string&  containerName, const StorageDe
     return status;
 }
 
-int AndroidDevice::startContainer(const string&  containerName){
+int AndroidDevice::startContainer(const string& containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -52,7 +53,7 @@ int AndroidDevice::startContainer(const string&  containerName){
 }
 
 
-int AndroidDevice::stopContainer(const string&  containerName){
+int AndroidDevice::stopContainer(const string& containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -64,7 +65,7 @@ int AndroidDevice::stopContainer(const string&  containerName){
     return status;
 }
 
-int AndroidDevice::destroyContainer(const string&  containerName){
+int AndroidDevice::destroyContainer(const string& containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -80,7 +81,7 @@ int AndroidDevice::destroyContainer(const string&  containerName){
     return status;
 }
 
-int AndroidDevice::switchToContainer(const string&  containerName){
+int AndroidDevice::switchToContainer(const string& containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -92,7 +93,7 @@ int AndroidDevice::switchToContainer(const string&  containerName){
     return status;
 }
 
-int AndroidDevice::setContainerImage(const string&  containerName, const StorageDescriptor& image){
+int AndroidDevice::setContainerImage(const string& containerName, const StorageDescriptor& image){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -105,7 +106,7 @@ int AndroidDevice::setContainerImage(const string&  containerName, const Storage
     return status;
 }
 
-int AndroidDevice::syncContainerImage(const string&  containerName){
+int AndroidDevice::syncContainerImage(const string& containerName){
     int status = 0;
     // Do some stuff about sync.
     return status;
@@ -124,22 +125,30 @@ int AndroidDevice::getContainersNumber() const {
     return myContainers.size();
 }
 
-ContainerInfo AndroidDevice::getContainerInfoAt(int n) const {
+const std::string& AndroidDevice::getContainerNameAt(int n) const {
     int k = 0;
     for(map<std::string, Container*>::const_iterator it = myContainers.begin(); it != myContainers.end(); ++it) {
         if (k == n) {
-            Container* cont = ((Container*)(it->second));
-            return ContainerInfo(cont->getName(), StorageDescriptor("dd"), cont->getState());
+            return it->first;
         }
         ++k;
     }
     throw std::out_of_range("");
 }
 
+ContainerInfo AndroidDevice::getContainerInfoAt(int n) const {
+    return getContainerInfo(getContainerNameAt(n));
+}
+
 ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const {
+    std::cout << name << std::endl;
     if (myContainers.find(name) != myContainers.end()) {
-        Container* cont = ((Container*)(myContainers.at(name)));
-        return ContainerInfo(cont->getName(), StorageDescriptor("dd"), cont->getState());
+        Container* cont = (Container*)(myContainers.at(name));
+     //   if (cont != 0) {
+        ContainerInfo info;
+        info.name = name;
+        info.state = cont->getState();
+        return info;
     } else {
         throw NoSuchContainer(name);
     }

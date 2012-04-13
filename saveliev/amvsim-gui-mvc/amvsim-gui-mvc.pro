@@ -12,7 +12,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     device-model.cpp \
-    container-list.cpp \
     container-delegate.cpp \
     main-window.cpp \
     api/StorageDescriptor.cpp \
@@ -24,7 +23,6 @@ SOURCES += main.cpp\
 
 HEADERS  += \
     device-model.h \
-    container-list.h \
     container-delegate.h \
     main-window.h \
     api/StorageDescriptor.h \
@@ -38,6 +36,8 @@ HEADERS  += \
     api/ContainerInfo.h
 
 OTHER_FILES +=
+
+
 
 
 

@@ -14,12 +14,11 @@ namespace Ui {
     class NewContainerDialog;
 }
 
-class WidgetButtonWithError : public QWidget {
+class MyWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit WidgetButtonWithError(QWidget *parent) : QWidget(parent) {}
-
+    explicit MyWidget(QWidget *parent) : QWidget(parent) {}
 };
 
 class NewContainerDialog : public QDialog {
@@ -50,9 +49,10 @@ private:
 
 public slots:
     void tryCreateHttpFtp();
+    void chooseFile();
 
 signals:
- // void done(ContainerInfo);
+ // void done();
 };
 
 #endif // NEWCONTAINERDIALOG_H

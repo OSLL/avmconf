@@ -3,7 +3,7 @@
 
 #include <string>
 #include "StorageDescriptor.h"
-//#include "container-info.h"
+//#include "ContainerInfo.h"
 #include "ContainerState.h"
 
 using std::string;

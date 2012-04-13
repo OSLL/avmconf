@@ -25,7 +25,9 @@ struct AndroidDevice {
 
     virtual int getContainersNumber() const;
 
-    virtual ContainerInfo getContainerInfoAt(int i) const;
+    virtual ContainerInfo getContainerInfoAt(int n) const;
+
+    virtual const std::string& getContainerNameAt(int n) const;
 
     virtual ContainerInfo getContainerInfo(const std::string& name) const;
 
@@ -40,7 +42,6 @@ private:
     Container* activeContainer;
 
     friend class Tests;
-
 
 };
 

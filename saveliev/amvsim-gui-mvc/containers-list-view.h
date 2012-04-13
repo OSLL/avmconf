@@ -14,7 +14,7 @@ public:
 signals:
 
 private slots:
-    void setItemWidget(ContainerInfo);
+    void setItemWidget(QString);
  // void setWidget(const QModelIndex &parent, int start, int end);
  // virtual void rowsInserted(const QModelIndex &parent, int start, int end);
 };

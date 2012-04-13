@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_view->setModel(m_model);
 
     // TEST
-    m_model->createContainer("name", StorageDescriptor("address"));
+    m_model->createContainer("Android container 1", StorageDescriptor("address"));
     // TEST
 
     m_createContainerButton = new QPushButton("Create new container", this);
