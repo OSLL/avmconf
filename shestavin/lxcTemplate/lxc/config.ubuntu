@@ -1,0 +1,6 @@
+lxc.utsname = ubuntu
+lxc.tty = 4
+
+lxc.rootfs = /lxc/rootfs.ubuntu
+lxc.mount = /lxc/fstab.ubuntu
+lxc.cgroup.devices.deny = a
