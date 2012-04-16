@@ -3,7 +3,6 @@
 
 #include <string>
 #include "StorageDescriptor.h"
-//#include "ContainerInfo.h"
 #include "ContainerState.h"
 
 using std::string;
@@ -16,19 +15,19 @@ struct Container {
 
     virtual const string& getName() const;
 
- // virtual ContainerInfo getInfo() const;
+    virtual const string& getImageAddress() const;
 
-    Container(const string& containerName, const StorageDescriptor& inpTemplate);
+    virtual int restoreImage(const std::string& imageAddress);
+
+    virtual int loadImage(const StorageDescriptor& inpTemplate);
+
+    Container(const string& containerName);
     virtual ~Container();
 
 private:
-
     ContainerState myState;
-    const string& myName;
-    StorageDescriptor myDescriptor;
-
-    virtual void init(const StorageDescriptor& inpTemplate);
-
+    string myName;
+    string myImageAddress;
 };
 
 #endif // CONTAINER_H

@@ -40,18 +40,42 @@ int DeviceModel::columnCount(const QModelIndex &parent) const {
     return 1;
 }
 
-bool DeviceModel::createContainer(QString name, StorageDescriptor descriptor) {
-    if(m_device.createContainer(name.toStdString(), descriptor) >= 0) {
+int DeviceModel::createContainer(QString name, StorageDescriptor descriptor) {
+    if (m_device.createContainer(name.toStdString(), descriptor) >= 0) {
         emit(layoutChanged());
-        emit(created(name));  //m_device.getContainerInfo(name.toStdString())));
-        return true;
+        emit(created(name)); //m_device.getContainerInfo(name.toStdString())));
+        return 0;
     }
-    return false;
+    return -1;
 }
 
-AndroidDevice * DeviceModel::device() {
-    return &m_device;
+int DeviceModel::destroyContainer(QString name) {
+    std::cout << rowCount() << std::endl;
+    if (m_device.destroyContainer(name.toStdString()) >= 0) {
+        std::cout << rowCount() << std::endl;
+        emit(layoutChanged());
+        emit(dataChanged(index(0, 0), index(rowCount()-1, 0)));
+        return 0;
+    }
+    return -1;
 }
+
+int DeviceModel::switchToContainer(QString name) {
+    m_device.switchToContainer(name.toStdString());
+}
+
+int DeviceModel::startContainer(QString name) {
+    m_device.startContainer(name.toStdString());
+}
+
+int DeviceModel::stopContainer(QString name) {
+    m_device.stopContainer(name.toStdString());
+}
+
+ContainerInfo DeviceModel::getContainerInfo(QString name) {
+    return m_device.getContainerInfo(name.toStdString());
+}
+
 
 //bool DeviceModel::setData(const QModelIndex &index, const QVariant &value, int role) {
 //    int row = index.row();

@@ -7,8 +7,8 @@
 #include <QPushButton>
 #include <QLabel>
 
-ContainerWidget::ContainerWidget(QString contName, DeviceModel* model, QObject *parent)
-    : m_contName(contName), m_model(model) {
+ContainerWidget::ContainerWidget(QString contName, DeviceModel * model, QWidget * parent)
+    : QWidget(parent), m_contName(contName), m_model(model) {
     setLayout(new QHBoxLayout);
 
     m_powerButton = new QPushButton("Run");
@@ -21,9 +21,13 @@ ContainerWidget::ContainerWidget(QString contName, DeviceModel* model, QObject *
     m_switchButton->setVisible(false);
     QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchHerePressed()));
 
+    m_destroyButton = new QPushButton("Destroy");
+    QObject::connect(m_destroyButton, SIGNAL(pressed()), this, SLOT(destroyContainer()));
+
     layout()->addWidget(m_powerButton);
     layout()->addWidget(m_nameLabel);
     ((QHBoxLayout*)layout())->addWidget(m_switchButton, 0, Qt::AlignRight);
+    ((QHBoxLayout*)layout())->addWidget(m_destroyButton, 0, Qt::AlignRight);
 
     setAutoFillBackground(true);
 }
@@ -43,30 +47,32 @@ ContainerWidget::ContainerWidget(QString contName, DeviceModel* model, QObject *
 //}
 
 void ContainerWidget::powerPressed() {
-    if (m_model->device()->getContainerInfo(m_contName.toStdString()).state == StateStopped) {
-        m_model->device()->startContainer(m_contName.toStdString());
+    if (m_model->getContainerInfo(m_contName).state == StateStopped) {
+        m_model->startContainer(m_contName);
         m_powerButton->setText("Stop");
         m_switchButton->setVisible(true);
-
-//        if (m_model->device()->getActiveContainer() == m_contName.toStdString()) {
-//            highlightAsActive();
-//        }
+     // if (m_model->device()->getActiveContainer() == m_contName.toStdString())
+     //     highlightAsActive();
     } else {
-        m_model->device()->stopContainer(m_contName.toStdString());
+        m_model->stopContainer(m_contName);
         m_powerButton->setText("Run");
         m_switchButton->setVisible(false);
     }
 }
 
 void ContainerWidget::switchHerePressed() {
-    if (m_model->device()->getContainerInfo(m_contName.toStdString()).state == StateRunning) {
-        m_model->device()->switchToContainer(m_contName.toStdString());
+    if (m_model->getContainerInfo(m_contName).state == StateRunning) {
+        m_model->switchToContainer(m_contName);
         highlightAsActive();
     }
 }
 
 void ContainerWidget::highlightAsActive() {
-    setPalette(QPalette( Qt::blue ) );
+    setPalette(QPalette(Qt::blue));
+}
+
+void ContainerWidget::destroyContainer() {
+    m_model->destroyContainer(m_contName);
 }
 
 

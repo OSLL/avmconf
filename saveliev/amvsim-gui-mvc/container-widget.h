@@ -18,18 +18,21 @@ private:
     QLabel *m_nameLabel;
     QPushButton *m_switchButton;
 
+    QPushButton *m_destroyButton;
+
     void highlightAsActive();
 
 public:
-    ContainerWidget(QString contName, DeviceModel* model, QObject *parent);
-//    void start();
-//    void stop();
+    ContainerWidget(QString contName, DeviceModel* model, QWidget *parent);
+ // void start();
+ // void stop();
 
 signals:
 
 public slots:    
     void powerPressed();
     void switchHerePressed();
+    void destroyContainer();
 };
 
 #endif // CONTAINEREDITDELEGATE_H

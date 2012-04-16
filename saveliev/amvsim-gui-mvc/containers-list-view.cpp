@@ -26,6 +26,15 @@ void ContainersListView::setItemWidget(QString name) {
 
 void ContainersListView::setModel(QAbstractItemModel *model) {
     QListView::setModel(model);
+
+    DeviceModel * dModel = (DeviceModel*)model;
+    for (int i = 0; i != dModel->rowCount(); ++i) {
+        QString name = dModel->data(dModel->index(i, 0), Qt::DisplayRole).toString();
+        setIndexWidget(dModel->index(i, 0), new ContainerWidget(name, dModel, this));
+    }
+
     connect(model, SIGNAL(created(QString)), this, SLOT(setItemWidget(QString)));
  // connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)), m_view, SLOT(setWidget(QModelIndex, int, int)));
 }
+
+

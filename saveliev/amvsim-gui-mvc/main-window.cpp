@@ -9,15 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
     setWindowTitle("Configurator");
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
-    setFixedWidth(400);
+    setFixedWidth(500);
 
     m_view = new ContainersListView(this);
     m_model = new DeviceModel(this);
     m_view->setModel(m_model);
-
-    // TEST
-    m_model->createContainer("Android container 1", StorageDescriptor("address"));
-    // TEST
 
     m_createContainerButton = new QPushButton("Create new container", this);
     QObject::connect(m_createContainerButton, SIGNAL(clicked()), this, SLOT(startAddingContainer()));

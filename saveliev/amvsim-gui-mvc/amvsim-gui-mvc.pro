@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     api/AndroidDevice.cpp \
     new-container-dialog.cpp \
     container-widget.cpp \
-    containers-list-view.cpp
+    containers-list-view.cpp \
+    api/Saver.cpp
 
 HEADERS  += \
     device-model.h \
@@ -33,9 +34,20 @@ HEADERS  += \
     container-widget.h \
     containers-list-view.h \
     api/ContainerState.h \
-    api/ContainerInfo.h
+    api/ContainerInfo.h \
+    api/Saver.h
 
 OTHER_FILES +=
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,42 +1,45 @@
 #include <stdexcept>
 #include <exception>
 #include <iostream>
+
 #include "AndroidDevice.h"
+#include "Saver.h"
 
 using std::string;
 using std::map;
 using std::pair;
 
-class NoSuchContainer : std::exception {
-    std::string msg;
-
-public:
-    NoSuchContainer(const std::string& msg) : msg(msg) { }
-
-    virtual const char* what() const throw() {
-        return msg.c_str();
-    }
-
-    virtual ~NoSuchContainer() throw() {}
-};
-
-AndroidDevice::AndroidDevice() : myContainers(), activeContainer(0) {
+AndroidDevice::AndroidDevice() : myContainers(), activeContainer(0), mySaver() {
+    mySaver.restore(myContainers);
 }
 
 AndroidDevice::~AndroidDevice(){
-    for (map<string, Container*>::iterator it = this->myContainers.begin(); it != this->myContainers.end(); ++it){
+    for (map<string, Container*>::iterator it = this->myContainers.begin(); it != this->myContainers.end(); ++it) {
         delete it->second;
     }
 }
 
-int AndroidDevice::createContainer(const string& containerName, const StorageDescriptor& inpTemplate){
+// -1: container with such name already exists
+// -2: cannot load image
+// -3: cannot open file to save
+int AndroidDevice::createContainer(const string& containerName, const StorageDescriptor& inpTemplate) {
     int status = 0;
-    if (this->myContainers.find(containerName) == this->myContainers.end()){
-        this->myContainers.insert(pair<string, Container*>(containerName, new Container(containerName, inpTemplate)));
-        status = 0;
+    Container * container;
+    if (myContainers.find(containerName) == this->myContainers.end()) {
+        container = new Container(containerName);
+
+        if (container->loadImage(inpTemplate) != 0) {
+            status = -2;
+        }
+        myContainers.insert(pair<string, Container*>(containerName, container));
+
+        if (mySaver.save(myContainers) != 0) {
+            status = -3;
+        }
     } else {
         status = -1;
     }
+
     return status;
 }
 
@@ -65,7 +68,7 @@ int AndroidDevice::stopContainer(const string& containerName){
     return status;
 }
 
-int AndroidDevice::destroyContainer(const string& containerName){
+int AndroidDevice::destroyContainer(const string& containerName) {
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -74,6 +77,7 @@ int AndroidDevice::destroyContainer(const string& containerName){
         }
         delete containerIter->second;
         this->myContainers.erase(containerIter);
+        mySaver.save(myContainers);
         status = 0;
     } else {
         status = -1;
@@ -96,10 +100,11 @@ int AndroidDevice::switchToContainer(const string& containerName){
 int AndroidDevice::setContainerImage(const string& containerName, const StorageDescriptor& image){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
-    if (containerIter != this->myContainers.end()){
-        delete containerIter->second;
-        containerIter->second = new Container(containerName, image);
-        status = 0;
+    if (containerIter != this->myContainers.end()) {
+        if (((Container*)containerIter->second)->loadImage(image) != 0)
+            status = -2;
+        else
+            status = 0;
     } else {
         status = -1;
     }

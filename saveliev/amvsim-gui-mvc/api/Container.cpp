@@ -1,31 +1,38 @@
 #include "Container.h"
 
-Container::Container(const string&  containerName, const StorageDescriptor& inpTemplate)
-    : myName(containerName) {
-    this->myState = StateStopped;    //Maybe should use as parameter?
-    this->init(inpTemplate);
+Container::Container(const string& containerName)
+    : myName(containerName), myImageAddress(""), myState(StateStopped) {
 }
 
+int Container::loadImage(const StorageDescriptor& inpTemplate) {
+    // Some iniitialization procedures with StorageDescriptor.
+    myImageAddress = "address";
 
-void Container::init(const StorageDescriptor& inpTemplate){
-    //Some iniitialization procedures with StorageDescriptor.
+    return 0;
 }
 
-const ContainerState& Container::getState() const{
-    return this->myState;
+int Container::restoreImage(const std::string& imageAddress) {
+    // initialization
+    myImageAddress = imageAddress;
+
+    return 0;
 }
 
-void Container::setState(const ContainerState& inpState){
-    this->myState = inpState;
+const ContainerState& Container::getState() const {
+    return myState;
 }
 
-const string& Container::getName() const{
-    return this->myName;
+void Container::setState(const ContainerState& inpState) {
+    myState = inpState;
+}
+
+const string& Container::getName() const {
+    return myName;
 }
 
 Container::~Container(){
 }
 
-//ContainerInfo Container::getInfo() const {
-//    return ContainerInfo(myName, myDescriptor, myState);
-//}
+const string & Container::getImageAddress() const {
+    return myImageAddress;
+}

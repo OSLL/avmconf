@@ -3,9 +3,25 @@
 
 #include <string>
 #include <map>
+#include <fstream>
+
 #include "Container.h"
 #include "ContainerInfo.h"
 #include "StorageDescriptor.h"
+#include "Saver.h"
+
+class NoSuchContainer : std::exception {
+    std::string msg;
+
+public:
+    NoSuchContainer(const std::string& msg) : msg(msg) { }
+
+    virtual const char* what() const throw() {
+        return msg.c_str();
+    }
+
+    virtual ~NoSuchContainer() throw() {}
+};
 
 struct AndroidDevice {
 
@@ -23,7 +39,6 @@ struct AndroidDevice {
 
     virtual int syncContainerImage(const std::string&  containerName);
 
-    // added by Vlad Saveliev
 
     virtual int getContainersNumber() const;
 
@@ -45,6 +60,16 @@ private:
 
     Container* activeContainer;
 
+    Saver mySaver;
+
 };
 
 #endif // ANDROIDDEVICE_H
+
+
+
+
+
+
+
+

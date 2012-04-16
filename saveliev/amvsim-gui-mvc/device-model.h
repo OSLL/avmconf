@@ -14,9 +14,13 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    bool createContainer(QString name, StorageDescriptor descriptor);
 
-    AndroidDevice * device();
+    int createContainer(QString name, StorageDescriptor descriptor);
+    int destroyContainer(QString name);
+    int switchToContainer(QString name);
+    int startContainer(QString name);
+    int stopContainer(QString name);
+    ContainerInfo getContainerInfo(QString name);
 
  // QModelIndex index(int row, int column, const QModelIndex &parent) const;
  // QModelIndex parent(const QModelIndex &child) const;
