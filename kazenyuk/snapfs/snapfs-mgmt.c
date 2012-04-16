@@ -12,7 +12,6 @@ static int snapfs_mnt_point_number = -1;
 static struct snapfs_mnt_point snapfs_mnt_points[max_snapfs_mnt_points];
 #undef max_snapfs_mnt_points
 
-static char mnt_point_path[256];
 static struct kobject *snapfs_kobj = NULL;
 
 static struct snapfs_mnt_point *snapfs_mnt_point_for_kobj(struct kobject *kobj)
@@ -38,7 +37,7 @@ static struct snapfs_mnt_point *snapfs_mnt_point_for_kobj(struct kobject *kobj)
 	return NULL;
 }
 
-static ssize_t mnt_point_show_path(struct kobject *kobj, 
+static ssize_t path_show(struct kobject *kobj, 
 				struct kobj_attribute *attr, char *buf)
 {
 	struct snapfs_mnt_point *mnt_point;
@@ -74,27 +73,72 @@ static ssize_t mnt_point_show_path(struct kobject *kobj,
 	return sprintf(buf, "%s\n", mnt_point->dentry->d_name.name);
 }
 
-static ssize_t mnt_point_store(struct kobject *kobj, 
+static ssize_t state_show(struct kobject *kobj,
+			struct kobj_attribute *attr, char *buf)
+{
+	struct snapfs_mnt_point *mnt_point;
+
+	mnt_point = snapfs_mnt_point_for_kobj(kobj);
+	if (!mnt_point) {
+		printk(KERN_ERR "Can't find mount point for kobject\n");
+		return 0;
+	}
+
+	return sprintf(buf, "%d\n", mnt_point->state);
+}
+
+static ssize_t next_state_show(struct kobject *kobj, 
+				struct kobj_attribute *attr, char *buf)
+{
+	struct snapfs_mnt_point *mnt_point;
+
+	mnt_point = snapfs_mnt_point_for_kobj(kobj);
+	if (!mnt_point) {
+		printk(KERN_ERR "Can't find mount point for kobject\n");
+		return 0;
+	}
+
+	return sprintf(buf, "%d\n", mnt_point->next_state);
+}
+
+static ssize_t next_state_store(struct kobject *kobj, 
 				struct kobj_attribute *attr, 
 				const char *buf, size_t count)
 {
+	struct snapfs_mnt_point *mnt_point;
+
 	if (kobj) {
-		printk(KERN_INFO "mnt_point_store for '%s' kobject\n", 
+		printk(KERN_INFO "next_state_store for '%s' kobject\n", 
 			kobject_name(kobj));
 	} else {
-		printk(KERN_WARNING "mnt_point_store for unknown kobject\n");
+		printk(KERN_WARNING "next_state_store for unknown kobject\n");
+		return 0;
 	}
 
-	sscanf(buf, "%s\n", mnt_point_path);
+	mnt_point = snapfs_mnt_point_for_kobj(kobj);
+	if (!mnt_point) {
+		printk(KERN_ERR "Can't find mount point for kobject\n");
+		return 0;
+	}
+
+	sscanf(buf, "%d\n", &mnt_point->next_state);
 	return count;
 }
 
-static struct kobj_attribute mnt_point_path_attr = __ATTR(path, 0444, mnt_point_show_path, NULL);
-static struct kobj_attribute mnt_point_attr = __ATTR(mnt_point_path, 0666, mnt_point_show_path, mnt_point_store);
+static struct kobj_attribute path_attr = __ATTR(path, 0444, 
+						path_show, 
+						NULL);
+static struct kobj_attribute state_attr = __ATTR(state, 0444,
+						state_show,
+						NULL);
+static struct kobj_attribute next_state_attr = __ATTR(next_state, 0666, 
+							next_state_show, 
+							next_state_store);
 
 static struct attribute *snapfs_mnt_attrs[] = {
-	&mnt_point_path_attr.attr,
-	&mnt_point_attr.attr,
+	&path_attr.attr,
+	&next_state_attr.attr,
+	&state_attr.attr,
 	NULL,
 };
 

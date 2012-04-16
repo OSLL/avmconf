@@ -11,6 +11,7 @@ struct snapfs_mnt_point {
 	struct attribute_group *attrs;
 	struct dentry *dentry;
 	int state;
+	int next_state;
 };
 
 int setup_snapfs_mgmt(void);
