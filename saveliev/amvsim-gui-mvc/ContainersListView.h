@@ -2,7 +2,7 @@
 #define CONTAINERSLISTVIEW_H
 
 #include <QListView>
-#include "container-widget.h"
+#include "ContainerWidget.h"
 
 class ContainersListView : public QListView {
     Q_OBJECT

@@ -1,16 +1,20 @@
-#include "containers-list-view.h"
-#include "container-widget.h"
-#include <iostream>
+
+#include <QDebug>
+
+#include "ContainerDelegate.h"
+#include "ContainersListView.h"
+#include "ContainerWidget.h"
 
 ContainersListView::ContainersListView(QWidget *parent) :
     QListView(parent) {
+    setItemDelegate(new ContainerDelegate(this));
 }
 
-//void ContainersListView::setWidget(const QModelIndex &parent, int start, int end) {
-//    std::cout << "rowsInserted" << std::endl;
+//void ContainersListView::setWidget(const QModelIndex & parent, int start, int end) {
+//    qDebug() << "rowsInserted";
 //    for (int i = start; i != end; ++i) {
 //        setIndexWidget(parent.child(i, 0), new ContainerWidget);
-//        std::cout << "rowInserted" << std::endl;
+//        qDebug() << "rowsInserted";
 //    }
 //}
 
@@ -33,7 +37,7 @@ void ContainersListView::setModel(QAbstractItemModel *model) {
         setIndexWidget(dModel->index(i, 0), new ContainerWidget(name, dModel, this));
     }
 
-    connect(model, SIGNAL(created(QString)), this, SLOT(setItemWidget(QString)));
+  connect(model, SIGNAL(created(QString)), this, SLOT(setItemWidget(QString)));
  // connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)), m_view, SLOT(setWidget(QModelIndex, int, int)));
 }
 

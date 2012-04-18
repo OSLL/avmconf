@@ -5,9 +5,9 @@
 #include <QListView>
 #include <QPushButton>
 
-#include "device-model.h"
-#include "container-delegate.h"
-#include "containers-list-view.h"
+#include "DeviceModel.h"
+#include "ContainerDelegate.h"
+#include "ContainersListView.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT

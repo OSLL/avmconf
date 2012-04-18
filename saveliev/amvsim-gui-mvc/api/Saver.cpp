@@ -1,3 +1,6 @@
+
+#include <QDebug>
+
 #include <iostream>
 
 #include "Saver.h"
@@ -11,7 +14,7 @@ using std::string;
 using std::pair;
 using std::ios;
 
-Saver::Saver() : fileName("/Users/vladsaveliev/Dropbox/AU/practice/avmconf/saveliev/amvsim-gui-mvc/device.txt") {
+Saver::Saver() : fileName("device.txt") {
 }
 
 
@@ -69,12 +72,12 @@ int Saver::restore(map<string, Container*> & containers) {
 
 Container * Saver::readContainer(ifstream & in) {
     Container * cont;
-    string name, address;
 
-    in >> name;
+    char name[32768], address[32768];
+    in.getline(name, 32768);
     if (!in.eof()) {
-        in >> address;
-        std::cout << name << " " << address << std::endl;
+        in.getline(address, 32768);
+        qDebug() << name << " " << address;
         cont = new Container(name);
         if (cont->restoreImage(address) != 0) {
             delete cont;

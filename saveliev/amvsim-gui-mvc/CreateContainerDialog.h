@@ -7,11 +7,11 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "container-delegate.h"
-#include "device-model.h"
+#include "ContainerDelegate.h"
+#include "DeviceModel.h"
 
 namespace Ui {
-    class NewContainerDialog;
+    class CreateContainerDialog;
 }
 
 class MyWidget : public QWidget {

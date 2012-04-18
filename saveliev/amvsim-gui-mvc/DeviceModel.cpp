@@ -1,8 +1,10 @@
+
 #include <stdexcept>
+
+#include <QDebug>
 #include <QVariant>
 #include <QSize>
-#include <iostream>
-#include "device-model.h"
+#include "DeviceModel.h"
 #include "api/ContainerInfo.h"
 
 DeviceModel::DeviceModel(QObject *parent) : QAbstractListModel(parent) {
@@ -10,13 +12,13 @@ DeviceModel::DeviceModel(QObject *parent) : QAbstractListModel(parent) {
 
 QVariant DeviceModel::data(const QModelIndex &index, int role) const {
     if (role == Qt::DisplayRole) {
-        try {
+        try {            
+            return QString::fromStdString(m_device.getContainerNameAt(index.row()));
          // QVariant var;
          // var.setValue<ContainerInfo>(m_device.getContainerInfoAt(index.row()));
-         // return var;
-            return QString::fromStdString(m_device.getContainerNameAt(index.row()));
+         // return var;            
         } catch (std::out_of_range e) {
-            std::cout << "out of range: " << index.row() << std::endl;
+            qDebug() << "Out of range: row =" << index.row();
             return QVariant();
         }
     }
@@ -28,33 +30,41 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-//TODO: обернуть в QVariant, во вьюхе перебор строк, где виджет равен нулю, создание виджета от даты от этой строки.
-
-int DeviceModel::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
+int DeviceModel::rowCount(const QModelIndex &) const {
     return m_device.getContainersNumber();
 }
 
-int DeviceModel::columnCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
+int DeviceModel::columnCount(const QModelIndex &) const {
     return 1;
 }
 
 int DeviceModel::createContainer(QString name, StorageDescriptor descriptor) {
-    if (m_device.createContainer(name.toStdString(), descriptor) >= 0) {
+    int result = m_device.createContainer(name.toStdString(), descriptor);
+
+    switch (result) {
+    case -1:
+        qDebug() << "Error creating container: container with such name already exists";
+        break;
+    case -2:
+        qDebug() << "Error creating container: cannot load image";
+        break;
+    case -3:
+        qDebug() << "Error creating container: cannot open file to save";
+        break;
+    default:
         emit(layoutChanged());
         emit(created(name)); //m_device.getContainerInfo(name.toStdString())));
-        return 0;
     }
-    return -1;
+
+    return result;
 }
 
 int DeviceModel::destroyContainer(QString name) {
-    std::cout << rowCount() << std::endl;
+    qDebug() << "destroyContainer: rowCount = " << rowCount();
     if (m_device.destroyContainer(name.toStdString()) >= 0) {
-        std::cout << rowCount() << std::endl;
+        qDebug() << "destroyContainer: rowCount = " << rowCount();
         emit(layoutChanged());
-        emit(dataChanged(index(0, 0), index(rowCount()-1, 0)));
+        emit(dataChanged(index(0, 0), index(rowCount()-2, 0)));
         return 0;
     }
     return -1;

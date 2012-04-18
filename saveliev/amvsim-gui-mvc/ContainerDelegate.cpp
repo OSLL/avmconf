@@ -1,14 +1,23 @@
 
-#include "container-delegate.h"
-#include "container-widget.h"
+#include <QPushButton>
+#include <QPainter>
+#include <QStylePainter>
 
-ContainerDelegate::ContainerDelegate(QWidget *parent = 0) : QItemDelegate(parent) { }
+#include "ContainerDelegate.h"
+#include "ContainerWidget.h"
 
-//void ContainerDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-//    QRect rect = option.rect;
-//    std::cout << rect.height() << "x" << rect.width() << std::endl;
-//    painter->fillRect(option.rect, option.palette.highlight());
+ContainerDelegate::ContainerDelegate(QWidget * parent) : QStyledItemDelegate(parent) { }
+
+//void ContainerDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
+//    QPushButton * widget = new QPushButton("Button name", (QWidget*)parent()); // new ContainerWidget(index, m_model, parent);
+
+//    QPixmap pixmap(widget->size());
+//    widget->render(&pixmap);
+
+//    // QStylePainter stylePainter(painter->device());
+//    // stylePainter.drawControl(QStyle::CE_PushButton, option);
 //}
+
 
 //QSize ContainerDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
 //    return QSize(300, 70);

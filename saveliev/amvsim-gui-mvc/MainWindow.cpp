@@ -1,9 +1,10 @@
+
 #include <QVBoxLayout>
-#include <iostream>
-#include "main-window.h"
-#include "container-widget.h"
-#include "new-container-dialog.h"
-#include "containers-list-view.h"
+
+#include "MainWindow.h"
+#include "ContainerWidget.h"
+#include "CreateContainerDialog.h"
+#include "ContainersListView.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_view = new ContainersListView(this);
     m_model = new DeviceModel(this);
     m_view->setModel(m_model);
+    m_view->setItemDelegate(new ContainerDelegate);
 
     m_createContainerButton = new QPushButton("Create new container", this);
     QObject::connect(m_createContainerButton, SIGNAL(clicked()), this, SLOT(startAddingContainer()));

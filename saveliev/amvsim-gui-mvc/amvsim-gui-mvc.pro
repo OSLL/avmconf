@@ -6,38 +6,69 @@
 
 QT       += core gui
 
-TARGET = amvsim-gui-mvc
+TARGET = AVMSimulator
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    device-model.cpp \
-    container-delegate.cpp \
-    main-window.cpp \
     api/StorageDescriptor.cpp \
     api/Container.cpp \
     api/AndroidDevice.cpp \
-    new-container-dialog.cpp \
-    container-widget.cpp \
-    containers-list-view.cpp \
-    api/Saver.cpp
+    api/Saver.cpp \
+    ContainerDelegate.cpp \
+    ContainerWidget.cpp \
+    DeviceModel.cpp \
+    MainWindow.cpp \
+    CreateContainerDialog.cpp \
+    ContainersListView.cpp
 
 HEADERS  += \
-    device-model.h \
-    container-delegate.h \
-    main-window.h \
     api/StorageDescriptor.h \
     api/Container.h \
     api/AndroidDevice.h \
-    new-container-dialog.h \
-    container-info.h \
-    container-widget.h \
-    containers-list-view.h \
     api/ContainerState.h \
     api/ContainerInfo.h \
-    api/Saver.h
+    api/Saver.h \
+    ContainerDelegate.h \
+    ContainerWidget.h \
+    ContainersListView.h \
+    DeviceModel.h \
+    MainWindow.h \
+    CreateContainerDialog.h
 
 OTHER_FILES +=
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

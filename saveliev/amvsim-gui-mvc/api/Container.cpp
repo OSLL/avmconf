@@ -1,5 +1,7 @@
 #include "Container.h"
 
+using std::string;
+
 Container::Container(const string& containerName)
     : myName(containerName), myImageAddress(""), myState(StateStopped) {
 }

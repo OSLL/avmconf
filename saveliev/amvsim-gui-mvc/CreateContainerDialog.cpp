@@ -1,3 +1,4 @@
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -6,9 +7,9 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "container-delegate.h"
-#include "new-container-dialog.h"
-#include "main-window.h"
+#include "ContainerDelegate.h"
+#include "CreateContainerDialog.h"
+#include "MainWindow.h"
 
 NewContainerDialog::NewContainerDialog(QWidget *parent, DeviceModel *model)
     : QDialog(parent), m_model(model){
@@ -25,26 +26,26 @@ NewContainerDialog::NewContainerDialog(QWidget *parent, DeviceModel *model)
 void NewContainerDialog::tryCreateHttpFtp() {
     QUrl url = QUrl::fromUserInput(m_urlEdit->text());
     if (!url.isValid()) {
-        invalidate(m_urlEdit, m_urlError, "Invalid url");
+        invalidate(m_urlEdit, m_urlError, "Invalid url " + m_urlEdit->text());
     } else {
         StorageDescriptor storage;
         storage.address = m_urlEdit->text().toStdString();
-        if (url.scheme() == "http") {
-            storage.type = StorageDescriptor::Http;
-        } else if (url.scheme() == "ftp") {
-            storage.type = StorageDescriptor::Ftp;
+
+        if (url.scheme() != "http" && url.scheme() != "ftp") {
+            invalidate(m_urlEdit, m_urlError, "Only http or ftp are allowed");
         } else {
-            invalidate(m_urlEdit, m_urlError, "Only http or ftp allowed");
-            return;
-        }
+            if (url.scheme() == "ftp") {
+                storage.type = StorageDescriptor::Http;
+            } else if (url.scheme() == "ftp") {
+                storage.type = StorageDescriptor::Ftp;
+            }
 
-        // ContainerInfo contInfo(m_nameEdit->text(), storage);
-        if (m_model->createContainer(m_nameEdit->text(), storage)) {
-            accept();
+            if (m_model->createContainer(m_nameEdit->text(), storage) < 0) {
+                invalidate(m_urlEdit, m_urlError, "Error creating a container");
+            } else {
+                accept();
+            }
         }
-
-        invalidate(m_urlEdit, m_urlError, "Error creating a container");
-        //if (m_device->createContainer(m_nameEdit->text().toStdString(), storage) < 0) {
     }
 }
 

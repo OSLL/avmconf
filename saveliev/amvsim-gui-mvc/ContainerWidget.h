@@ -2,7 +2,7 @@
 #define CONTAINEREDITDELEGATE_H
 
 #include "api/ContainerInfo.h"
-#include "device-model.h"
+#include "DeviceModel.h"
 #include <QItemDelegate>
 #include <QPushButton>
 #include <QLabel>

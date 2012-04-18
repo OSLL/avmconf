@@ -1,11 +1,12 @@
-#include "container-widget.h"
-#include "api/ContainerInfo.h"
-#include "api/ContainerState.h"
-#include <iostream>
+
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+
+#include "api/ContainerInfo.h"
+#include "api/ContainerState.h"
+#include "ContainerWidget.h"
 
 ContainerWidget::ContainerWidget(QString contName, DeviceModel * model, QWidget * parent)
     : QWidget(parent), m_contName(contName), m_model(model) {
