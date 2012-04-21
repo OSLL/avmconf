@@ -7,7 +7,7 @@
 #include "DeviceModel.h"
 #include "api/ContainerInfo.h"
 
-DeviceModel::DeviceModel(QObject *parent) : QAbstractListModel(parent) {
+DeviceModel::DeviceModel(QObject * parent) : QAbstractListModel(parent) {
 }
 
 QVariant DeviceModel::data(const QModelIndex &index, int role) const {
@@ -38,7 +38,7 @@ int DeviceModel::columnCount(const QModelIndex &) const {
     return 1;
 }
 
-int DeviceModel::createContainer(QString name, StorageDescriptor descriptor) {
+int DeviceModel::createContainer(const QString &  name, StorageDescriptor descriptor) {
     int result = m_device.createContainer(name.toStdString(), descriptor);
 
     switch (result) {
@@ -59,30 +59,33 @@ int DeviceModel::createContainer(QString name, StorageDescriptor descriptor) {
     return result;
 }
 
-int DeviceModel::destroyContainer(QString name) {
+int DeviceModel::destroyContainer(const QString & name) {
     qDebug() << "destroyContainer: rowCount = " << rowCount();
     if (m_device.destroyContainer(name.toStdString()) >= 0) {
         qDebug() << "destroyContainer: rowCount = " << rowCount();
+
         emit(layoutChanged());
-        emit(dataChanged(index(0, 0), index(rowCount()-2, 0)));
+        emit(dataChanged(index(0, 0), index(rowCount()-1, 0)));
         return 0;
+    } else {
+        qDebug() << "Error destroying a container: name =" << name << ", rowCount =" << rowCount();
+        return -1;
     }
-    return -1;
 }
 
-int DeviceModel::switchToContainer(QString name) {
-    m_device.switchToContainer(name.toStdString());
+int DeviceModel::switchToContainer(const QString & name) {
+    return m_device.switchToContainer(name.toStdString());
 }
 
-int DeviceModel::startContainer(QString name) {
-    m_device.startContainer(name.toStdString());
+int DeviceModel::startContainer(const QString &  name) {
+    return m_device.startContainer(name.toStdString());
 }
 
-int DeviceModel::stopContainer(QString name) {
-    m_device.stopContainer(name.toStdString());
+int DeviceModel::stopContainer(const QString &  name) {
+    return m_device.stopContainer(name.toStdString());
 }
 
-ContainerInfo DeviceModel::getContainerInfo(QString name) {
+ContainerInfo DeviceModel::getContainerInfo(const QString &  name) {
     return m_device.getContainerInfo(name.toStdString());
 }
 

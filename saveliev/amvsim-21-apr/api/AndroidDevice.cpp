@@ -13,7 +13,7 @@ AndroidDevice::AndroidDevice() : myContainers(), activeContainer(0), mySaver() {
     mySaver.restore(myContainers);
 }
 
-AndroidDevice::~AndroidDevice(){
+AndroidDevice::~AndroidDevice() {
     for (map<string, Container*>::iterator it = this->myContainers.begin(); it != this->myContainers.end(); ++it) {
         delete it->second;
     }
@@ -22,7 +22,7 @@ AndroidDevice::~AndroidDevice(){
 // -1: container with such name already exists
 // -2: cannot load image
 // -3: cannot open file to save
-int AndroidDevice::createContainer(const string& containerName, const StorageDescriptor& inpTemplate) {
+int AndroidDevice::createContainer(const string & containerName, const StorageDescriptor & inpTemplate) {
     int status = 0;
     Container * container;
     if (myContainers.find(containerName) == this->myContainers.end()) {
@@ -43,7 +43,7 @@ int AndroidDevice::createContainer(const string& containerName, const StorageDes
     return status;
 }
 
-int AndroidDevice::startContainer(const string& containerName){
+int AndroidDevice::startContainer(const string & containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -56,7 +56,7 @@ int AndroidDevice::startContainer(const string& containerName){
     return status;
 }
 
-int AndroidDevice::stopContainer(const string& containerName){
+int AndroidDevice::stopContainer(const string & containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -68,7 +68,7 @@ int AndroidDevice::stopContainer(const string& containerName){
     return status;
 }
 
-int AndroidDevice::destroyContainer(const string& containerName) {
+int AndroidDevice::destroyContainer(const string & containerName) {
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -85,7 +85,7 @@ int AndroidDevice::destroyContainer(const string& containerName) {
     return status;
 }
 
-int AndroidDevice::switchToContainer(const string& containerName){
+int AndroidDevice::switchToContainer(const string & containerName){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()){
@@ -97,7 +97,7 @@ int AndroidDevice::switchToContainer(const string& containerName){
     return status;
 }
 
-int AndroidDevice::setContainerImage(const string& containerName, const StorageDescriptor& image){
+int AndroidDevice::setContainerImage(const string & containerName, const StorageDescriptor & image){
     int status = 0;
     map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
     if (containerIter != this->myContainers.end()) {
@@ -111,7 +111,7 @@ int AndroidDevice::setContainerImage(const string& containerName, const StorageD
     return status;
 }
 
-int AndroidDevice::syncContainerImage(const string& containerName){
+int AndroidDevice::syncContainerImage(const string &){
     int status = 0;
     // Do some stuff about sync.
     return status;

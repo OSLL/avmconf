@@ -23,9 +23,9 @@ struct Container {
     virtual ~Container();
 
 private:
-    ContainerState myState;
     std::string myName;
     std::string myImageAddress;
+    ContainerState myState;
 };
 
 #endif // CONTAINER_H

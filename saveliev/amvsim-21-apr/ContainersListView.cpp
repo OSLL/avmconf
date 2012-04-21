@@ -37,7 +37,7 @@ void ContainersListView::setModel(QAbstractItemModel *model) {
         setIndexWidget(dModel->index(i, 0), new ContainerWidget(name, dModel, this));
     }
 
-  connect(model, SIGNAL(created(QString)), this, SLOT(setItemWidget(QString)));
+    connect(model, SIGNAL(created(QString)), this, SLOT(setItemWidget(QString)));
  // connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)), m_view, SLOT(setWidget(QModelIndex, int, int)));
 }
 

@@ -9,6 +9,7 @@
 using std::ofstream;
 using std::ifstream;
 using std::endl;
+using std::getline;
 using std::map;
 using std::string;
 using std::pair;
@@ -62,7 +63,7 @@ int Saver::restore(map<string, Container*> & containers) {
         return -1;
     } else {
         while (Container * cont = readContainer(in)) {
-            std::cout << cont->getName() << std::endl;
+            qDebug() << cont->getName().c_str() << " ";
             containers.insert(make_pair(cont->getName(), cont));
         }
         in.close();
@@ -73,11 +74,11 @@ int Saver::restore(map<string, Container*> & containers) {
 Container * Saver::readContainer(ifstream & in) {
     Container * cont;
 
-    char name[32768], address[32768];
-    in.getline(name, 32768);
+    string name, address;
+    std::getline(in, name);
     if (!in.eof()) {
-        in.getline(address, 32768);
-        qDebug() << name << " " << address;
+        std::getline(in, address);
+        qDebug() << name.c_str() << " " << address.c_str();
         cont = new Container(name);
         if (cont->restoreImage(address) != 0) {
             delete cont;
