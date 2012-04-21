@@ -4,20 +4,24 @@
 #include <QtGui/QMainWindow>
 #include <QListView>
 #include <QPushButton>
+#include <QLabel>
 
+#include "api/AndroidDevice.h"
 #include "DeviceModel.h"
-#include "ContainerDelegate.h"
 #include "ContainersListView.h"
+#include "ContainerDelegate.h"
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(AndroidDevice* device, QWidget* parent = 0);
 
 private:
     DeviceModel *m_model;
     ContainersListView *m_view;
+    QLabel *m_errorLabel;
     QPushButton *m_createContainerButton;
 
 public slots:

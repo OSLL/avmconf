@@ -1,21 +1,25 @@
-
 #include <QVBoxLayout>
 
 #include "MainWindow.h"
 #include "ContainerWidget.h"
 #include "CreateContainerDialog.h"
 #include "ContainersListView.h"
+#include "ErrorLabel.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent) {
+MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
+    : QMainWindow(parent)
+{
     setWindowTitle("Configurator");
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     setFixedWidth(500);
+    setFixedHeight(400);
 
     m_view = new ContainersListView(this);
-    m_model = new DeviceModel(this);
+    m_model = new DeviceModel(device, this);
     m_view->setModel(m_model);
     m_view->setItemDelegate(new ContainerDelegate);
+
+    m_errorLabel = new ErrorLabel(this);
 
     m_createContainerButton = new QPushButton("Create new container", this);
     QObject::connect(m_createContainerButton, SIGNAL(clicked()), this, SLOT(startAddingContainer()));
@@ -23,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *central = new QWidget;
     central->setLayout(new QVBoxLayout);
     central->layout()->addWidget(m_view);
+ // central->layout()->addWidget(m_errorLabel);
     central->layout()->addWidget(m_createContainerButton);
     setCentralWidget(central);
 

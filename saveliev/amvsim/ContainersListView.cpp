@@ -6,8 +6,8 @@
 #include "ContainerWidget.h"
 
 ContainersListView::ContainersListView(QWidget *parent) :
-    QListView(parent) {
-    setItemDelegate(new ContainerDelegate(this));
+    QListView(parent)
+{
 }
 
 //void ContainersListView::setWidget(const QModelIndex & parent, int start, int end) {

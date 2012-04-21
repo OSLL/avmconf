@@ -10,10 +10,11 @@
 #include "ContainerDelegate.h"
 #include "CreateContainerDialog.h"
 #include "MainWindow.h"
+#include "ErrorLabel.h"
 
 NewContainerDialog::NewContainerDialog(QWidget *parent, DeviceModel *model)
-    : QDialog(parent), m_model(model){
-
+    : QDialog(parent), m_model(model)
+{
     this->setFixedWidth(500);
     this->setStyleSheet("*[left-margin-zero=\"true\"] { margin-left: 0px; }");
     setLayout(new QVBoxLayout);
@@ -23,7 +24,9 @@ NewContainerDialog::NewContainerDialog(QWidget *parent, DeviceModel *model)
     initLocalEdit();
 }
 
-void NewContainerDialog::tryCreateHttpFtp() {
+
+void NewContainerDialog::tryCreateHttpFtp()
+{
     QUrl url = QUrl::fromUserInput(m_urlEdit->text());
     if (!url.isValid()) {
         invalidate(m_urlEdit, m_urlError, "Invalid url " + m_urlEdit->text());
@@ -49,18 +52,24 @@ void NewContainerDialog::tryCreateHttpFtp() {
     }
 }
 
-void NewContainerDialog::invalidate(QLineEdit *edit, QLabel *label, QString msg) {
+
+void NewContainerDialog::invalidate(QLineEdit *edit, QLabel *label, QString msg)
+{
     edit->setStyleSheet("QLineEdit { border: 1px solid red; }");
     label->setText(msg);
 }
 
-void NewContainerDialog::initNameEdit() {
+
+void NewContainerDialog::initNameEdit()
+{
     m_nameEdit = new QLineEdit(this);
     layout()->addWidget(new QLabel("Name of container"));
     layout()->addWidget(m_nameEdit);
 }
 
-void NewContainerDialog::initUrlEdit() {
+
+void NewContainerDialog::initUrlEdit()
+{
     QLabel *urlLabel = new QLabel("HTTP or FTP address of image");
     urlLabel->setStyleSheet("margin: 15px 0px 0px -4px");
 
@@ -70,8 +79,7 @@ void NewContainerDialog::initUrlEdit() {
     m_urlLoadButton->setFixedWidth(200);
     QObject::connect(m_urlLoadButton, SIGNAL(clicked()), this, SLOT(tryCreateHttpFtp()));
 
-    m_urlError = new QLabel(this);
-    m_urlError->setStyleSheet("color: red");
+    m_urlError = new ErrorLabel(this);
 
     MyWidget *widgetButtonWithError = new MyWidget(this);
     widgetButtonWithError->setLayout(new QHBoxLayout);
@@ -86,7 +94,9 @@ void NewContainerDialog::initUrlEdit() {
     layout()->addWidget(widgetButtonWithError);
 }
 
-void NewContainerDialog::initLocalEdit() {    
+
+void NewContainerDialog::initLocalEdit()
+{
     QLabel *localLabel = new QLabel("Local address of image");
     localLabel->setStyleSheet("margin: 15px 0px 0px -4px");
 
@@ -105,8 +115,7 @@ void NewContainerDialog::initLocalEdit() {
     m_localLoadButton = new QPushButton("Install image from local disk", this);
     m_localLoadButton->setFixedWidth(210);
 
-    m_localError = new QLabel(this);
-    m_localError->setStyleSheet("color: red");
+    m_localError = new ErrorLabel(this);
 
     MyWidget *loadBwE = new MyWidget(this);
     loadBwE->setLayout(new QHBoxLayout);
@@ -130,6 +139,7 @@ void NewContainerDialog::initLocalEdit() {
     // QObject::connect(m_localLoadButton, SIGNAL(clicked()), this, SLOT(tryCreate()));
 }
 
-void NewContainerDialog::chooseFile() {
+void NewContainerDialog::chooseFile()
+{
     m_localAddressEdit->setText(QFileDialog::getOpenFileName(this, "Choose Image", "", "Files (*.*)"));
 }

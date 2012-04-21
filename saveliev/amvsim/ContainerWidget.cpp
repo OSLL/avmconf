@@ -9,7 +9,8 @@
 #include "ContainerWidget.h"
 
 ContainerWidget::ContainerWidget(QString contName, DeviceModel * model, QWidget * parent)
-    : QWidget(parent), m_contName(contName), m_model(model) {
+    : QWidget(parent), m_contName(contName), m_model(model)
+{
     setLayout(new QHBoxLayout);
 
     m_powerButton = new QPushButton("Run");
@@ -47,7 +48,8 @@ ContainerWidget::ContainerWidget(QString contName, DeviceModel * model, QWidget 
 //    m_device->stopContainer(m_nameLabel->text().toStdString());
 //}
 
-void ContainerWidget::powerPressed() {
+void ContainerWidget::powerPressed()
+{
     if (m_model->getContainerInfo(m_contName).state == StateStopped) {
         m_model->startContainer(m_contName);
         m_powerButton->setText("Stop");
@@ -61,18 +63,21 @@ void ContainerWidget::powerPressed() {
     }
 }
 
-void ContainerWidget::switchHerePressed() {
+void ContainerWidget::switchHerePressed()
+{
     if (m_model->getContainerInfo(m_contName).state == StateRunning) {
         m_model->switchToContainer(m_contName);
         highlightAsActive();
     }
 }
 
-void ContainerWidget::highlightAsActive() {
+void ContainerWidget::highlightAsActive()
+{
     setPalette(QPalette(Qt::blue));
 }
 
-void ContainerWidget::destroyContainer() {
+void ContainerWidget::destroyContainer()
+{
     m_model->destroyContainer(m_contName);
 }
 

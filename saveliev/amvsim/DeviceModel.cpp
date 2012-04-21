@@ -7,88 +7,134 @@
 #include "DeviceModel.h"
 #include "api/ContainerInfo.h"
 
-DeviceModel::DeviceModel(QObject * parent) : QAbstractListModel(parent) {
+DeviceModel::DeviceModel(AndroidDevice* device, QObject* parent) :
+    QAbstractListModel(parent),
+    m_device(device)
+{
+    std::vector<std::string> names = device->getContainersNames();
+    for (int i = 0; i != names.size(); ++i) {
+        m_names.push_back(QString::fromStdString(names[i]));
+    }
 }
 
-QVariant DeviceModel::data(const QModelIndex &index, int role) const {
+
+QVariant DeviceModel::data(const QModelIndex& index, int role) const
+{
     if (role == Qt::DisplayRole) {
-        try {            
-            return QString::fromStdString(m_device.getContainerNameAt(index.row()));
-         // QVariant var;
-         // var.setValue<ContainerInfo>(m_device.getContainerInfoAt(index.row()));
-         // return var;            
-        } catch (std::out_of_range e) {
-            qDebug() << "Out of range: row =" << index.row();
+        if (index.row() < m_names.size()) {
+            return m_names[index.row()];
+        } else {
+            qDebug() << "DeviceModel::data. Out of range: row =" << index.row();
             return QVariant();
         }
     }
 
     if (role == Qt::SizeHintRole) {
-        return QSize(300, 50);
+        return QSize(0, 50);
     }
 
     return QVariant();
+
+     // QVariant var;
+     // var.setValue<ContainerInfo>(m_device->getContainerInfoAt(index.row()));
+     // return var;
 }
 
-int DeviceModel::rowCount(const QModelIndex &) const {
-    return m_device.getContainersNumber();
+
+int DeviceModel::rowCount(const QModelIndex&) const
+{
+    return m_names.size();
 }
 
-int DeviceModel::columnCount(const QModelIndex &) const {
+
+int DeviceModel::columnCount(const QModelIndex&) const
+{
     return 1;
 }
 
-int DeviceModel::createContainer(const QString &  name, StorageDescriptor descriptor) {
-    int result = m_device.createContainer(name.toStdString(), descriptor);
 
-    switch (result) {
-    case -1:
-        qDebug() << "Error creating container: container with such name already exists";
-        break;
-    case -2:
-        qDebug() << "Error creating container: cannot load image";
-        break;
-    case -3:
-        qDebug() << "Error creating container: cannot open file to save";
-        break;
-    default:
+int DeviceModel::createContainer(const QString& name, StorageDescriptor& descriptor)
+{
+    int result = m_device->createContainer(name.toStdString(), descriptor);
+
+    if (result == -3) {
+        qDebug() << "Error creating container " << name << ": cannot open file to save";
+    }
+    else if (result == -2) {
+        qDebug() << "Error creating container " << name << ": cannot load image";
+    }
+    else if (result == -1) {
+        qDebug() << "Error creating container " << name << ": container with such name already exists";
+    }
+    else if (result < 0) {
+        qDebug() << "Unknown error creating container " << name;
+    }
+    else if (result >= 0) {
+        m_names.push_back(name);
         emit(layoutChanged());
-        emit(created(name)); //m_device.getContainerInfo(name.toStdString())));
+        emit(created(name)); //? m_device->getContainerInfo(name.toStdString())))
     }
 
     return result;
 }
 
-int DeviceModel::destroyContainer(const QString & name) {
-    qDebug() << "destroyContainer: rowCount = " << rowCount();
-    if (m_device.destroyContainer(name.toStdString()) >= 0) {
-        qDebug() << "destroyContainer: rowCount = " << rowCount();
 
-        emit(layoutChanged());
-        emit(dataChanged(index(0, 0), index(rowCount()-1, 0)));
-        return 0;
-    } else {
-        qDebug() << "Error destroying a container: name =" << name << ", rowCount =" << rowCount();
-        return -1;
+int DeviceModel::destroyContainer(const QString& name)
+{
+    beginRemoveRows(QModelIndex(), getRow(name), getRow(name));
+
+    int result = m_device->destroyContainer(name.toStdString());
+
+    if (result == -1) {
+        qDebug() << "Error destroying container: not container with name " << name;
     }
+    else if (result < 0) {
+        qDebug() << "Unknown error destroying container " << name;
+    }
+    else if (result >= 0) {
+        m_names.erase(std::find(m_names.begin(), m_names.end(), name));
+        emit(layoutChanged());
+    }
+
+    endRemoveRows();
+    return result;
 }
 
-int DeviceModel::switchToContainer(const QString & name) {
-    return m_device.switchToContainer(name.toStdString());
+
+int DeviceModel::switchToContainer(const QString& name)
+{
+    return m_device->switchToContainer(name.toStdString());
 }
 
-int DeviceModel::startContainer(const QString &  name) {
-    return m_device.startContainer(name.toStdString());
+
+int DeviceModel::startContainer(const QString& name)
+{
+    return m_device->startContainer(name.toStdString());
 }
 
-int DeviceModel::stopContainer(const QString &  name) {
-    return m_device.stopContainer(name.toStdString());
+
+int DeviceModel::stopContainer(const QString& name)
+{
+    return m_device->stopContainer(name.toStdString());
 }
 
-ContainerInfo DeviceModel::getContainerInfo(const QString &  name) {
-    return m_device.getContainerInfo(name.toStdString());
+
+ContainerInfo DeviceModel::getContainerInfo(const QString& name)
+{
+    return m_device->getContainerInfo(name.toStdString());
 }
 
+
+int DeviceModel::getRow(const QString& name) const
+{
+    for (int i = 0; i != m_names.size(); ++i) {
+        if (name == m_names[i]) {
+            return i;
+        }
+    }
+
+    return -1;
+}
 
 //bool DeviceModel::setData(const QModelIndex &index, const QVariant &value, int role) {
 //    int row = index.row();
@@ -96,7 +142,7 @@ ContainerInfo DeviceModel::getContainerInfo(const QString &  name) {
 //    this->insertRow()
 //    ContainerInfo contInfo =
 
-//    m_device.createContainer(p.first  .toString(), );
+//    m_device->createContainer(p.first  .toString(), );
 
 //    if (index.column() == 0)
 //        p.first = value.toString();

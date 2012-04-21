@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     DeviceModel.cpp \
     MainWindow.cpp \
     CreateContainerDialog.cpp \
-    ContainersListView.cpp
+    ContainersListView.cpp \
+    ErrorLabel.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -34,7 +35,8 @@ HEADERS  += \
     ContainersListView.h \
     DeviceModel.h \
     MainWindow.h \
-    CreateContainerDialog.h
+    CreateContainerDialog.h \
+    ErrorLabel.h
 
 OTHER_FILES +=
 

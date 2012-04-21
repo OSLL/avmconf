@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include <fstream>
 
 #include "Container.h"
@@ -10,58 +11,45 @@
 #include "StorageDescriptor.h"
 #include "Saver.h"
 
-class NoSuchContainer : std::exception {
-    std::string msg;
-
+class NoSuchContainer : std::exception
+{
 public:
-    NoSuchContainer(const std::string& msg) : msg(msg) { }
+    NoSuchContainer(const std::string& msg) : m_msg(msg) { }
 
     virtual const char* what() const throw() {
-        return msg.c_str();
+        return m_msg.c_str();
     }
 
     virtual ~NoSuchContainer() throw() {}
-};
-
-struct AndroidDevice {
-
-    virtual int createContainer(const std::string&  containerName, const StorageDescriptor& inpTemplate);
-
-    virtual int startContainer(const std::string&  containerName);
-
-    virtual int stopContainer(const std::string&  containerName);
-
-    virtual int destroyContainer(const std::string&  containerName);
-
-    virtual int switchToContainer(const std::string&  containerName);
-
-    virtual int setContainerImage(const std::string&  containerName, const StorageDescriptor&  image);
-
-    virtual int syncContainerImage(const std::string&  containerName);
-
-
-    virtual int getContainersNumber() const;
-
-    virtual ContainerInfo getContainerInfoAt(int n) const;
-
-    virtual const std::string& getContainerNameAt(int n) const;
-
-    virtual ContainerInfo getContainerInfo(const std::string& name) const;
-
-    virtual const std::string& getActiveContainer() const;
-
-    AndroidDevice();
-
-    virtual ~AndroidDevice();
 
 private:
+    std::string m_msg;
+};
 
-    std::map<std::string, Container*> myContainers;
+struct AndroidDevice
+{
+    AndroidDevice();
+    virtual ~AndroidDevice();
 
-    Container* activeContainer;
+    virtual int createContainer(const std::string& containerName, const StorageDescriptor& inpTemplate);
+    virtual int startContainer(const std::string& containerName);
+    virtual int stopContainer(const std::string& containerName);
+    virtual int destroyContainer(const std::string& containerName);
+    virtual int switchToContainer(const std::string& containerName);
+    virtual int setContainerImage(const std::string& containerName, const StorageDescriptor& image);
+    virtual int syncContainerImage(const std::string& containerName);
+    int getContainersNumber() const;
+    const std::string& getActiveContainer() const;
+ // const std::string& getContainerNameAt(int n) const;
+ // ContainerInfo getContainerInfoAt(int n) const;
+    ContainerInfo getContainerInfo(const std::string& name) const;
+    std::vector<std::string> getContainersNames() const;
 
-    Saver mySaver;
-
+private:
+    typedef std::map<std::string, Container*> ContainersMap;
+    ContainersMap m_containers;
+    Container* m_activeContainer;
+    Saver m_saver;
 };
 
 #endif // ANDROIDDEVICE_H

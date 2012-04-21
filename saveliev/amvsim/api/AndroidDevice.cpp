@@ -9,12 +9,12 @@ using std::string;
 using std::map;
 using std::pair;
 
-AndroidDevice::AndroidDevice() : myContainers(), activeContainer(0), mySaver() {
-    mySaver.restore(myContainers);
+AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver() {
+    m_saver.restore(m_containers);
 }
 
 AndroidDevice::~AndroidDevice() {
-    for (map<string, Container*>::iterator it = this->myContainers.begin(); it != this->myContainers.end(); ++it) {
+    for (map<string, Container*>::iterator it = this->m_containers.begin(); it != this->m_containers.end(); ++it) {
         delete it->second;
     }
 }
@@ -25,15 +25,15 @@ AndroidDevice::~AndroidDevice() {
 int AndroidDevice::createContainer(const string & containerName, const StorageDescriptor & inpTemplate) {
     int status = 0;
     Container * container;
-    if (myContainers.find(containerName) == this->myContainers.end()) {
+    if (m_containers.find(containerName) == this->m_containers.end()) {
         container = new Container(containerName);
 
         if (container->loadImage(inpTemplate) != 0) {
             status = -2;
         }
-        myContainers.insert(pair<string, Container*>(containerName, container));
+        m_containers.insert(pair<string, Container*>(containerName, container));
 
-        if (mySaver.save(myContainers) != 0) {
+        if (m_saver.save(m_containers) != 0) {
             status = -3;
         }
     } else {
@@ -45,10 +45,10 @@ int AndroidDevice::createContainer(const string & containerName, const StorageDe
 
 int AndroidDevice::startContainer(const string & containerName){
     int status = 0;
-    map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
-    if (containerIter != this->myContainers.end()){
+    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
+    if (containerIter != this->m_containers.end()){
         containerIter->second->setState(StateRunning); //Do same stuff about starting container.
-        /* added by Vlad Saveliev */ if (activeContainer == 0) switchToContainer(containerName);
+        /* added by Vlad Saveliev */ if (m_activeContainer == 0) switchToContainer(containerName);
         status = 0;
     } else {
         status = -1;
@@ -58,8 +58,8 @@ int AndroidDevice::startContainer(const string & containerName){
 
 int AndroidDevice::stopContainer(const string & containerName){
     int status = 0;
-    map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
-    if (containerIter != this->myContainers.end()){
+    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
+    if (containerIter != this->m_containers.end()){
         containerIter->second->setState(StateStopped); //Do same stuff about stopping container.
         status = 0;
     } else {
@@ -70,14 +70,14 @@ int AndroidDevice::stopContainer(const string & containerName){
 
 int AndroidDevice::destroyContainer(const string & containerName) {
     int status = 0;
-    map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
-    if (containerIter != this->myContainers.end()){
-        if (this->activeContainer == containerIter->second){
-            this->activeContainer = NULL;
+    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
+    if (containerIter != this->m_containers.end()){
+        if (this->m_activeContainer == containerIter->second){
+            this->m_activeContainer = NULL;
         }
         delete containerIter->second;
-        this->myContainers.erase(containerIter);
-        mySaver.save(myContainers);
+        this->m_containers.erase(containerIter);
+        m_saver.save(m_containers);
         status = 0;
     } else {
         status = -1;
@@ -87,9 +87,9 @@ int AndroidDevice::destroyContainer(const string & containerName) {
 
 int AndroidDevice::switchToContainer(const string & containerName){
     int status = 0;
-    map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
-    if (containerIter != this->myContainers.end()){
-        this->activeContainer = containerIter->second;
+    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
+    if (containerIter != this->m_containers.end()){
+        this->m_activeContainer = containerIter->second;
         status = 0;
     } else {
         status = -1;
@@ -99,8 +99,8 @@ int AndroidDevice::switchToContainer(const string & containerName){
 
 int AndroidDevice::setContainerImage(const string & containerName, const StorageDescriptor & image){
     int status = 0;
-    map<string, Container*>::iterator containerIter = this->myContainers.find(containerName);
-    if (containerIter != this->myContainers.end()) {
+    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
+    if (containerIter != this->m_containers.end()) {
         if (((Container*)containerIter->second)->loadImage(image) != 0)
             status = -2;
         else
@@ -127,29 +127,32 @@ int AndroidDevice::syncContainerImage(const string &){
 //}
 
 int AndroidDevice::getContainersNumber() const {
-    return myContainers.size();
+    return m_containers.size();
 }
 
-const std::string& AndroidDevice::getContainerNameAt(int n) const {
-    int k = 0;
-    for(map<std::string, Container*>::const_iterator it = myContainers.begin(); it != myContainers.end(); ++it) {
-        if (k == n) {
-            return it->first;
-        }
-        ++k;
-    }
-    throw std::out_of_range("");
-}
+//const std::string& AndroidDevice::getContainerNameAt(int n) const
+//{
+//    int k = 0;
+//    for(map<std::string, Container*>::const_iterator it = m_containers.begin(); it != m_containers.end(); ++it) {
+//        if (k == n) {
+//            return it->first;
+//        }
+//        ++k;
+//    }
+//    throw std::out_of_range("");
+//}
 
-ContainerInfo AndroidDevice::getContainerInfoAt(int n) const {
-    return getContainerInfo(getContainerNameAt(n));
-}
+//ContainerInfo AndroidDevice::getContainerInfoAt(int n) const
+//{
+//    return getContainerInfo(getContainerNameAt(n));
+//}
 
-ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const {
+ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const
+{
     std::cout << name << std::endl;
-    if (myContainers.find(name) != myContainers.end()) {
-        Container* cont = (Container*)(myContainers.at(name));
-     //   if (cont != 0) {
+    if (m_containers.find(name) != m_containers.end()) {
+        Container* cont = (Container*)(m_containers.at(name));
+     // if (cont != 0) {
         ContainerInfo info;
         info.name = name;
         info.state = cont->getState();
@@ -159,8 +162,18 @@ ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const {
     }
 }
 
-const std::string & AndroidDevice::getActiveContainer() const {
-    return activeContainer->getName();
+std::vector<std::string> AndroidDevice::getContainersNames() const
+{
+    std::vector<std::string> v;
+    for(ContainersMap::const_iterator it = m_containers.begin(); it != m_containers.end(); ++it) {
+        v.push_back(it->first);
+    }
+    return v;
+}
+
+const std::string & AndroidDevice::getActiveContainer() const
+{
+    return m_activeContainer->getName();
 }
 
 
