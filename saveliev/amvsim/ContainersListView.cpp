@@ -18,7 +18,9 @@ ContainersListView::ContainersListView(QWidget *parent) :
 //    }
 //}
 
-void ContainersListView::setItemWidget(QString name) {
+
+void ContainersListView::setItemWidget(QString name)
+{
     if (model() != 0) {
         for (int row = 0; row != model()->rowCount(); ++row) {
             if (indexWidget(model()->index(row, 0)) == 0) {
@@ -28,7 +30,9 @@ void ContainersListView::setItemWidget(QString name) {
     }
 }
 
-void ContainersListView::setModel(QAbstractItemModel *model) {
+
+void ContainersListView::setModel(QAbstractItemModel *model)
+{
     QListView::setModel(model);
 
     DeviceModel * dModel = (DeviceModel*)model;
