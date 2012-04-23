@@ -1,13 +1,15 @@
 #ifndef _SNAPFS_MGMT_H
 #define _SNAPFS_MGMT_H
 
-struct kobject;
+#include <linux/kobject.h>
+
+//struct kobject;
 struct attribute_group;
 struct dentry;
 
 struct snapfs_mnt_point {
 	char *name;
-	struct kobject *kobj;
+	struct kobject kobj;
 	struct attribute_group *attrs;
 	struct dentry *dentry;
 	int state;

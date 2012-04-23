@@ -14,27 +14,21 @@ static struct snapfs_mnt_point snapfs_mnt_points[max_snapfs_mnt_points];
 
 static struct kobject *snapfs_kobj = NULL;
 
+static void snapfs_mntpoint_kobj_release(struct kobject *kobj)
+{
+	return;
+}
+
+static struct kobj_type snapfs_mntpoint_ktype = {
+	//.release = snapfs_mntpoint_kobj_release,
+	.release = NULL,
+	//.sysfs_ops = &kobj_sysfs_ops,	// to be set in mntpoint setup function
+};
+
 static struct snapfs_mnt_point *snapfs_mnt_point_for_kobj(struct kobject *kobj)
 {
-	int i;
-	struct snapfs_mnt_point *mnt_point;
-
 	printk(KERN_DEBUG "snapfs_mnt_point_for_kobj\n");
-
-	i = 0;
-	mnt_point = snapfs_mnt_points;
-	if (snapfs_mnt_point_number < 0) {
-		return NULL;
-	}
-
-	while (i <= snapfs_mnt_point_number) {
-		if (mnt_point[i].kobj == kobj) {
-			return &mnt_point[i];
-		}
-		++i;
-	}
-
-	return NULL;
+	return container_of(kobj, struct snapfs_mnt_point, kobj);
 }
 
 static ssize_t path_show(struct kobject *kobj, 
@@ -169,11 +163,12 @@ int setup_snapfs_mount_point_mgmt(struct dentry *dentry)
 	}
 	snprintf(mnt_point->name, mnt_point_name_length, 
 			"mnt_point_%d", next_snapfs_mnt_point_number);
-	
-	mnt_point->kobj = kobject_create_and_add(mnt_point->name, snapfs_kobj);
-        if (!mnt_point->kobj) {
-		printk(KERN_ERR "Can't create SnapFS mount point KObject\n");
-		kfree(mnt_point->name);
+	snapfs_mntpoint_ktype.sysfs_ops = snapfs_kobj->ktype->sysfs_ops;
+	result = kobject_init_and_add(&mnt_point->kobj, &snapfs_mntpoint_ktype, 
+					snapfs_kobj, mnt_point->name);
+	if (result) {
+		printk(KERN_ERR "Can't init SnapFS mount point KObject\n");
+		kobject_put(&mnt_point->kobj);
 		return -ENOMEM;
 	}
 	
@@ -181,7 +176,7 @@ int setup_snapfs_mount_point_mgmt(struct dentry *dentry)
 	if (!mnt_point->attrs) {
 		printk(KERN_ERR "Can't do kmalloc\n");
 		kfree(mnt_point->name);
-		kobject_put(mnt_point->kobj);
+		kobject_put(&mnt_point->kobj);
 		return -ENOMEM;
 	}
 	memset(mnt_point->attrs, 0, sizeof(*mnt_point->attrs));
@@ -189,11 +184,11 @@ int setup_snapfs_mount_point_mgmt(struct dentry *dentry)
 	mnt_point->attrs->attrs = snapfs_mnt_attrs;
 	mnt_point->dentry = dentry;
 	
-	result = sysfs_create_group(mnt_point->kobj, mnt_point->attrs);
+	result = sysfs_create_group(&mnt_point->kobj, mnt_point->attrs);
 	if (result) {
 		printk(KERN_ERR "Can't create sysfs group");
 		kfree(mnt_point->name);
-		kobject_put(mnt_point->kobj);
+		kobject_put(&mnt_point->kobj);
 		kfree(mnt_point->attrs);
 		return result;
 	}
@@ -212,7 +207,7 @@ void cleanup_snapfs_mgmt()
 		mnt_point = &snapfs_mnt_points[i];
 		kfree(mnt_point->name);
 		kfree(mnt_point->attrs);
-		kobject_put(mnt_point->kobj);	//do we really need to do it here?
+		kobject_put(&mnt_point->kobj);	//do we really need to do it here?
 	}
 }
 
