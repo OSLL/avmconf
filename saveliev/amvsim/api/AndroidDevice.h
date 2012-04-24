@@ -11,21 +11,6 @@
 #include "StorageDescriptor.h"
 #include "Saver.h"
 
-class NoSuchContainer : std::exception
-{
-public:
-    NoSuchContainer(const std::string& msg) : m_msg(msg) { }
-
-    virtual const char* what() const throw() {
-        return m_msg.c_str();
-    }
-
-    virtual ~NoSuchContainer() throw() {}
-
-private:
-    std::string m_msg;
-};
-
 struct AndroidDevice
 {
     AndroidDevice();

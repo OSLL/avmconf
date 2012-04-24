@@ -1,7 +1,6 @@
-#include <stdexcept>
-#include <exception>
 #include <iostream>
 
+#include "NoSuchContainerException.h"
 #include "AndroidDevice.h"
 #include "Saver.h"
 
@@ -158,7 +157,7 @@ ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const
         info.state = cont->getState();
         return info;
     } else {
-        throw NoSuchContainer(name);
+        throw NoSuchContainerException(name);
     }
 }
 
