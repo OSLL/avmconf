@@ -2,7 +2,7 @@
 
 #include "MainWindow.h"
 #include "ContainerWidget.h"
-#include "CreateContainerDialog.h"
+#include "NewContainerDialog.h"
 #include "ContainersListView.h"
 #include "ErrorLabel.h"
 
