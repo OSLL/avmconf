@@ -21,7 +21,9 @@ SOURCES += main.cpp\
     MainWindow.cpp \
     CreateContainerDialog.cpp \
     ContainersListView.cpp \
-    ErrorLabel.cpp
+    ErrorLabel.cpp \
+    CreateContainerDialog2.cpp \
+    CreateContainerDialog2.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -36,9 +38,13 @@ HEADERS  += \
     DeviceModel.h \
     MainWindow.h \
     CreateContainerDialog.h \
-    ErrorLabel.h
+    ErrorLabel.h \
+    CreateContainerDialog2.h
 
 OTHER_FILES +=
+
+FORMS += \
+    CreateContainerDialog2.ui
 
 
 

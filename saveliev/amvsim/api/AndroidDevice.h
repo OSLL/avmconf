@@ -40,8 +40,6 @@ struct AndroidDevice
     virtual int syncContainerImage(const std::string& containerName);
     int getContainersNumber() const;
     const std::string& getActiveContainer() const;
- // const std::string& getContainerNameAt(int n) const;
- // ContainerInfo getContainerInfoAt(int n) const;
     ContainerInfo getContainerInfo(const std::string& name) const;
     std::vector<std::string> getContainersNames() const;
 
