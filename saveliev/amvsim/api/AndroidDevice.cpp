@@ -8,41 +8,73 @@ using std::string;
 using std::map;
 using std::pair;
 
-AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver() {
+
+AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
+{
     m_saver.restore(m_containers);
 }
 
-AndroidDevice::~AndroidDevice() {
+
+AndroidDevice::~AndroidDevice()
+{
     for (map<string, Container*>::iterator it = this->m_containers.begin(); it != this->m_containers.end(); ++it) {
         delete it->second;
     }
 }
 
-// -1: container with such name already exists
-// -2: cannot load image
-// -3: cannot open file to save
-int AndroidDevice::createContainer(const string & containerName, const StorageDescriptor & inpTemplate) {
-    int status = 0;
+
+AndroidDevice::Result AndroidDevice::createContainer(const string & containerName, const StorageDescriptor & inpTemplate)
+{
+    Result result = UndefinedError;
+
     Container * container;
-    if (m_containers.find(containerName) == this->m_containers.end()) {
+    if (m_containers.find(containerName) != this->m_containers.end()) {
+        result = IdAlreadyExists;
+    } else {
         container = new Container(containerName);
 
         if (container->loadImage(inpTemplate) != 0) {
-            status = -2;
+            result = CannotLoadImage;
         }
         m_containers.insert(pair<string, Container*>(containerName, container));
 
         if (m_saver.save(m_containers) != 0) {
-            status = -3;
+            result = CannotSave;
         }
-    } else {
-        status = -1;
     }
 
-    return status;
+    return result;
 }
 
-int AndroidDevice::startContainer(const string & containerName){
+
+AndroidDevice::Result AndroidDevice::destroyContainer(const string & containerName)
+{
+    Result result = UndefinedError;
+
+    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
+
+    if (containerIter == this->m_containers.end()) {
+        result = NoSuchId;
+    } else {
+        if (this->m_activeContainer == containerIter->second) {
+            this->m_activeContainer = 0;
+        }
+        delete containerIter->second;
+        this->m_containers.erase(containerIter);
+
+        if (m_saver.save(m_containers) != 0) {
+            result = CannotSave;
+        } else {
+            result = Alright;
+        }
+    }
+
+    return result;
+}
+
+
+int AndroidDevice::startContainer(const string & containerName)
+{
     int status = 0;
     map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
     if (containerIter != this->m_containers.end()){
@@ -55,7 +87,9 @@ int AndroidDevice::startContainer(const string & containerName){
     return status;
 }
 
-int AndroidDevice::stopContainer(const string & containerName){
+
+int AndroidDevice::stopContainer(const string & containerName)
+{
     int status = 0;
     map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
     if (containerIter != this->m_containers.end()){
@@ -67,24 +101,9 @@ int AndroidDevice::stopContainer(const string & containerName){
     return status;
 }
 
-int AndroidDevice::destroyContainer(const string & containerName) {
-    int status = 0;
-    map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
-    if (containerIter != this->m_containers.end()){
-        if (this->m_activeContainer == containerIter->second){
-            this->m_activeContainer = NULL;
-        }
-        delete containerIter->second;
-        this->m_containers.erase(containerIter);
-        m_saver.save(m_containers);
-        status = 0;
-    } else {
-        status = -1;
-    }
-    return status;
-}
 
-int AndroidDevice::switchToContainer(const string & containerName){
+int AndroidDevice::switchToContainer(const string & containerName)
+{
     int status = 0;
     map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
     if (containerIter != this->m_containers.end()){
@@ -96,7 +115,9 @@ int AndroidDevice::switchToContainer(const string & containerName){
     return status;
 }
 
-int AndroidDevice::setContainerImage(const string & containerName, const StorageDescriptor & image){
+
+int AndroidDevice::setContainerImage(const string & containerName, const StorageDescriptor & image)
+{
     int status = 0;
     map<string, Container*>::iterator containerIter = this->m_containers.find(containerName);
     if (containerIter != this->m_containers.end()) {
@@ -110,13 +131,17 @@ int AndroidDevice::setContainerImage(const string & containerName, const Storage
     return status;
 }
 
-int AndroidDevice::syncContainerImage(const string &){
+
+int AndroidDevice::syncContainerImage(const string &)
+{
     int status = 0;
     // Do some stuff about sync.
     return status;
 }
 
-//std::vector<std::string> AndroidDevice::getContainersNames() const {
+
+//std::vector<std::string> AndroidDevice::getContainersNames() const
+//{
 //    std::vector<int> names;
 //    for(map<int,int>::iterator it = myContainers.begin(); it != myContainers.end(); ++it) {
 //        names.push_back(it->first);
@@ -125,26 +150,12 @@ int AndroidDevice::syncContainerImage(const string &){
 //    return names;
 //}
 
-int AndroidDevice::getContainersNumber() const {
+
+int AndroidDevice::getContainersNumber() const
+{
     return m_containers.size();
 }
 
-//const std::string& AndroidDevice::getContainerNameAt(int n) const
-//{
-//    int k = 0;
-//    for(map<std::string, Container*>::const_iterator it = m_containers.begin(); it != m_containers.end(); ++it) {
-//        if (k == n) {
-//            return it->first;
-//        }
-//        ++k;
-//    }
-//    throw std::out_of_range("");
-//}
-
-//ContainerInfo AndroidDevice::getContainerInfoAt(int n) const
-//{
-//    return getContainerInfo(getContainerNameAt(n));
-//}
 
 ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const
 {
@@ -161,6 +172,7 @@ ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const
     }
 }
 
+
 std::vector<std::string> AndroidDevice::getContainersNames() const
 {
     std::vector<std::string> v;
@@ -170,14 +182,37 @@ std::vector<std::string> AndroidDevice::getContainersNames() const
     return v;
 }
 
+
 const std::string & AndroidDevice::getActiveContainer() const
 {
     return m_activeContainer->getName();
 }
 
 
+std::vector<ServiceInfo> & AndroidDevice::getServicesInfo() const
+{
+    /////////////
+    // HARD CODED
+        
+    ServiceInfo s("OutgoinfCalls", "Outgoing calls");
+    s.parameters.push_back(BoolParameter("Allowed", "Allowed", true));
+    
+    std::vector<ServiceInfo> services;
+    services.push_back(s);
+    return services;
+    
+    /////////////
+}
 
 
+void AndroidDevice::parameterChanged(int serviceId, int parameterId, double newValue)
+{
+}
 
+void AndroidDevice::parameterChanged(int serviceId, int parameterId, const std::string &newValue)
+{
+}
 
-
+void AndroidDevice::parameterChanged(int serviceId, int parameterId, bool newValue)
+{
+}

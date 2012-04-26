@@ -3,38 +3,38 @@
 using std::string;
 
 Container::Container(const string& containerName)
-    : myName(containerName), myImageAddress(""), myState(StateStopped) {
+    : m_name(containerName), m_imageAddress(""), m_state(Undefined) {
 }
 
 int Container::loadImage(const StorageDescriptor &) {
     // Some iniitialization procedures with StorageDescriptor.
-    myImageAddress = "address";
+    m_imageAddress = "address";
 
     return 0;
 }
 
 int Container::restoreImage(const std::string & imageAddress) {
     // initialization
-    myImageAddress = imageAddress;
+    m_imageAddress = imageAddress;
 
     return 0;
 }
 
 const ContainerState& Container::getState() const {
-    return myState;
+    return m_state;
 }
 
 void Container::setState(const ContainerState& inpState) {
-    myState = inpState;
+    m_state = inpState;
 }
 
 const string& Container::getName() const {
-    return myName;
+    return m_name;
 }
 
 Container::~Container(){
 }
 
 const string & Container::getImageAddress() const {
-    return myImageAddress;
+    return m_imageAddress;
 }

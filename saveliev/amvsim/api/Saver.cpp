@@ -19,7 +19,7 @@ Saver::Saver() : fileName("device.txt") {
 }
 
 
-int Saver::save(const std::map<std::string, Container *> & containers) {
+int Saver::save(const std::map<std::string, Container*> & containers) {
     ofstream out;
     out.open(fileName.c_str());
     for (map<string, Container*>::const_iterator it = containers.begin(); it != containers.end(); ++it) {

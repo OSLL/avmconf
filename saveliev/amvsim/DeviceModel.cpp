@@ -55,27 +55,26 @@ int DeviceModel::columnCount(const QModelIndex&) const
 
 int DeviceModel::createContainer(const QString& name, StorageDescriptor& descriptor)
 {
-    int result = m_device->createContainer(name.toStdString(), descriptor);
+    AndroidDevice::Result result = m_device->createContainer(name.toStdString(), descriptor);
 
-    if (result == -3) {
-        qDebug() << "Error creating container " << name << ": cannot open file to save";
+    if (result == AndroidDevice::CannotSave) {
+        qDebug() << "Error creating container " << name << ": cannot save containers to file";
     }
-    else if (result == -2) {
+    else if (result == AndroidDevice::CannotLoadImage) {
         qDebug() << "Error creating container " << name << ": cannot load image";
     }
-    else if (result == -1) {
-        qDebug() << "Error creating container " << name << ": container with such name already exists";
+    else if (result == AndroidDevice::IdAlreadyExists) {
+        qDebug() << "Error creating container " << name << ": container with such id already exists";
     }
-    else if (result < 0) {
-        qDebug() << "Unknown error creating container " << name;
-    }
-    else if (result >= 0) {
+    else if (result == AndroidDevice::Alright) {
         m_names.push_back(name);
         emit(layoutChanged());
         emit(created(name)); //? m_device->getContainerInfo(name.toStdString())))
+    } else {
+        qDebug() << "Unknown error creating container " << name;
     }
 
-    return result;
+    return 0;
 }
 
 
@@ -83,7 +82,7 @@ int DeviceModel::destroyContainer(const QString& name)
 {
     beginRemoveRows(QModelIndex(), getRow(name), getRow(name));
 
-    int result = m_device->destroyContainer(name.toStdString());
+    AndroidDevice::Result result = m_device->destroyContainer(name.toStdString());
 
     if (result == -1) {
         qDebug() << "Error destroying container: not container with name " << name;
@@ -97,7 +96,8 @@ int DeviceModel::destroyContainer(const QString& name)
     }
 
     endRemoveRows();
-    return result;
+
+    return 0;
 }
 
 
