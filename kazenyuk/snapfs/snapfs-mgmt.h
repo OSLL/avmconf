@@ -3,7 +3,6 @@
 
 #include <linux/kobject.h>
 
-//struct kobject;
 struct attribute_group;
 struct dentry;
 
