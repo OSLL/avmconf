@@ -8,8 +8,10 @@
 #include <linux/stat.h>		/* S_IFDIR */
 #include <linux/time.h>		/* CURRENT_TIME */
 #include <linux/pagemap.h>	/* PAGE_CACHE_SIZE, PAGE_CACHE_SHIFT */
+#include <linux/list.h>
 
 #include "snapfs-mgmt.h"
+
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sergey Kazenyuk");
@@ -28,6 +30,8 @@ struct dentry *snapfs_mount(struct file_system_type *fs_type,
 void snapfs_kill_sb(struct super_block *sb);
 /*static int snapfs_mkdir(struct inode *dir, struct dentry *dentry,
 		                        umode_t mode);*/
+struct dentry *snapfs_inode_lookup(struct inode *inode, struct dentry *dentry, 
+				   struct nameidata *nd);
 
 
 static struct file_system_type snapfs_fs_type = {
@@ -45,11 +49,12 @@ static struct super_operations snapfs_super_ops = {
 
 static struct inode_operations snapfs_file_inode_ops = {
 	.setattr = simple_setattr,
-	.getattr = simple_getattr,	
+	.getattr = simple_getattr,
 };
 
 static struct inode_operations snapfs_dir_inode_ops = {
-	.lookup  = simple_lookup,
+	.lookup  = snapfs_inode_lookup,
+	//.lookup  = simple_lookup,
 	.create  = snapfs_create,
 	//.link    = simple_link,
 	//.unlink  = simple_unlink,
@@ -72,7 +77,38 @@ static struct file_operations snapfs_file_ops = {
 	.llseek       = generic_file_llseek,
 };
 
-//static struct address_space_operations snapfs_a
+
+struct dentry *snapfs_inode_lookup(struct inode *inode, struct dentry *dentry,
+				   struct nameidata *nd)
+{
+	struct inode *wrapped_node = NULL;
+	struct super_block *wrapped_sb = NULL;
+	struct super_block *snapfs_sb = NULL;
+
+	printk(KERN_INFO "snapfs_inode_lookup\n");
+
+	snapfs_sb = inode->i_sb;
+	printk(KERN_INFO "SnapFS super block FS name: \"%s\"\n", snapfs_sb->s_type->name);
+
+	// find super_block of the corresponding wrapped file system
+	wrapped_sb = list_entry(&snapfs_sb->s_list, struct super_block, s_list);
+	do {
+		printk(KERN_INFO "wrapped_sb = %p", wrapped_sb);
+		if (wrapped_sb) {
+			printk(KERN_INFO "wrapped_sb->s_magic = %lx", wrapped_sb->s_magic);
+			printk(KERN_INFO "wrapped_sb->s_type = %p", wrapped_sb->s_type);
+			if (wrapped_sb->s_type) {
+				printk(KERN_INFO "wrapped_sb->s_type->name = %p", wrapped_sb->s_type->name);
+				if (wrapped_sb->s_type->name) {
+					printk(KERN_INFO "super block FS name: \"%s\"\n", wrapped_sb->s_type->name);
+				}
+			}
+		}
+		wrapped_sb = list_entry(wrapped_sb->s_list.next, struct super_block, s_list);
+	} while (wrapped_sb != snapfs_sb);
+
+	return simple_lookup(inode, dentry, nd);
+}
 
 static int snapfs_mknod(struct inode *dir, struct dentry *dentry,
 		    umode_t mode, dev_t dev)
