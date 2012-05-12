@@ -4,13 +4,8 @@
 *.DS_Store
 *.plist
 
-shestavin/*
-kazenyuk/.*
-
 saveliev/avmsim-gui/interfaceimpl.h
 
 *Qt_4_7_4_for_GCC__Qt_SDK__Debug*
-
-saveliev/amvsim/amvsim-gui-mvc.pro
 
 saveliev/amvsim/amvsim-gui-mvc.pro.user
