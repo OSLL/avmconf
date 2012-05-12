@@ -1,4 +1,3 @@
-
 #include <QPushButton>
 #include <QPainter>
 #include <QStylePainter>

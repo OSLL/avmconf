@@ -10,9 +10,8 @@
 #include "ContainerInfo.h"
 #include "StorageDescriptor.h"
 #include "Saver.h"
-#include "Service.h"
 #include "ServiceInfo.h"
-
+#include "Service.h"
 
 class AndroidDevice
 {
@@ -35,15 +34,17 @@ public:
     virtual int switchToContainer(const std::string& containerName);
     virtual int setContainerImage(const std::string& containerName, const StorageDescriptor& image);
     virtual int syncContainerImage(const std::string& containerName);
-    int getContainersNumber() const;
     const std::string& getActiveContainer() const;
     ContainerInfo getContainerInfo(const std::string& name) const;
-    std::vector<std::string> getContainersNames() const;
+    std::vector<std::string> getContainersIds() const;
+    int getContainersNumber() const;
     
-    void parameterChanged(int serviceId, int parameterId, double newValue) const;  
-    void parameterChanged(int serviceId, int parameterId, const std::string& newValue) const;
-    void parameterChanged(int serviceId, int parameterId, bool newValue) const;
-    std::vector<ServiceInfo> & getServicesInfo() const;
+    void parameterChanged(int serviceId, int parameterId, double newValue);  
+    void parameterChanged(int serviceId, int parameterId, const std::string& newValue);
+    void parameterChanged(int serviceId, int parameterId, bool newValue);
+    ServiceInfo getServiceInfo(const std::string& id) const;
+    std::vector<std::string> getServicesIds() const;
+    int getServicesNumber() const;
        
 
 private:
@@ -51,7 +52,8 @@ private:
     ContainersMap m_containers;
     Container* m_activeContainer;
 
-    std::vector<Service> m_services;
+    typedef std::map<std::string, Service*> ServicesMap;
+    ServicesMap m_services;
 
     Saver m_saver;
 };

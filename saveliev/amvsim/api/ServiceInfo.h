@@ -1,17 +1,9 @@
-#ifndef SERVICE_H
-#define SERVICE_H
+#ifndef SERVICEINFO_H
+#define SERVICEINFO_H
 
 #include <map>
 #include <vector>
 #include <string>
-
-struct ServiceInfo {
-    ServiceInfo(std::string id, const std::string& name) : id(id), name(name) { }
-
-    std::string id;
-    std::string name;
-    std::vector<Parameter> parameters;
-};
 
 
 class Parameter {
@@ -23,9 +15,11 @@ public:
     };
     
     virtual Type getType() = 0;
+    const std::string& getName() { return m_name; }
+    const std::string& getId() { return m_id; }
     
 protected:
-    Parameter(std::string id, const std::string& name)
+    Parameter(const std::string &id, const std::string& name)
         : m_id(id), m_name(name) { }
         
     std::string m_id;
@@ -37,7 +31,7 @@ class DoubleWithRangeParameter : public Parameter {
 public:
     virtual Type getType() { return DoubleWithRange; }
     
-    DoubleWithRange(std::string id, const std::string& name, double min, double max, double value)
+    DoubleWithRangeParameter(const std::string &id, const std::string& name, double min, double max, double value)
         : Parameter(id, name), m_min(min), m_max(max), m_value(value) { }
     
     double getMin() const { return m_min; }
@@ -54,11 +48,11 @@ class OptionsParameter : public Parameter {
 public:    
     virtual Type getType() { return Options; }
     
-    OptionsParameter(std::string id, const std::string& name, int value)
+    OptionsParameter(const std::string &id, const std::string& name, int value)
         : Parameter(id, name), m_value(value) { }
     
     void setOption(int value, const std::string& option) { m_options[value] = option; }
-    std::map<int, std::string>& getOptions() const { return m_options; }
+    std::map<int, std::string> &getOptions() { return m_options; }
     int getValue() const { return m_value; }
     
 private:
@@ -70,7 +64,7 @@ class BoolParameter : public Parameter {
 public:
     virtual Type getType() { return Bool; }
     
-    BoolParameter(std::string id, const std::string& name, bool value)
+    BoolParameter(const std::string& id, const std::string& name, bool value)
         : Parameter(id, name), m_value(value) { }
     
     bool getValue() const { return m_value; }
@@ -79,7 +73,29 @@ private:
     bool m_value;
 };
 
-#endif // SERVICE_H
+
+class ServiceInfo {
+    friend class AndroidDevice;
+    
+public:
+    typedef std::map<std::string, Parameter*> ParametersMap;
+    
+    ServiceInfo() { } 
+    ServiceInfo(const std::string& id, const std::string& name) : m_id(id), m_name(name) { }
+    
+    const std::string& getName() const { return m_name; }
+    const std::string& getId() const { return m_id; }
+    std::vector<std::string> getParametersIds() const;
+    int getParametersCount() const;
+    Parameter *getParameter(const std::string &id) const;
+    
+private:
+    std::string m_id;
+    std::string m_name;
+    ParametersMap m_parameters;
+};
+
+#endif // SERVICEINFO_H
 
 
 

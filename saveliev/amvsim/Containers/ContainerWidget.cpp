@@ -4,12 +4,16 @@
 #include <QPushButton>
 #include <QLabel>
 
-#include "api/ContainerInfo.h"
-#include "api/ContainerState.h"
+#include "../api/ContainerInfo.h"
+#include "../api/ContainerState.h"
 #include "ContainerWidget.h"
 
-ContainerWidget::ContainerWidget(QString contName, DeviceModel * model, QWidget * parent)
-    : QWidget(parent), m_contName(contName), m_model(model)
+ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model, 
+                                 QWidget *parent, QVector<QPushButton*> *switchButtons)
+    : QWidget(parent), 
+      m_contName(contName.toString()), 
+      m_model((ContainerListModel*)model),
+      m_switchButtons(switchButtons)      
 {
     setLayout(new QHBoxLayout);
 
@@ -17,10 +21,11 @@ ContainerWidget::ContainerWidget(QString contName, DeviceModel * model, QWidget 
     m_powerButton->setFixedWidth(70);
     QObject::connect(m_powerButton, SIGNAL(pressed()), this, SLOT(powerPressed()));
 
-    m_nameLabel = new QLabel(contName);
+    m_nameLabel = new QLabel(m_contName);
 
     m_switchButton = new QPushButton("Switch here");
     m_switchButton->setVisible(false);
+    m_switchButtons->push_back(m_switchButton);
     QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchHerePressed()));
 
     m_destroyButton = new QPushButton("Destroy");
@@ -54,6 +59,12 @@ void ContainerWidget::powerPressed()
         m_model->startContainer(m_contName);
         m_powerButton->setText("Stop");
         m_switchButton->setVisible(true);
+        for (int i = 0; i != m_switchButtons->size(); ++i) {
+            QPushButton* button = ((QPushButton*)(*m_switchButtons)[i]);
+            if (button != m_switchButton)
+                button->setEnabled(true);
+        }
+        m_switchButton->setEnabled(false);
      // if (m_model->device()->getActiveContainer() == m_contName.toStdString())
      //     highlightAsActive();
     } else {
@@ -68,6 +79,12 @@ void ContainerWidget::switchHerePressed()
     if (m_model->getContainerInfo(m_contName).state == StateRunning) {
         m_model->switchToContainer(m_contName);
         highlightAsActive();
+        for (int i = 0; i != m_switchButtons->size(); ++i) {
+            QPushButton* button = ((QPushButton*)(*m_switchButtons)[i]);
+            if (button != m_switchButton)
+                button->setEnabled(true);
+        }
+        m_switchButton->setEnabled(false);
     }
 }
 

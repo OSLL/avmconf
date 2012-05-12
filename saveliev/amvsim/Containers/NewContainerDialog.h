@@ -5,7 +5,7 @@
 #include <QLineEdit>
 #include <QDialog>
 #include "ContainerDelegate.h"
-#include "DeviceModel.h"
+#include "ContainerListModel.h"
 
 namespace Ui {
     class NewContainerDialog;
@@ -16,11 +16,11 @@ class NewContainerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewContainerDialog(QWidget *parent, DeviceModel *model);
+    explicit NewContainerDialog(QWidget *parent, ContainerListModel *model);
     ~NewContainerDialog();
 
 private:
-    DeviceModel *m_model;
+    ContainerListModel *m_model;
 
     Ui::NewContainerDialog *ui;
 
@@ -28,6 +28,7 @@ private:
 
 public slots:
     void tryCreateHttpFtp();
+    void tryCreateLocal();
     void chooseFile();
 };
 

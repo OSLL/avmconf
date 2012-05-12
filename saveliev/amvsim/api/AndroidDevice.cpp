@@ -12,6 +12,14 @@ using std::pair;
 AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
 {
     m_saver.restore(m_containers);
+    
+    /////////////
+    // HARD CODED
+    Service* service = new Service("outgoingCalls");
+    m_services.insert(std::make_pair("outgoingCalls", service));
+    Service* service2 = new Service("incomingCalls");
+    m_services.insert(std::make_pair("incomingCalls", service2));
+    /////////////
 }
 
 
@@ -35,11 +43,14 @@ AndroidDevice::Result AndroidDevice::createContainer(const string & containerNam
 
         if (container->loadImage(inpTemplate) != 0) {
             result = CannotLoadImage;
-        }
-        m_containers.insert(pair<string, Container*>(containerName, container));
+        } else {
+            m_containers.insert(pair<string, Container*>(containerName, container));
 
-        if (m_saver.save(m_containers) != 0) {
-            result = CannotSave;
+            if (m_saver.save(m_containers) != 0) {
+                result = CannotSave;
+            } else {
+                result = Alright;
+            }
         }
     }
 
@@ -151,15 +162,14 @@ int AndroidDevice::syncContainerImage(const string &)
 //}
 
 
-int AndroidDevice::getContainersNumber() const
+const std::string & AndroidDevice::getActiveContainer() const
 {
-    return m_containers.size();
+    return m_activeContainer->getName();
 }
 
 
 ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const
 {
-    std::cout << name << std::endl;
     if (m_containers.find(name) != m_containers.end()) {
         Container* cont = (Container*)(m_containers.at(name));
      // if (cont != 0) {
@@ -173,7 +183,7 @@ ContainerInfo AndroidDevice::getContainerInfo(const std::string &name) const
 }
 
 
-std::vector<std::string> AndroidDevice::getContainersNames() const
+std::vector<std::string> AndroidDevice::getContainersIds() const
 {
     std::vector<std::string> v;
     for(ContainersMap::const_iterator it = m_containers.begin(); it != m_containers.end(); ++it) {
@@ -183,25 +193,39 @@ std::vector<std::string> AndroidDevice::getContainersNames() const
 }
 
 
-const std::string & AndroidDevice::getActiveContainer() const
+int AndroidDevice::getContainersNumber() const
 {
-    return m_activeContainer->getName();
+    return m_containers.size();
 }
 
 
-std::vector<ServiceInfo> & AndroidDevice::getServicesInfo() const
-{
+ServiceInfo AndroidDevice::getServiceInfo(const std::string &id) const
+{    
+    Service* service = (Service*)(m_services.at(id));
+    
     /////////////
     // HARD CODED
-        
-    ServiceInfo s("OutgoinfCalls", "Outgoing calls");
-    s.parameters.push_back(BoolParameter("Allowed", "Allowed", true));
-    
-    std::vector<ServiceInfo> services;
-    services.push_back(s);
-    return services;
-    
+    ServiceInfo s(id, "OutGoingCalls");
+    s.m_parameters.insert(std::make_pair(id, new BoolParameter("Allowed", "Allowed", true)));
+    s.m_parameters.insert(std::make_pair(id, new BoolParameter("Allowed2", "Allowed", true)));
+    return s;
     /////////////
+}
+
+
+std::vector<std::string> AndroidDevice::getServicesIds() const
+{
+    std::vector<std::string> v;
+    for(ServicesMap::const_iterator it = m_services.begin(); it != m_services.end(); ++it) {
+        v.push_back(it->first);
+    }
+    return v;    
+}
+
+
+int AndroidDevice::getServicesNumber() const
+{
+    return m_services.size();
 }
 
 
@@ -209,9 +233,11 @@ void AndroidDevice::parameterChanged(int serviceId, int parameterId, double newV
 {
 }
 
+
 void AndroidDevice::parameterChanged(int serviceId, int parameterId, const std::string &newValue)
 {
 }
+
 
 void AndroidDevice::parameterChanged(int serviceId, int parameterId, bool newValue)
 {

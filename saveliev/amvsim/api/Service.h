@@ -1,13 +1,17 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include <string>
+
 class Service
 {
 public:
-    Service(int id) : m_id(id) { }
-    
+    Service(const std::string& id) : m_id(id)
+    {
+    }
+        
 private:
-    int m_id;
+    std::string m_id;
 };
 
 #endif // SERVICE_H

@@ -1,19 +1,19 @@
-#ifndef DEVICEMODEL_H
-#define DEVICEMODEL_H
+#ifndef CONTAINERLISTMODEL_H
+#define CONTAINERLISTMODEL_H
 
 #include <vector>
 #include <QString>
-#include <QAbstractTableModel>
+#include <QAbstractListModel>
 
-#include "api/AndroidDevice.h"
-#include "api/ContainerInfo.h"
+#include "../api/AndroidDevice.h"
+#include "../api/ContainerInfo.h"
 
-class DeviceModel : public QAbstractListModel
+class ContainerListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit DeviceModel(AndroidDevice* device, QObject* parent = 0);
+    explicit ContainerListModel(AndroidDevice* device, QObject* parent = 0);
 
     QVariant data(const QModelIndex& index, int role) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -32,16 +32,9 @@ public:
 
 private:
     AndroidDevice* m_device;
-    std::vector<QString> m_names;
+    std::vector<QString> m_ids;
 
     int getRow(const QString& name) const;
-
-signals:
-    void created(const QString&);
- // void rowsInserted ( const QModelIndex& parent, int start, int end );
-
-public slots:
-
 };
 
-#endif // DEVICEMODEL_H
+#endif // CONTAINERLISTMODEL_H

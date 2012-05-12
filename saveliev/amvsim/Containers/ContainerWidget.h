@@ -1,29 +1,33 @@
 #ifndef CONTAINEREDITDELEGATE_H
 #define CONTAINEREDITDELEGATE_H
 
-#include "api/ContainerInfo.h"
-#include "DeviceModel.h"
 #include <QItemDelegate>
 #include <QPushButton>
 #include <QLabel>
+#include <QButtonGroup>
+
+#include "../api/ContainerInfo.h"
+#include "ContainerListModel.h"
 
 class ContainerWidget : public QWidget {
     Q_OBJECT
 
 private:
     QString m_contName;
-    DeviceModel *m_model;
+    ContainerListModel *m_model;
 
     QPushButton *m_powerButton;
     QLabel *m_nameLabel;
     QPushButton *m_switchButton;
 
     QPushButton *m_destroyButton;
+    
+    QVector<QPushButton*> *m_switchButtons;
 
     void highlightAsActive();
 
 public:
-    ContainerWidget(QString contName, DeviceModel* model, QWidget *parent);
+    ContainerWidget(QVariant contName, QAbstractItemModel* model, QWidget *parent, QVector<QPushButton*> *switchButtons);
  // void start();
  // void stop();
 

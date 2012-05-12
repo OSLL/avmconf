@@ -1,36 +1,59 @@
 #include <QVBoxLayout>
 
 #include "MainWindow.h"
-#include "ContainerWidget.h"
-#include "NewContainerDialog.h"
-#include "ContainersListView.h"
+#include "Containers/NewContainerDialog.h"
 #include "ErrorLabel.h"
+#include "Containers/ContainerWidget.h"
+#include "Services/ServiceView.h"
 
 MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
     : QMainWindow(parent)
 {
+    const int HEIGHT = 600;
+    const int LISTWIDTH = 450;
+    const int OPTIONSWIDTH = 350;
+    
     setWindowTitle("Configurator");
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
-    setFixedWidth(500);
-    setFixedHeight(400);
-
-    m_view = new ContainersListView(this);
-    m_model = new DeviceModel(device, this);
-    m_view->setModel(m_model);
-    m_view->setItemDelegate(new ContainerDelegate);
-
-    m_errorLabel = new ErrorLabel(this);
-
+    setFixedHeight(HEIGHT);
+    
+    QWidget *allWidget = new QWidget;
+    allWidget->setLayout(new QHBoxLayout);
+    allWidget->layout()->setContentsMargins(0, 0, 0, 0);
+    setCentralWidget(allWidget);
+    
+    
+    // CONTAINERS LIST
+    m_containersModel = new ContainerListModel(device, this);
+    
+    QWidget *leftWidget = new QWidget;
+    leftWidget->setLayout(new QVBoxLayout);
+    leftWidget->setFixedWidth(LISTWIDTH);
+    leftWidget->layout()->setContentsMargins(12, 12, 0, 12);
+    allWidget->layout()->addWidget(leftWidget);
+    
+    m_containersView = new ContainerListView(this);
+    m_containersView->setModel(m_containersModel);
     m_createContainerButton = new QPushButton("Create new container", this);
     QObject::connect(m_createContainerButton, SIGNAL(clicked()), this, SLOT(startAddingContainer()));
-
-    QWidget *central = new QWidget;
-    central->setLayout(new QVBoxLayout);
-    central->layout()->addWidget(m_view);
- // central->layout()->addWidget(m_errorLabel);
-    central->layout()->addWidget(m_createContainerButton);
-    setCentralWidget(central);
-
+    leftWidget->layout()->addWidget(m_containersView);
+    leftWidget->layout()->addWidget(m_createContainerButton);
+    
+    
+    // SERVICES
+    QWidget *rightWidget = new QWidget;
+    rightWidget->setLayout(new QVBoxLayout);
+    rightWidget->setFixedWidth(OPTIONSWIDTH);
+    rightWidget->layout()->setContentsMargins(0, 12, 12, 12);
+    allWidget->layout()->addWidget(rightWidget);
+            
+    m_servicesModel = new ServiceListModel(device, this);    
+    m_servicesView = new ServiceListView(this);
+    m_servicesView->setModel(m_servicesModel);
+    m_servicesView->setLayout(new QVBoxLayout);
+    rightWidget->layout()->addWidget(m_servicesView);
+    
+    
  // item->setFlags( item->flags() & ~Qt::ItemIsSelectable );
 
 //    m_view->setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -43,7 +66,6 @@ MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
 }
 
 void MainWindow::startAddingContainer() {
-    NewContainerDialog *dialog = new NewContainerDialog(this, m_model);
-    QObject::connect(dialog, SIGNAL(done(ContainerInfo)), this, SLOT(finishAddingContainer(ContainerInfo)));
+    NewContainerDialog *dialog = new NewContainerDialog(this, m_containersModel);
     dialog->show();
 }
