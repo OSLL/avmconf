@@ -3,12 +3,12 @@
 
 #include <QStyledItemDelegate>
 
-#include <DeviceModel.h>
+#include "ContainerListModel.h"
 
 class ContainerDelegate : public QStyledItemDelegate {
     Q_OBJECT
 private:
-    DeviceModel * m_model;
+    ContainerListModel * m_model;
 
 public:
     ContainerDelegate(QWidget *parent = 0);

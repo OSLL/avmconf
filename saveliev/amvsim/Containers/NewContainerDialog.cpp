@@ -1,10 +1,11 @@
-#include "NewContainerDialog.h"
-#include "ui_NewContainerDialog.h"
-
 #include <QFileDialog>
 #include <QUrl>
 
-NewContainerDialog::NewContainerDialog(QWidget *parent, DeviceModel *model)
+#include "NewContainerDialog.h"
+#include "ui_NewContainerDialog.h"
+
+
+NewContainerDialog::NewContainerDialog(QWidget *parent, ContainerListModel *model)
     : QDialog(parent),
       m_model(model),
       ui(new Ui::NewContainerDialog)
@@ -12,8 +13,8 @@ NewContainerDialog::NewContainerDialog(QWidget *parent, DeviceModel *model)
     ui->setupUi(this);
 
     QObject::connect(ui->chooseButton,    SIGNAL(clicked()), this, SLOT(chooseFile()));
-    QObject::connect(ui->loadLocalButton, SIGNAL(clicked()), this, SLOT(tryCreateHttpFtp()));
     QObject::connect(ui->loadUrlButton,   SIGNAL(clicked()), this, SLOT(tryCreateHttpFtp()));
+    QObject::connect(ui->loadLocalButton, SIGNAL(clicked()), this, SLOT(tryCreateLocal()));
 }
 
 
@@ -55,6 +56,29 @@ void NewContainerDialog::tryCreateHttpFtp()
             }
         }
     }
+}
+
+void NewContainerDialog::tryCreateLocal()
+{
+    QUrl url = QUrl::fromUserInput(ui->urlEdit->text());
+    if (!url.isValid()) {
+        invalidate(ui->urlEdit, ui->urlError, "Invalid url " + ui->urlEdit->text());
+    } else {
+        StorageDescriptor storage;
+        storage.address = ui->localEdit->text().toStdString();
+        
+        if (url.scheme() != "file" || url.scheme() != "") {
+            invalidate(ui->urlEdit, ui->urlError, "Not a local file");            
+        } else {
+            storage.type = StorageDescriptor::Local;            
+        }
+        
+        if (m_model->createContainer(ui->nameEdit->text(), storage) < 0) {
+            invalidate(ui->localEdit, ui->localError, "Error creating a container");
+        } else {
+            accept();
+        }
+    }    
 }
 
 
