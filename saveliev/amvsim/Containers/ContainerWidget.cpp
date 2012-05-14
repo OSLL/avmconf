@@ -36,7 +36,13 @@ ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model,
     ((QHBoxLayout*)layout())->addWidget(m_switchButton, 0, Qt::AlignRight);
     ((QHBoxLayout*)layout())->addWidget(m_destroyButton, 0, Qt::AlignRight);
 
+        
     setAutoFillBackground(true);
+}
+
+void ContainerWidget::mousePressEvent(QMouseEvent*) 
+{
+    emit pressed(m_contName);    
 }
 
 //void ContainerWidget::start() {

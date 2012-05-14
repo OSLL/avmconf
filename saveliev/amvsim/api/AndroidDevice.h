@@ -10,7 +10,7 @@
 #include "ContainerInfo.h"
 #include "StorageDescriptor.h"
 #include "Saver.h"
-#include "ServiceInfo.h"
+#include "Parameter.h"
 #include "Service.h"
 
 class AndroidDevice
@@ -39,13 +39,15 @@ public:
     std::vector<std::string> getContainersIds() const;
     int getContainersNumber() const;
     
-    void parameterChanged(int serviceId, int parameterId, double newValue);  
-    void parameterChanged(int serviceId, int parameterId, const std::string& newValue);
-    void parameterChanged(int serviceId, int parameterId, bool newValue);
-    ServiceInfo getServiceInfo(const std::string& id) const;
-    std::vector<std::string> getServicesIds() const;
-    int getServicesNumber() const;
-       
+    void parameterChanged(int parameterId, Value newValue);      
+    std::vector<Parameter*> getContainerParametersList() const;
+    std::vector<Parameter*> getDeviceParametersList() const;     
+    std::vector<Value*> getContainerParametersValues(const std::string& containerId) const;   
+    std::vector<Value*> getDeviceParametersValues() const;    
+    
+//    ServiceInfo getServiceInfo(const std::string& id) const;
+//    std::vector<std::string> getServicesIds() const;
+//    int getServicesNumber() const;
 
 private:
     typedef std::map<std::string, Container*> ContainersMap;

@@ -33,8 +33,23 @@ public:
 private:
     AndroidDevice* m_device;
     std::vector<QString> m_ids;
-
+    
     int getRow(const QString& name) const;
+    
+signals:
+    void containersSelected(const QString& contName);
 };
 
 #endif // CONTAINERLISTMODEL_H
+
+
+
+
+
+
+
+
+
+
+
+

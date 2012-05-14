@@ -4,7 +4,7 @@
 #include "Containers/NewContainerDialog.h"
 #include "ErrorLabel.h"
 #include "Containers/ContainerWidget.h"
-#include "Services/ServiceView.h"
+#include "Services/ContainerParametersWidget.h"
 
 MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
     : QMainWindow(parent)
@@ -40,18 +40,22 @@ MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
     leftWidget->layout()->addWidget(m_createContainerButton);
     
     
-    // SERVICES
+    // SERVICES    
     QWidget *rightWidget = new QWidget;
     rightWidget->setLayout(new QVBoxLayout);
     rightWidget->setFixedWidth(OPTIONSWIDTH);
     rightWidget->layout()->setContentsMargins(0, 12, 12, 12);
     allWidget->layout()->addWidget(rightWidget);
+    
+    rightWidget->layout()->addWidget(new ContainerParametersWidget(device));
             
-    m_servicesModel = new ServiceListModel(device, this);    
-    m_servicesView = new ServiceListView(this);
-    m_servicesView->setModel(m_servicesModel);
-    m_servicesView->setLayout(new QVBoxLayout);
-    rightWidget->layout()->addWidget(m_servicesView);
+//  m_containerParametersView = new 
+    
+//  m_servicesModel = new ServiceListModel(device, this);    
+//  m_servicesView = new ServiceListView(this);
+//  m_servicesView->setModel(m_servicesModel);
+//  m_servicesView->setLayout(new QVBoxLayout);
+//  rightWidget->layout()->addWidget(m_servicesView);
     
     
  // item->setFlags( item->flags() & ~Qt::ItemIsSelectable );

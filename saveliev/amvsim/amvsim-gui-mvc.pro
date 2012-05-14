@@ -16,17 +16,14 @@ SOURCES += main.cpp\
     api/Saver.cpp \
     MainWindow.cpp \
     ErrorLabel.cpp \
-    Services/ServiceView.cpp \
-    Services/ServiceModel.cpp \
-    Services/ServiceListView.cpp \
-    Services/ServiceListModel.cpp \
     Containers/NewContainerDialog.cpp \
     Containers/ContainerWidget.cpp \
     Containers/ContainerListView.cpp \
     Containers/ContainerListModel.cpp \
     Containers/ContainerDelegate.cpp \
-    api/ServiceInfo.cpp \
-    Containers/SwitchButtons.cpp
+    Containers/SwitchButtons.cpp \
+    Services/ContainerParametersWidget.cpp \
+    api/Parameter.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -39,19 +36,16 @@ HEADERS  += \
     ErrorLabel.h \
     NewContainerDialog.h \
     api/NoSuchContainerException.h \
-    api/ServiceInfo.h \
     api/Service.h \
-    Services/ServiceView.h \
-    Services/ServiceModel.h \
-    Services/ServiceListView.h \
-    Services/ServiceListModel.h \
     Containers/NewContainerDialog.h \
     Containers/ContainerWidget.h \
     Containers/ContainerListView.h \
     Containers/ContainerListModel.h \
     Containers/ContainerDelegate.h \
     OptionsParameterWidget.h \
-    Containers/SwitchButtons.h
+    Containers/SwitchButtons.h \
+    Services/ContainerParametersWidget.h \
+    api/Parameter.h
 
 OTHER_FILES += \
     device.txt

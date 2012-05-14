@@ -9,8 +9,6 @@
 #include "api/AndroidDevice.h"
 #include "Containers/ContainerListModel.h"
 #include "Containers/ContainerListView.h"
-#include "Services/ServiceListModel.h"
-#include "Services/ServiceListView.h"
 
 class MainWindow : public QMainWindow
 {
@@ -22,8 +20,6 @@ public:
 private:
     ContainerListModel *m_containersModel;
     ContainerListView *m_containersView;
-    ServiceListModel *m_servicesModel;
-    ServiceListView *m_servicesView;
     QPushButton *m_createContainerButton;
     QLabel *m_errorLabel;
     

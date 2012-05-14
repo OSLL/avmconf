@@ -199,46 +199,85 @@ int AndroidDevice::getContainersNumber() const
 }
 
 
-ServiceInfo AndroidDevice::getServiceInfo(const std::string &id) const
-{    
-    Service* service = (Service*)(m_services.at(id));
+//ServiceInfo AndroidDevice::getServiceInfo(const std::string &id) const
+//{    
+//    Service* service = (Service*)(m_services.at(id));
     
-    /////////////
-    // HARD CODED
-    ServiceInfo s(id, "OutGoingCalls");
-    s.m_parameters.insert(std::make_pair(id, new BoolParameter("Allowed", "Allowed", true)));
-    s.m_parameters.insert(std::make_pair(id, new BoolParameter("Allowed2", "Allowed", true)));
-    return s;
-    /////////////
-}
+//    /////////////
+//    // HARD CODED
+//    ServiceInfo s(id, "OutGoingCalls");
+//    s.m_parameters.insert(std::make_pair(id, new BoolParameter("Allowed", "Allowed", true)));
+//    s.m_parameters.insert(std::make_pair(id, new BoolParameter("Allowed2", "Allowed", true)));
+//    return s;
+//    /////////////
+//}
 
 
-std::vector<std::string> AndroidDevice::getServicesIds() const
-{
-    std::vector<std::string> v;
-    for(ServicesMap::const_iterator it = m_services.begin(); it != m_services.end(); ++it) {
-        v.push_back(it->first);
-    }
-    return v;    
-}
+//std::vector<std::string> AndroidDevice::getServicesIds() const
+//{
+//    std::vector<std::string> v;
+//    for(ServicesMap::const_iterator it = m_services.begin(); it != m_services.end(); ++it) {
+//        v.push_back(it->first);
+//    }
+//    return v;    
+//}
 
 
-int AndroidDevice::getServicesNumber() const
-{
-    return m_services.size();
-}
+//int AndroidDevice::getServicesNumber() const
+//{
+//    return m_services.size();
+//}
 
 
-void AndroidDevice::parameterChanged(int serviceId, int parameterId, double newValue)
-{
-}
-
-
-void AndroidDevice::parameterChanged(int serviceId, int parameterId, const std::string &newValue)
+void AndroidDevice::parameterChanged(int parameterId, Value newValue)
 {
 }
 
 
-void AndroidDevice::parameterChanged(int serviceId, int parameterId, bool newValue)
-{
+std::vector<Parameter*> AndroidDevice::getContainerParametersList() const
+{ 
+    std::vector<Parameter*> parameters;
+    parameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
+    parameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
+    
+    return parameters;
 }
+
+std::vector<Parameter*> AndroidDevice::getDeviceParametersList() const
+{
+    std::vector<Parameter*> parameters;
+    
+    std::vector<std::string> wifiOptions;
+    wifiOptions.push_back("Point 1");
+    wifiOptions.push_back("Point 2");
+    wifiOptions.push_back("Point 3");    
+    
+    parameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "Outgoing calls", wifiOptions));
+    
+    return parameters;    
+}
+
+std::vector<Value*> AndroidDevice::getContainerParametersValues(const std::string &containerId) const
+{
+    std::vector<Value*> values;
+    values.push_back(new BoolValue("outgoing_calls_allowed", true));
+    values.push_back(new BoolValue("incoming_calls_allowed", true));
+    
+    return values;
+}
+
+std::vector<Value*> AndroidDevice::getDeviceParametersValues() const
+{
+    std::vector<Value*> values;
+    values.push_back(new OptionsValue("wifi_access_points", 1));
+    
+    return values;
+}
+
+
+
+
+
+
+
+

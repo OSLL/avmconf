@@ -30,8 +30,10 @@ public:
     ContainerWidget(QVariant contName, QAbstractItemModel* model, QWidget *parent, QVector<QPushButton*> *switchButtons);
  // void start();
  // void stop();
-
+    void mousePressEvent(QMouseEvent*);
+    
 signals:
+    void pressed(const QString& m_contName);
 
 public slots:    
     void powerPressed();
@@ -40,3 +42,10 @@ public slots:
 };
 
 #endif // CONTAINEREDITDELEGATE_H
+
+
+
+
+
+
+

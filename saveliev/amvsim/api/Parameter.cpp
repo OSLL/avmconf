@@ -1,4 +1,4 @@
-#include "ServiceInfo.h"
+#include "Parameter.h"
 
 std::vector<std::string> ServiceInfo::getParametersIds() const 
 {    
