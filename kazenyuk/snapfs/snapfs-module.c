@@ -9,6 +9,9 @@
 #include <linux/time.h>		/* CURRENT_TIME */
 #include <linux/pagemap.h>	/* PAGE_CACHE_SIZE, PAGE_CACHE_SHIFT */
 #include <linux/list.h>
+#include <linux/namei.h>
+#include <linux/path.h>
+#include <../fs/mount.h>
 
 #include "snapfs-mgmt.h"
 
@@ -32,6 +35,8 @@ void snapfs_kill_sb(struct super_block *sb);
 		                        umode_t mode);*/
 struct dentry *snapfs_inode_lookup(struct inode *inode, struct dentry *dentry, 
 				   struct nameidata *nd);
+static int snapfs_dir_open(struct inode *inode, struct file *file);
+static int snapfs_dir_readdir(struct file *file, void *buf, filldir_t fill);
 
 
 static struct file_system_type snapfs_fs_type = {
@@ -77,37 +82,70 @@ static struct file_operations snapfs_file_ops = {
 	.llseek       = generic_file_llseek,
 };
 
+//almost identical to simple_dir_operations
+static struct file_operations snapfs_dir_ops = {
+	//.open         = dcache_dir_open,
+	.open         = snapfs_dir_open,
+	.release      = dcache_dir_close,
+	.llseek       = dcache_dir_lseek,
+	.read         = generic_read_dir,
+	//.readdir      = dcache_readdir,
+	.readdir      = snapfs_dir_readdir,
+	.fsync        = noop_fsync,
+};
 
-struct dentry *snapfs_inode_lookup(struct inode *inode, struct dentry *dentry,
+struct dentry *snapfs_inode_lookup(struct inode *dir, struct dentry *dentry,
 				   struct nameidata *nd)
 {
 	struct inode *wrapped_node = NULL;
 	struct super_block *wrapped_sb = NULL;
 	struct super_block *snapfs_sb = NULL;
+	struct mount *mnt = NULL;
 
-	printk(KERN_INFO "snapfs_inode_lookup\n");
+	printk(KERN_INFO "snapfs_inode_lookup(dir = %p, dentry = %p, nd = %p)\n", dir, dentry, nd);
 
-	snapfs_sb = inode->i_sb;
+	printk(KERN_INFO "dentry->d_inode = %p", dentry->d_inode);
+	printk(KERN_INFO "nd->path->dentry = %p", nd->path.dentry);
+	printk(KERN_INFO "nd->path->dentry->d_inode = %p", nd->path.dentry->d_inode);
+
+	snapfs_sb = dir->i_sb;
 	printk(KERN_INFO "SnapFS super block FS name: \"%s\"\n", snapfs_sb->s_type->name);
 
-	// find super_block of the corresponding wrapped file system
-	wrapped_sb = list_entry(&snapfs_sb->s_list, struct super_block, s_list);
-	do {
-		printk(KERN_INFO "wrapped_sb = %p", wrapped_sb);
-		if (wrapped_sb) {
-			printk(KERN_INFO "wrapped_sb->s_magic = %lx", wrapped_sb->s_magic);
-			printk(KERN_INFO "wrapped_sb->s_type = %p", wrapped_sb->s_type);
-			if (wrapped_sb->s_type) {
-				printk(KERN_INFO "wrapped_sb->s_type->name = %p", wrapped_sb->s_type->name);
-				if (wrapped_sb->s_type->name) {
-					printk(KERN_INFO "super block FS name: \"%s\"\n", wrapped_sb->s_type->name);
-				}
+	mnt = container_of(nd->path.mnt, struct mount, mnt);
+	wrapped_node = mnt->mnt_mountpoint->d_inode;
+	wrapped_sb = wrapped_node->i_sb;
+	nd->path.mnt = &mnt->mnt_parent->mnt;
+	nd->path.dentry = mnt->mnt_mountpoint;
+
+	printk(KERN_INFO "wrapped_sb = %p", wrapped_sb);
+	if (wrapped_sb) {
+		printk(KERN_INFO "wrapped_sb->s_magic = %lx", wrapped_sb->s_magic);
+		printk(KERN_INFO "wrapped_sb->s_type = %p", wrapped_sb->s_type);
+		if (wrapped_sb->s_type) {
+			printk(KERN_INFO "wrapped_sb->s_type->name = %p", 
+			       wrapped_sb->s_type->name);
+			if (wrapped_sb->s_type->name) {
+				printk(KERN_INFO "super block FS name: \"%s\"\n", 
+				       wrapped_sb->s_type->name);
 			}
 		}
-		wrapped_sb = list_entry(wrapped_sb->s_list.next, struct super_block, s_list);
-	} while (wrapped_sb != snapfs_sb);
+	}
+	
+	return wrapped_node->i_op->lookup(wrapped_node, dentry, nd);
+	//return simple_lookup(dir, dentry, nd);
+}
 
-	return simple_lookup(inode, dentry, nd);
+static int snapfs_dir_open(struct inode *inode, struct file *file)
+{
+	printk(KERN_INFO "snapfs_dir_open(inode = %p, file = %p)\n", inode, file);
+	printk(KERN_INFO "inode->i_sb->s_type->name = %s", inode->i_sb->s_type->name);
+	return dcache_dir_open(inode, file);
+}
+
+static int snapfs_dir_readdir(struct file *file, void *buf, filldir_t fill)
+{
+	printk(KERN_INFO "snapfs_dir_readdir(file = %p, buf = %p, ...)\n", file, buf);
+	return dcache_readdir(file, buf, fill);
 }
 
 static int snapfs_mknod(struct inode *dir, struct dentry *dentry,
@@ -167,7 +205,7 @@ struct inode *snapfs_get_inode(struct super_block *sb, struct inode *dir,
 			break;
 		case S_IFDIR:
 			node->i_op = &snapfs_dir_inode_ops;
-			node->i_fop = &simple_dir_operations;
+			node->i_fop = &snapfs_dir_ops;
 
 			inc_nlink(node);	// directory inodes start off 
 						// with i_nlink == 2 (for "." entry) (WHY?!)
