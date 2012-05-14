@@ -14,10 +14,12 @@ static struct snapfs_mnt_point snapfs_mnt_points[max_snapfs_mnt_points];
 
 static struct kobject *snapfs_kobj = NULL;
 
+/*
 static void snapfs_mntpoint_kobj_release(struct kobject *kobj)
 {
 	return;
 }
+*/
 
 static struct kobj_type snapfs_mntpoint_ktype = {
 	//.release = snapfs_mntpoint_kobj_release,
@@ -27,7 +29,7 @@ static struct kobj_type snapfs_mntpoint_ktype = {
 
 static struct snapfs_mnt_point *snapfs_mnt_point_for_kobj(struct kobject *kobj)
 {
-	printk(KERN_DEBUG "snapfs_mnt_point_for_kobj\n");
+	printk(KERN_INFO "snapfs_mnt_point_for_kobj\n");
 	return container_of(kobj, struct snapfs_mnt_point, kobj);
 }
 
@@ -81,21 +83,7 @@ static ssize_t state_show(struct kobject *kobj,
 	return sprintf(buf, "%d\n", mnt_point->state);
 }
 
-static ssize_t next_state_show(struct kobject *kobj, 
-				struct kobj_attribute *attr, char *buf)
-{
-	struct snapfs_mnt_point *mnt_point;
-
-	mnt_point = snapfs_mnt_point_for_kobj(kobj);
-	if (!mnt_point) {
-		printk(KERN_ERR "Can't find mount point for kobject\n");
-		return 0;
-	}
-
-	return sprintf(buf, "%d\n", mnt_point->next_state);
-}
-
-static ssize_t next_state_store(struct kobject *kobj, 
+static ssize_t state_store(struct kobject *kobj, 
 				struct kobj_attribute *attr, 
 				const char *buf, size_t count)
 {
@@ -115,7 +103,7 @@ static ssize_t next_state_store(struct kobject *kobj,
 		return 0;
 	}
 
-	sscanf(buf, "%d\n", &mnt_point->next_state);
+	sscanf(buf, "%d\n", &mnt_point->state);
 	return count;
 }
 
@@ -124,14 +112,10 @@ static struct kobj_attribute path_attr = __ATTR(path, 0444,
 						NULL);
 static struct kobj_attribute state_attr = __ATTR(state, 0444,
 						state_show,
-						NULL);
-static struct kobj_attribute next_state_attr = __ATTR(next_state, 0666, 
-							next_state_show, 
-							next_state_store);
+						state_store);
 
 static struct attribute *snapfs_mnt_attrs[] = {
 	&path_attr.attr,
-	&next_state_attr.attr,
 	&state_attr.attr,
 	NULL,
 };
