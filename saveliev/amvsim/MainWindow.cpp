@@ -1,21 +1,21 @@
 #include <QVBoxLayout>
 
 #include "MainWindow.h"
-#include "Containers/NewContainerDialog.h"
-#include "ErrorLabel.h"
-#include "Containers/ContainerWidget.h"
-#include "Services/ContainerParametersWidget.h"
+#include "Dialogs/NewContainerDialog.h"
+#include "Elements/ErrorLabel.h"
+#include "Views/ContainerWidget.h"
 
-MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
+MainWindow::MainWindow(IDevice* device, QWidget* parent)
     : QMainWindow(parent)
 {
     const int HEIGHT = 600;
-    const int LISTWIDTH = 450;
-    const int OPTIONSWIDTH = 350;
+    const int LISTWIDTH = 480;
+    const int OPTIONSWIDTH = 0;
     
     setWindowTitle("Configurator");
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     setFixedHeight(HEIGHT);
+    setStyleSheet("font-size: 13px");
     
     QWidget *allWidget = new QWidget;
     allWidget->setLayout(new QHBoxLayout);
@@ -40,15 +40,17 @@ MainWindow::MainWindow(AndroidDevice* device, QWidget* parent)
     leftWidget->layout()->addWidget(m_createContainerButton);
     
     
-    // SERVICES    
-    QWidget *rightWidget = new QWidget;
-    rightWidget->setLayout(new QVBoxLayout);
-    rightWidget->setFixedWidth(OPTIONSWIDTH);
-    rightWidget->layout()->setContentsMargins(0, 12, 12, 12);
-    allWidget->layout()->addWidget(rightWidget);
+//    // SERVICES    
+//    QWidget *rightWidget = new QWidget;
+//    rightWidget->setLayout(new QVBoxLayout);
+//    rightWidget->setFixedWidth(OPTIONSWIDTH);
+//    rightWidget->layout()->setContentsMargins(0, 12, 12, 12);
+//    allWidget->layout()->addWidget(rightWidget);
     
-    rightWidget->layout()->addWidget(new ContainerParametersWidget(device));
+//    rightWidget->layout()->addWidget(new ContainerParametersWidget(device));
             
+    
+    
 //  m_containerParametersView = new 
     
 //  m_servicesModel = new ServiceListModel(device, this);    

@@ -2,16 +2,17 @@
 #define CONTAINERPARAMETERSWIDGET_H
 
 #include <QWidget>
-#include "api/AndroidDevice.h"
+
+#include "../Models/ContainerListModel.h"
 
 class ContainerParametersWidget : public QWidget
 {
     Q_OBJECT
 private:
-    AndroidDevice *m_device;
+    ContainerListModel *m_model;
     
 public:
-    explicit ContainerParametersWidget(AndroidDevice* device, QWidget *parent = 0);
+    ContainerParametersWidget(ContainerListModel* model, const QString &contName, QWidget *parent = 0);
     
 signals:
     

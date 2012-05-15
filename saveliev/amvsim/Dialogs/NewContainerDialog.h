@@ -4,8 +4,8 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QDialog>
-#include "ContainerDelegate.h"
-#include "ContainerListModel.h"
+
+#include "../Models/ContainerListModel.h"
 
 namespace Ui {
     class NewContainerDialog;

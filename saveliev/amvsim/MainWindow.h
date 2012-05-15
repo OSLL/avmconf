@@ -6,16 +6,16 @@
 #include <QPushButton>
 #include <QLabel>
 
-#include "api/AndroidDevice.h"
-#include "Containers/ContainerListModel.h"
-#include "Containers/ContainerListView.h"
+#include "API/IDevice.h"
+#include "Models/ContainerListModel.h"
+#include "Views/ContainerListView.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(AndroidDevice* device, QWidget* parent = 0);
+    MainWindow(IDevice* device, QWidget* parent = 0);
 
 private:
     ContainerListModel *m_containersModel;

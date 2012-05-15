@@ -28,14 +28,9 @@ ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model,
     m_switchButtons->push_back(m_switchButton);
     QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchHerePressed()));
 
-    m_destroyButton = new QPushButton("Destroy");
-    QObject::connect(m_destroyButton, SIGNAL(pressed()), this, SLOT(destroyContainer()));
-
     layout()->addWidget(m_powerButton);
     layout()->addWidget(m_nameLabel);
     ((QHBoxLayout*)layout())->addWidget(m_switchButton, 0, Qt::AlignRight);
-    ((QHBoxLayout*)layout())->addWidget(m_destroyButton, 0, Qt::AlignRight);
-
         
     setAutoFillBackground(true);
 }
@@ -98,12 +93,5 @@ void ContainerWidget::highlightAsActive()
 {
     setPalette(QPalette(Qt::blue));
 }
-
-void ContainerWidget::destroyContainer()
-{
-    m_model->destroyContainer(m_contName);
-}
-
-
 
 

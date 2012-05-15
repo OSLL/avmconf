@@ -4,8 +4,9 @@
 #include <string>
 #include "StorageDescriptor.h"
 #include "ContainerState.h"
+#include "IContainer.h"
 
-class Container {
+class Container : public IContainer {
 public:
     virtual const ContainerState& getState() const; //Maybe should change to isStarted() and isStopped()?
     virtual void setState(const ContainerState& inpState); //Maybe should change to start() and stop()?
@@ -16,7 +17,7 @@ public:
     
     Container(const std::string& containerName);
     virtual ~Container();
-
+    
 private:
     std::string m_name;
     std::string m_imageAddress;

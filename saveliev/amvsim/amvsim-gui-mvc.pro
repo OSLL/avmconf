@@ -15,15 +15,16 @@ SOURCES += main.cpp\
     api/AndroidDevice.cpp \
     api/Saver.cpp \
     MainWindow.cpp \
-    ErrorLabel.cpp \
-    Containers/NewContainerDialog.cpp \
-    Containers/ContainerWidget.cpp \
-    Containers/ContainerListView.cpp \
-    Containers/ContainerListModel.cpp \
-    Containers/ContainerDelegate.cpp \
-    Containers/SwitchButtons.cpp \
-    Services/ContainerParametersWidget.cpp \
-    api/Parameter.cpp
+    api/Parameter.cpp \
+    Views/ContainerWidget.cpp \
+    Views/ContainerListView.cpp \
+    Views/ContainerDelegate.cpp \
+    Models/ContainerListModel.cpp \
+    Elements/SwitchButtons.cpp \
+    Elements/ErrorLabel.cpp \
+    Dialogs/NewContainerDialog.cpp \
+    Dialogs/ContainerParametersWidget.cpp \
+    Dialogs/ContainerDialog.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -33,25 +34,26 @@ HEADERS  += \
     api/ContainerInfo.h \
     api/Saver.h \
     MainWindow.h \
-    ErrorLabel.h \
-    NewContainerDialog.h \
     api/NoSuchContainerException.h \
     api/Service.h \
-    Containers/NewContainerDialog.h \
-    Containers/ContainerWidget.h \
-    Containers/ContainerListView.h \
-    Containers/ContainerListModel.h \
-    Containers/ContainerDelegate.h \
-    OptionsParameterWidget.h \
-    Containers/SwitchButtons.h \
-    Services/ContainerParametersWidget.h \
-    api/Parameter.h
+    api/Parameter.h \
+    api/IContainer.h \
+    api/IDevice.h \
+    Views/ContainerWidget.h \
+    Views/ContainerListView.h \
+    Views/ContainerDelegate.h \
+    Models/ContainerListModel.h \
+    Elements/SwitchButtons.h \
+    Elements/ErrorLabel.h \
+    Dialogs/NewContainerDialog.h \
+    Dialogs/ContainerParametersWidget.h \
+    Dialogs/ContainerDialog.h
 
 OTHER_FILES += \
     device.txt
 
 FORMS += \
-    Containers/NewContainerDialog.ui
+    Dialogs/NewContainerDialog.ui
 
 
 

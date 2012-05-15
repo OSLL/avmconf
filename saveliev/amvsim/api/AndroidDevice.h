@@ -4,7 +4,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <fstream>
 
 #include "Container.h"
 #include "ContainerInfo.h"
@@ -12,21 +11,14 @@
 #include "Saver.h"
 #include "Parameter.h"
 #include "Service.h"
+#include "IDevice.h"
 
-class AndroidDevice
+class AndroidDevice : public IDevice
 {
 public:
     AndroidDevice();
     virtual ~AndroidDevice();
 
-    enum Result {
-        UndefinedError,
-        Alright,
-        IdAlreadyExists,
-        NoSuchId,
-        CannotLoadImage,
-        CannotSave
-    };
     virtual Result createContainer(const std::string& containerName, const StorageDescriptor& inpTemplate);
     virtual Result destroyContainer(const std::string& containerName);
     virtual int startContainer(const std::string& containerName);
@@ -34,16 +26,16 @@ public:
     virtual int switchToContainer(const std::string& containerName);
     virtual int setContainerImage(const std::string& containerName, const StorageDescriptor& image);
     virtual int syncContainerImage(const std::string& containerName);
-    const std::string& getActiveContainer() const;
-    ContainerInfo getContainerInfo(const std::string& name) const;
-    std::vector<std::string> getContainersIds() const;
-    int getContainersNumber() const;
-    
-    void parameterChanged(int parameterId, Value newValue);      
-    std::vector<Parameter*> getContainerParametersList() const;
-    std::vector<Parameter*> getDeviceParametersList() const;     
-    std::vector<Value*> getContainerParametersValues(const std::string& containerId) const;   
-    std::vector<Value*> getDeviceParametersValues() const;    
+    virtual const std::string& getActiveContainer() const;
+    virtual ContainerInfo getContainerInfo(const std::string& name) const;
+    virtual std::vector<std::string> getContainersIds() const;
+    virtual int getContainersNumber() const;
+     
+    virtual void parameterChanged(int parameterId, Value newValue);      
+    virtual std::vector<Parameter*> getContainerParametersList() const;
+    virtual std::vector<Parameter*> getDeviceParametersList() const;     
+    virtual std::vector<Value*> getContainerParametersValues(const std::string& containerId) const;   
+    virtual std::vector<Value*> getDeviceParametersValues() const;    
     
 //    ServiceInfo getServiceInfo(const std::string& id) const;
 //    std::vector<std::string> getServicesIds() const;

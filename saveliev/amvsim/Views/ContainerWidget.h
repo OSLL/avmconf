@@ -6,8 +6,8 @@
 #include <QLabel>
 #include <QButtonGroup>
 
-#include "../api/ContainerInfo.h"
-#include "ContainerListModel.h"
+#include "../API/ContainerInfo.h"
+#include "../Models/ContainerListModel.h"
 
 class ContainerWidget : public QWidget {
     Q_OBJECT
@@ -19,8 +19,6 @@ private:
     QPushButton *m_powerButton;
     QLabel *m_nameLabel;
     QPushButton *m_switchButton;
-
-    QPushButton *m_destroyButton;
     
     QVector<QPushButton*> *m_switchButtons;
 
@@ -38,7 +36,6 @@ signals:
 public slots:    
     void powerPressed();
     void switchHerePressed();
-    void destroyContainer();
 };
 
 #endif // CONTAINEREDITDELEGATE_H

@@ -5,8 +5,6 @@ class SwitchButtons
 {
 public:
     SwitchButtons();
-    
-    
 };
 
 #endif // SWITCHBUTTONS_H
