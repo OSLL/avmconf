@@ -113,13 +113,20 @@ struct dentry *snapfs_inode_lookup(struct inode *dir, struct dentry *dentry,
 	printk(KERN_INFO "snapfs_sb = %p", snapfs_sb);
 	printk(KERN_INFO "snapfs_sb->s_type->name = \"%s\"\n", snapfs_sb->s_type->name);
 
-	mnt = container_of(nd->path.mnt, struct mount, mnt);
+	mnt = real_mount(nd->path.mnt);
 	wrapped_node = mnt->mnt_mountpoint->d_inode;
 	wrapped_sb = wrapped_node->i_sb;
+
+	// Update nd->path
+	// vfsmount: replace snapfs' vfsmount with underlying fs vfsmount structure
 	nd->path.mnt = &mnt->mnt_parent->mnt;
+	// dentry:
 	nd->path.dentry = mnt->mnt_mountpoint;
+	// Update nd
+	// inode: should be the same as nd.path.dentry.d_inode
 	nd->inode = nd->path.dentry->d_inode;
 
+	// replace snapfs superblock with underlying fs superblock
 	dentry->d_sb = wrapped_sb;
 
 	printk(KERN_INFO "wrapped_sb = %p", wrapped_sb);
