@@ -5,8 +5,8 @@
 #include <QString>
 #include <QAbstractListModel>
 
-#include "../API/IDevice.h"
-#include "../API/ContainerInfo.h"
+#include "../api/IDevice.h"
+#include "../api/ContainerInfo.h"
 
 class ContainerListModel : public QAbstractListModel
 {

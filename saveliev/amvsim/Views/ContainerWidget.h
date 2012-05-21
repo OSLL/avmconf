@@ -7,7 +7,7 @@
 #include <QButtonGroup>
 
 #include "ContainerListView.h"
-#include "../API/ContainerInfo.h"
+#include "../api/ContainerInfo.h"
 #include "../Models/ContainerListModel.h"
 
 class ContainerWidget : public QWidget {
