@@ -12,10 +12,18 @@ class ContainerDialog : public QDialog
     Q_OBJECT
 
 private:
-    QPushButton *m_destroyButton;  
+    QPushButton *m_doneButton;    
+    QPushButton *m_destroyButton;
+    QPushButton *m_cancelDestroyButton;
+    
     ContainerParametersWidget *m_parameters;
     ContainerListModel *m_model;
     QString m_contName;
+    
+    QWidget *initButtons();
+    QWidget *initParameters();
+    
+    bool m_toDestroy;
     
 public:
     ContainerDialog(ContainerListModel *model, const QString &contName, QWidget *parent = 0);
@@ -23,6 +31,8 @@ public:
 signals:
     
 public slots:
+    void destroyPressed();
+    void cancelDestroyPressed();
     
 };
 

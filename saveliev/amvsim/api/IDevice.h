@@ -33,8 +33,8 @@ public:
     virtual int getContainersNumber() const = 0;
      
     virtual void parameterChanged(int parameterId, Value newValue) = 0;
-    virtual std::vector<Parameter*> getContainerParametersList() const = 0;
-    virtual std::vector<Parameter*> getDeviceParametersList() const = 0;
+    virtual const std::vector<Parameter*> &getContainerParametersList() const = 0;
+    virtual const std::vector<Parameter*> &getDeviceParametersList() const = 0;
     virtual std::vector<Value*> getContainerParametersValues(const std::string& containerId) const = 0;  
     virtual std::vector<Value*> getDeviceParametersValues() const = 0;
 };

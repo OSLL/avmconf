@@ -11,6 +11,12 @@ class ContainerParametersWidget : public QWidget
 private:
     ContainerListModel *m_model;
     
+    void initWidgetsForParameters();
+    
+    static void buildBoolean        (QWidget *w, BoolParameter *par);
+    static void buildDoubleWithRange(QWidget *w, DoubleParameterWithRange *par);
+    static void buildOptions        (QWidget *w, OptionsParameter *par);
+    
 public:
     ContainerParametersWidget(ContainerListModel* model, const QString &contName, QWidget *parent = 0);
     

@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QButtonGroup>
 
+#include "ContainerListView.h"
 #include "../API/ContainerInfo.h"
 #include "../Models/ContainerListModel.h"
 
@@ -20,14 +21,17 @@ private:
     QLabel *m_nameLabel;
     QPushButton *m_switchButton;
     
-    QVector<QPushButton*> *m_switchButtons;
+    QMap<QString, ContainerWidget*> *m_anotherContainerWidgets;
 
+    void highlightTheRestRunningAsInactive();
     void highlightAsActive();
-
+    void highlightAsStopped();
+    void highlightRunningAsInactive();
+    
 public:
-    ContainerWidget(QVariant contName, QAbstractItemModel* model, QWidget *parent, QVector<QPushButton*> *switchButtons);
- // void start();
- // void stop();
+    ContainerWidget(QVariant contName, QAbstractItemModel* model, QWidget *parent, 
+                    QMap<QString, ContainerWidget*> *anotherContainerWidgets);
+    
     void mousePressEvent(QMouseEvent*);
     
 signals:

@@ -13,13 +13,24 @@ AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
 {
     m_saver.restore(m_containers);
     
-    /////////////
+    /////////////////
     // HARD CODED
+    // // services
     Service* service = new Service("outgoingCalls");
     m_services.insert(std::make_pair("outgoingCalls", service));
     Service* service2 = new Service("incomingCalls");
     m_services.insert(std::make_pair("incomingCalls", service2));
-    /////////////
+        
+    // // parameters
+    std::vector<std::string> wifiOptions;
+    wifiOptions.push_back("Point 1");
+    wifiOptions.push_back("Point 2");
+    wifiOptions.push_back("Point 3");  
+    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "Outgoing calls", wifiOptions));
+        
+    m_containerParameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
+    m_containerParameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
+    /////////////////
 }
 
 
@@ -234,27 +245,14 @@ void AndroidDevice::parameterChanged(int parameterId, Value newValue)
 }
 
 
-std::vector<Parameter*> AndroidDevice::getContainerParametersList() const
-{ 
-    std::vector<Parameter*> parameters;
-    parameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
-    parameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
-    
-    return parameters;
+const std::vector<Parameter*> &AndroidDevice::getContainerParametersList() const
+{     
+    return m_containerParameters;
 }
 
-std::vector<Parameter*> AndroidDevice::getDeviceParametersList() const
+const std::vector<Parameter*> &AndroidDevice::getDeviceParametersList() const
 {
-    std::vector<Parameter*> parameters;
-    
-    std::vector<std::string> wifiOptions;
-    wifiOptions.push_back("Point 1");
-    wifiOptions.push_back("Point 2");
-    wifiOptions.push_back("Point 3");    
-    
-    parameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "Outgoing calls", wifiOptions));
-    
-    return parameters;    
+    return m_deviceParameters;    
 }
 
 std::vector<Value*> AndroidDevice::getContainerParametersValues(const std::string &containerId) const

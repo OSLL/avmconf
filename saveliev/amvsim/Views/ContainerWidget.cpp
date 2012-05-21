@@ -9,11 +9,11 @@
 #include "ContainerWidget.h"
 
 ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model, 
-                                 QWidget *parent, QVector<QPushButton*> *switchButtons)
+                                 QWidget *parent, QMap<QString, ContainerWidget*> *anotherContainerWidgets)
     : QWidget(parent), 
       m_contName(contName.toString()), 
       m_model((ContainerListModel*)model),
-      m_switchButtons(switchButtons)      
+      m_anotherContainerWidgets(anotherContainerWidgets)      
 {
     setLayout(new QHBoxLayout);
 
@@ -24,15 +24,16 @@ ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model,
     m_nameLabel = new QLabel(m_contName);
 
     m_switchButton = new QPushButton("Switch here");
-    m_switchButton->setVisible(false);
-    m_switchButtons->push_back(m_switchButton);
+    m_switchButton->setEnabled(false);
     QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchHerePressed()));
-
-    layout()->addWidget(m_powerButton);
-    layout()->addWidget(m_nameLabel);
+    
+    ((QHBoxLayout*)layout())->addWidget(m_powerButton);
+    ((QHBoxLayout*)layout())->addWidget(m_nameLabel);
     ((QHBoxLayout*)layout())->addWidget(m_switchButton, 0, Qt::AlignRight);
         
     setAutoFillBackground(true);
+    
+    (*m_anotherContainerWidgets).insert(contName.toString(), this);
 }
 
 void ContainerWidget::mousePressEvent(QMouseEvent*) 
@@ -40,58 +41,62 @@ void ContainerWidget::mousePressEvent(QMouseEvent*)
     emit pressed(m_contName);    
 }
 
-//void ContainerWidget::start() {
-//    m_stopButton->setEnabled(true);
-//    m_startButton->setEnabled(false);
-
-//    m_device->startContainer(m_nameLabel->text().toStdString());
-//}
-
-//void ContainerWidget::stop() {
-//    m_stopButton->setEnabled(false);
-//    m_startButton->setEnabled(true);
-
-//    m_device->stopContainer(m_nameLabel->text().toStdString());
-//}
-
 void ContainerWidget::powerPressed()
 {
-    if (m_model->getContainerInfo(m_contName).state == StateStopped) {
+    if (m_model->getContainerInfo(m_contName).state != StateRunning) {
         m_model->startContainer(m_contName);
-        m_powerButton->setText("Stop");
-        m_switchButton->setVisible(true);
-        for (int i = 0; i != m_switchButtons->size(); ++i) {
-            QPushButton* button = ((QPushButton*)(*m_switchButtons)[i]);
-            if (button != m_switchButton)
-                button->setEnabled(true);
-        }
-        m_switchButton->setEnabled(false);
-     // if (m_model->device()->getActiveContainer() == m_contName.toStdString())
-     //     highlightAsActive();
-    } else {
+        m_powerButton->setText("Stop");          
+        highlightAsActive();          
+        highlightTheRestRunningAsInactive();
+        
+    } else {        
         m_model->stopContainer(m_contName);
         m_powerButton->setText("Run");
-        m_switchButton->setVisible(false);
+        m_switchButton->setEnabled(false);        
+        highlightAsStopped();
     }
 }
 
 void ContainerWidget::switchHerePressed()
 {
     if (m_model->getContainerInfo(m_contName).state == StateRunning) {
-        m_model->switchToContainer(m_contName);
+        m_model->switchToContainer(m_contName);  
         highlightAsActive();
-        for (int i = 0; i != m_switchButtons->size(); ++i) {
-            QPushButton* button = ((QPushButton*)(*m_switchButtons)[i]);
-            if (button != m_switchButton)
-                button->setEnabled(true);
-        }
-        m_switchButton->setEnabled(false);
+        highlightTheRestRunningAsInactive();
     }
+}
+
+void ContainerWidget::highlightTheRestRunningAsInactive()
+{    
+    for (QMap<QString, ContainerWidget*>::Iterator it = m_anotherContainerWidgets->begin(); 
+         it != m_anotherContainerWidgets->end(); ++it) {
+        ContainerWidget* w = (ContainerWidget*)it.value();
+        if (w->m_switchButton != m_switchButton &&
+                m_model->getContainerInfo(w->m_contName).state == StateRunning) {  
+            
+            w->highlightRunningAsInactive();            
+        }
+    }        
 }
 
 void ContainerWidget::highlightAsActive()
 {
-    setPalette(QPalette(Qt::blue));
+    m_switchButton->setEnabled(false);   
+    m_nameLabel->setStyleSheet("font-weight: bold"); 
 }
+
+void ContainerWidget::highlightAsStopped()
+{
+    m_nameLabel->setStyleSheet("font-weight: normal");    
+}
+
+void ContainerWidget::highlightRunningAsInactive()
+{      
+    if (m_model->getContainerInfo(m_contName).state == StateRunning) {
+        m_switchButton->setEnabled(true);
+        m_nameLabel->setStyleSheet("font-weight: normal");
+    }
+}
+
 
 

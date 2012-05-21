@@ -141,7 +141,7 @@ int ContainerListModel::getRow(const QString& name) const
     return row;
 }
 
-std::vector<Parameter*> ContainerListModel::getContainerParametersList() const
+const std::vector<Parameter*> &ContainerListModel::getContainerParametersList() const
 {
     return m_device->getContainerParametersList();
 }

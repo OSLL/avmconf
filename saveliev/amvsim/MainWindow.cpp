@@ -10,7 +10,6 @@ MainWindow::MainWindow(IDevice* device, QWidget* parent)
 {
     const int HEIGHT = 600;
     const int LISTWIDTH = 480;
-    const int OPTIONSWIDTH = 0;
     
     setWindowTitle("Configurator");
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);

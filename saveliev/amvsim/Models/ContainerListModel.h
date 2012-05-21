@@ -28,8 +28,8 @@ public:
     ContainerInfo getContainerInfo(const QString& name);
     
     void parameterChanged(int parameterId, Value newValue);      
-    std::vector<Parameter*> getContainerParametersList() const;
-    std::vector<Parameter*> getDeviceParametersList() const;     
+    const std::vector<Parameter*> &getContainerParametersList() const;
+    const std::vector<Parameter*> &getDeviceParametersList() const;     
     std::vector<Value*> getContainerParametersValues(const std::string& containerId) const;   
     std::vector<Value*> getDeviceParametersValues() const;   
 

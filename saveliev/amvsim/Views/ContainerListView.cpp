@@ -36,7 +36,7 @@ void ContainerListView::setWidgets(int start, int end)
 {
     for (int i = start; i != end; ++i) {
         QVariant data = model()->data(model()->index(i, 0), Qt::DisplayRole).toString();
-        ContainerWidget *widget = new ContainerWidget(data, model(), this, &m_switchButtons);
+        ContainerWidget *widget = new ContainerWidget(data, model(), this, &m_containerWidgets);
         setIndexWidget(model()->index(i, 0), widget);
         
         connect(widget, SIGNAL(pressed(const QString&)), this, SLOT(itemPressed(const QString&)));
