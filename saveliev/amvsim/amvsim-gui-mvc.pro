@@ -20,12 +20,10 @@ SOURCES += main.cpp\
     Views/ContainerListView.cpp \
     Views/ContainerDelegate.cpp \
     Models/ContainerListModel.cpp \
-    Elements/SwitchButtons.cpp \
     Elements/ErrorLabel.cpp \
     Dialogs/NewContainerDialog.cpp \
-    Dialogs/ContainerParametersWidget.cpp \
     Dialogs/ContainerDialog.cpp \
-    Views/DeviceParametersWidget.cpp
+    Views/ParametersWidget.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -44,12 +42,10 @@ HEADERS  += \
     Views/ContainerListView.h \
     Views/ContainerDelegate.h \
     Models/ContainerListModel.h \
-    Elements/SwitchButtons.h \
     Elements/ErrorLabel.h \
     Dialogs/NewContainerDialog.h \
-    Dialogs/ContainerParametersWidget.h \
     Dialogs/ContainerDialog.h \
-    Views/DeviceParametersWidget.h
+    Views/ParametersWidget.h
 
 OTHER_FILES += \
     device.txt

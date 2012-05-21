@@ -9,7 +9,7 @@
 #include "api/IDevice.h"
 #include "Models/ContainerListModel.h"
 #include "Views/ContainerListView.h"
-#include "Views/DeviceParametersWidget.h"
+#include "Views/ParametersWidget.h"
 
 class MainWindow : public QMainWindow
 {

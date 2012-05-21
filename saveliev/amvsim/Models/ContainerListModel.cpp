@@ -128,6 +128,11 @@ ContainerInfo ContainerListModel::getContainerInfo(const QString& name)
     return m_device->getContainerInfo(name.toStdString());
 }
 
+IDevice *ContainerListModel::getDevice() const
+{
+    return m_device;
+}
+
 
 int ContainerListModel::getRow(const QString& name) const
 {
@@ -139,11 +144,6 @@ int ContainerListModel::getRow(const QString& name) const
     }
 
     return row;
-}
-
-const std::vector<Parameter*> &ContainerListModel::getContainerParametersList() const
-{
-    return m_device->getContainerParametersList();
 }
 
 

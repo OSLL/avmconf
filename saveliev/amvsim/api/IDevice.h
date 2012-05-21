@@ -32,11 +32,10 @@ public:
     virtual std::vector<std::string> getContainersIds() const = 0;
     virtual int getContainersNumber() const = 0;
      
-    virtual void parameterChanged(int parameterId, Value newValue) = 0;
     virtual const std::vector<Parameter*> &getContainerParametersList() const = 0;
     virtual const std::vector<Parameter*> &getDeviceParametersList() const = 0;
-    virtual std::vector<Value*> getContainerParametersValues(const std::string& containerId) const = 0;  
-    virtual std::vector<Value*> getDeviceParametersValues() const = 0;
+    virtual void parameterChanged(int parameterId, Value newValue) = 0;
+    virtual Value *getValue(const std::string& parameterId) const = 0;
 };
 
 #endif // IDEVICE_H

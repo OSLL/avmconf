@@ -22,7 +22,7 @@ ContainerDialog::ContainerDialog(ContainerListModel *model, const QString &contN
 
 QWidget *ContainerDialog::initParameters()
 {
-    m_parameters = new ContainerParametersWidget(m_model, m_contName);    
+    m_parameters = new ParametersWidget(m_model->getDevice(), m_model->getDevice()->getContainerParametersList());    
     return m_parameters;
 }
 

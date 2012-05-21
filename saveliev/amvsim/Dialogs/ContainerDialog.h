@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QPushButton>
 
-#include "ContainerParametersWidget.h"
+#include "../Views/ParametersWidget.h"
 #include "../Models/ContainerListModel.h"
 
 class ContainerDialog : public QDialog 
@@ -16,7 +16,7 @@ private:
     QPushButton *m_destroyButton;
     QPushButton *m_cancelDestroyButton;
     
-    ContainerParametersWidget *m_parameters;
+    ParametersWidget *m_parameters;
     ContainerListModel *m_model;
     QString m_contName;
     

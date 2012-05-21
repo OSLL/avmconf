@@ -25,8 +25,13 @@ AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
     std::vector<std::string> wifiOptions;
     wifiOptions.push_back("Point 1");
     wifiOptions.push_back("Point 2");
-    wifiOptions.push_back("Point 3");  
-    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "Outgoing calls", wifiOptions));
+    wifiOptions.push_back("Point 3");
+    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "WiFi", wifiOptions));    
+    std::vector<std::string> wifiOptions2;
+    wifiOptions2.push_back("Access pt");
+    wifiOptions2.push_back("Alalala");
+    wifiOptions2.push_back("Point of access");
+    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points2", "Access points 2", "WiFi", wifiOptions2));
         
     m_containerParameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
     m_containerParameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
@@ -244,6 +249,12 @@ void AndroidDevice::parameterChanged(int parameterId, Value newValue)
 {
 }
 
+Value *AndroidDevice::getValue(const std::string &parameterId) const
+{
+    if (parameterId == "outgoing_calls_allowed") return new BoolValue(parameterId, true);
+    if (parameterId == "incoming_calls_allowed") return new BoolValue(parameterId, false);
+    if (parameterId == "wifi_access_points")     return new OptionsValue(parameterId, 1);
+}
 
 const std::vector<Parameter*> &AndroidDevice::getContainerParametersList() const
 {     
@@ -255,22 +266,6 @@ const std::vector<Parameter*> &AndroidDevice::getDeviceParametersList() const
     return m_deviceParameters;    
 }
 
-std::vector<Value*> AndroidDevice::getContainerParametersValues(const std::string &containerId) const
-{
-    std::vector<Value*> values;
-    values.push_back(new BoolValue("outgoing_calls_allowed", true));
-    values.push_back(new BoolValue("incoming_calls_allowed", true));
-    
-    return values;
-}
-
-std::vector<Value*> AndroidDevice::getDeviceParametersValues() const
-{
-    std::vector<Value*> values;
-    values.push_back(new OptionsValue("wifi_access_points", 1));
-    
-    return values;
-}
 
 
 

@@ -31,11 +31,10 @@ public:
     virtual std::vector<std::string> getContainersIds() const;
     virtual int getContainersNumber() const;
      
-    virtual void parameterChanged(int parameterId, Value newValue);      
     virtual const std::vector<Parameter*> &getContainerParametersList() const;
     virtual const std::vector<Parameter*> &getDeviceParametersList() const;     
-    virtual std::vector<Value*> getContainerParametersValues(const std::string& containerId) const;   
-    virtual std::vector<Value*> getDeviceParametersValues() const;    
+    virtual void parameterChanged(int parameterId, Value newValue);
+    virtual Value *getValue(const std::string& parameterId) const; 
     
 //    ServiceInfo getServiceInfo(const std::string& id) const;
 //    std::vector<std::string> getServicesIds() const;

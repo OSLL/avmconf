@@ -1,4 +1,5 @@
 #include <QVBoxLayout>
+#include <QScrollArea>
 
 #include "MainWindow.h"
 #include "Dialogs/NewContainerDialog.h"
@@ -18,13 +19,16 @@ MainWindow::MainWindow(IDevice* device, QWidget* parent)
     allWidget->setLayout(new QVBoxLayout);
     allWidget->layout()->setContentsMargins(10, 10, 10, 10);
     setCentralWidget(allWidget);
-    
+        
     QWidget *containersWidget = initContainerList();
     QWidget *parametersWidget = initDeviceParameters();
+        
+    QScrollArea *sa = new QScrollArea();
+    sa->setWidget(parametersWidget);
     
     ((QVBoxLayout*)allWidget->layout())->addWidget(m_createContainerButton, 0, Qt::AlignLeft);
     ((QVBoxLayout*)allWidget->layout())->addWidget(containersWidget);
-    ((QVBoxLayout*)allWidget->layout())->addWidget(parametersWidget);
+    ((QVBoxLayout*)allWidget->layout())->addWidget(sa);
 }
 
 QWidget *MainWindow::initContainerList()
@@ -49,11 +53,11 @@ QWidget * MainWindow::initDeviceParameters()
 {
     QWidget *w = new QWidget;
     w->setLayout(new QVBoxLayout);
-    w->setFixedHeight(HEIGHT - CONTAINERLIST_HEIGHT);
     w->layout()->setContentsMargins(0, 0, 0, 0);
     
     w->layout()->addWidget(new QLabel("Device parameters"));
-    w->layout()->addWidget(new DeviceParametersWidget(m_device)); 
+    ((QVBoxLayout*)w->layout())->addWidget(new ParametersWidget(m_device,
+            m_device->getDeviceParametersList()), 0, Qt::AlignTop); 
     
     return w;    
 }

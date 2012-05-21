@@ -27,12 +27,8 @@ public:
 
     ContainerInfo getContainerInfo(const QString& name);
     
-    void parameterChanged(int parameterId, Value newValue);      
-    const std::vector<Parameter*> &getContainerParametersList() const;
-    const std::vector<Parameter*> &getDeviceParametersList() const;     
-    std::vector<Value*> getContainerParametersValues(const std::string& containerId) const;   
-    std::vector<Value*> getDeviceParametersValues() const;   
-
+    IDevice *getDevice() const;
+    
  // QModelIndex index(int row, int column, const QModelIndex&parent) const;
  // QModelIndex parent(const QModelIndex&child) const;
 
