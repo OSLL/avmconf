@@ -105,27 +105,28 @@ struct dentry *snapfs_inode_lookup(struct inode *dir, struct dentry *dentry,
 	printk(KERN_INFO "snapfs_inode_lookup(dir = %p, dentry = %p, nd = %p)\n", dir, dentry, nd);
 
 	printk(KERN_INFO "dentry->d_inode = %p", dentry->d_inode);
+	printk(KERN_INFO "dentry->d_sb = %p", dentry->d_sb);
 	printk(KERN_INFO "nd->path->dentry = %p", nd->path.dentry);
 	printk(KERN_INFO "nd->path->dentry->d_inode = %p", nd->path.dentry->d_inode);
 
 	snapfs_sb = dir->i_sb;
-	printk(KERN_INFO "SnapFS super block FS name: \"%s\"\n", snapfs_sb->s_type->name);
+	printk(KERN_INFO "snapfs_sb = %p", snapfs_sb);
+	printk(KERN_INFO "snapfs_sb->s_type->name = \"%s\"\n", snapfs_sb->s_type->name);
 
 	mnt = container_of(nd->path.mnt, struct mount, mnt);
 	wrapped_node = mnt->mnt_mountpoint->d_inode;
 	wrapped_sb = wrapped_node->i_sb;
 	nd->path.mnt = &mnt->mnt_parent->mnt;
 	nd->path.dentry = mnt->mnt_mountpoint;
+	nd->inode = nd->path.dentry->d_inode;
+
+	dentry->d_sb = wrapped_sb;
 
 	printk(KERN_INFO "wrapped_sb = %p", wrapped_sb);
 	if (wrapped_sb) {
-		printk(KERN_INFO "wrapped_sb->s_magic = %lx", wrapped_sb->s_magic);
-		printk(KERN_INFO "wrapped_sb->s_type = %p", wrapped_sb->s_type);
 		if (wrapped_sb->s_type) {
-			printk(KERN_INFO "wrapped_sb->s_type->name = %p", 
-			       wrapped_sb->s_type->name);
 			if (wrapped_sb->s_type->name) {
-				printk(KERN_INFO "super block FS name: \"%s\"\n", 
+				printk(KERN_INFO "wrapped_sb->s_type->name = \"%s\"\n", 
 				       wrapped_sb->s_type->name);
 			}
 		}
