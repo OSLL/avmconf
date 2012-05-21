@@ -5,7 +5,11 @@
 #include <QLabel>
 
 #include "api/IDevice.h"
-#include "ParameterWidgets.h"
+#include "ParametersWidget.h"
+
+#include "OptionsParameterWidget.h"
+#include "DoubleParameterWithRangeWidget.h"
+#include "BoolParameterWidget.h"
 
 class ParametersWidget : public QWidget
 {
