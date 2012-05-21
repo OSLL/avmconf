@@ -5,6 +5,7 @@
 #include <QLabel>
 
 #include "api/IDevice.h"
+#include "ParameterWidgets.h"
 
 class ParametersWidget : public QWidget
 {
@@ -16,9 +17,9 @@ private:
     void initWidgetsForParameters(const std::vector<Parameter*> &parameters);
     QLabel *buildServiceLabel(QLabel *label);
     
-    static void buildBoolean        (QWidget *w, BoolParameter *par, bool val);
-    static void buildDoubleWithRange(QWidget *w, DoubleParameterWithRange *par, double val);
-    static void buildOptions        (QWidget *w, OptionsParameter *par, int val);
+    ParameterWidget *buildBoolean        (BoolParameter *par, bool val);
+    ParameterWidget *buildDoubleWithRange(DoubleParameterWithRange *par, double val);
+    ParameterWidget *buildOptions        (OptionsParameter *par, int val);
     
 public:
     ParametersWidget(IDevice *device, const std::vector<Parameter*>& parameters, QWidget *parent = 0);
@@ -26,7 +27,9 @@ public:
 signals:
     
 public slots:
-    
+    void checkBoxChanged(int val, Parameter *par);   
+    void sliderMoved(double val, Parameter *par);   
+    void radioSwitchedChanged(int val, Parameter *par);    
 };
 
 #endif // CONTAINERPARAMETERSWIDGET_H

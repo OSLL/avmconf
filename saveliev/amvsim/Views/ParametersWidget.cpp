@@ -4,9 +4,11 @@
 #include <QLineEdit>
 #include <QLabel> 
 #include <QSlider>
+#include <QDebug>
 #include <sstream>
 
 #include "ParametersWidget.h"
+#include "ParameterWidgets.h"
 
 
 ParametersWidget::ParametersWidget(IDevice *device, const std::vector<Parameter*> &parameters, QWidget *parent)
@@ -18,7 +20,6 @@ ParametersWidget::ParametersWidget(IDevice *device, const std::vector<Parameter*
     
     initWidgetsForParameters(parameters);
 }
-
 
 void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &pars) 
 {        
@@ -37,25 +38,30 @@ void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &p
                  
         parametersForAService->layout()->addWidget(buildServiceLabel(new QLabel(QString::fromStdString(si->first))));     
         
+        Value *value;
+        Parameter *par;
         for (std::map<std::string, Parameter*>::iterator pi = si->second.begin(); pi != si->second.end(); ++pi) {
-            QWidget *w = new QWidget();
+            ParameterWidget *w = 0;
             
-            Parameter* par = pi->second;
+            par = pi->second;
             Parameter::Type type = par->getType();
-            Value* value = m_device->getValue(par->getId());
+            value = m_device->getValue(par->getId());
             
             if (type == Parameter::Bool) { 
-                buildBoolean(w, (BoolParameter*)par, ((BoolValue*)value)->getValue());
+                w = buildBoolean((BoolParameter*)par, ((BoolValue*)value)->getValue());
                 
             } else if (type == Parameter::DoubleWithRange) {
-                buildDoubleWithRange(w, (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue()); 
+                w = buildDoubleWithRange((DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue()); 
                 
             } else if (type == Parameter::Options) {
-                buildOptions(w, (OptionsParameter*)par, ((OptionsValue*)value)->getValue());
+                w = buildOptions((OptionsParameter*)par, ((OptionsValue*)value)->getValue());
             }   
             
-            ((QVBoxLayout*)parametersForAService->layout())->addWidget(w, 0, Qt::AlignTop);   
-        }            
+            if (w != 0) {
+                ((QVBoxLayout*)parametersForAService->layout())->addWidget(w, 0, Qt::AlignTop); 
+            }
+        }       
+        
         ((QVBoxLayout*)layout())->addWidget(parametersForAService, 0, Qt::AlignTop);   
     }   
 }
@@ -66,18 +72,24 @@ QLabel *ParametersWidget::buildServiceLabel(QLabel *label)
     return label;
 }
 
-void ParametersWidget::buildBoolean(QWidget *w, BoolParameter *par, bool val)
-{
-    QCheckBox *chBox = new QCheckBox(par->getName().c_str());
-    chBox->setChecked(val);
+ParameterWidget *ParametersWidget::buildBoolean(BoolParameter *par, bool val)
+{    
+    QCheckBox *checkBox = new QCheckBox(par->getName().c_str());
+    checkBox->setChecked(val);
     
+    BoolParameterWidget *w = new BoolParameterWidget(m_device, par->getId());   
     w->setLayout(new QVBoxLayout);
     w->layout()->setContentsMargins(0, 0, 0, 0);
-    w->layout()->addWidget(chBox);
+    w->layout()->addWidget(checkBox);
+        
+    QObject::connect(checkBox, SIGNAL(stateChanged(int)), w, SLOT(checkBoxChanged(int)));
+    
+    return w;
 }
 
-void ParametersWidget::buildDoubleWithRange(QWidget *w, DoubleParameterWithRange *par, double val)
+ParameterWidget *ParametersWidget::buildDoubleWithRange(DoubleParameterWithRange *par, double val)
 {   
+    DoubleParameterWithRangeWidget *w = new DoubleParameterWithRangeWidget(m_device, par->getId()); 
     w->setLayout(new QHBoxLayout);
     w->layout()->setContentsMargins(0, 0, 0, 0);
     
@@ -86,10 +98,13 @@ void ParametersWidget::buildDoubleWithRange(QWidget *w, DoubleParameterWithRange
     
     w->layout()->addWidget(new QLabel(par->getName().c_str()));
     w->layout()->addWidget(new QLineEdit(QString::fromStdString(strs.str())));
+    
+    return w;
 }
 
-void ParametersWidget::buildOptions(QWidget *w, OptionsParameter *par, int val)
+ParameterWidget *ParametersWidget::buildOptions(OptionsParameter *par, int val)
 {   
+    OptionsParameterWidget *w = new OptionsParameterWidget(m_device, par->getId()); 
     w->setLayout(new QVBoxLayout);
     w->layout()->setContentsMargins(0, 0, 0, 0);  
     w->layout()->setSpacing(0);
@@ -108,7 +123,9 @@ void ParametersWidget::buildOptions(QWidget *w, OptionsParameter *par, int val)
             rb->setChecked(true);
         }            
     }
-    rb->setStyleSheet("margin-bottom: 7px");    
+    rb->setStyleSheet("margin-bottom: 7px");
+    
+    return w;    
 }
 
 

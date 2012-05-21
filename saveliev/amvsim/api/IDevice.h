@@ -34,7 +34,7 @@ public:
      
     virtual const std::vector<Parameter*> &getContainerParametersList() const = 0;
     virtual const std::vector<Parameter*> &getDeviceParametersList() const = 0;
-    virtual void parameterChanged(int parameterId, Value newValue) = 0;
+    virtual void parameterChanged(int parameterId, Value *newValue) = 0;
     virtual Value *getValue(const std::string& parameterId) const = 0;
 };
 

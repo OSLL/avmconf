@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     Dialogs/NewContainerDialog.cpp \
     Dialogs/ContainerDialog.cpp \
     Views/ParametersWidget.cpp \
-    Dialogs/DeviceParametersDialog.cpp
+    Dialogs/DeviceParametersDialog.cpp \
+    Views/ParameterWidgets.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -47,7 +48,8 @@ HEADERS  += \
     Dialogs/NewContainerDialog.h \
     Dialogs/ContainerDialog.h \
     Views/ParametersWidget.h \
-    Dialogs/DeviceParametersDialog.h
+    Dialogs/DeviceParametersDialog.h \
+    Views/ParameterWidgets.h
 
 OTHER_FILES += \
     device.txt

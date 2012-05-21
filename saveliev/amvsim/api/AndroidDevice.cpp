@@ -41,8 +41,19 @@ AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
 
 AndroidDevice::~AndroidDevice()
 {
-    for (map<string, Container*>::iterator it = this->m_containers.begin(); it != this->m_containers.end(); ++it) {
+    for (map<string, Container*>::iterator it = this->m_containers.begin();
+         it != this->m_containers.end(); ++it) {
         delete it->second;
+    }
+    
+    for (std::vector<Parameter*>::iterator it = this->m_deviceParameters.begin();
+         it != this->m_deviceParameters.end(); ++it) {
+        delete *it;
+    }
+    
+    for (std::vector<Parameter*>::iterator it = this->m_containerParameters.begin();
+         it != this->m_containerParameters.end(); ++it) {
+        delete *it;
     }
 }
 
@@ -245,8 +256,9 @@ int AndroidDevice::getContainersNumber() const
 //}
 
 
-void AndroidDevice::parameterChanged(int parameterId, Value newValue)
+void AndroidDevice::parameterChanged(int parameterId, Value *newValue)
 {
+    delete newValue;
 }
 
 Value *AndroidDevice::getValue(const std::string &parameterId) const
