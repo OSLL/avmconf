@@ -2,6 +2,7 @@
 #define OPTIONSPARAMETERWIDGET_H
 
 #include <QWidget>
+
 #include "ParameterWidget.h"
 
 class OptionsParameterWidget : public ParameterWidget 

@@ -4,7 +4,7 @@
 #include "MainWindow.h"
 #include "Dialogs/NewContainerDialog.h"
 #include "Elements/ErrorLabel.h"
-#include "Views/ContainerWidget.h"
+#include "ContainerList/ContainerWidget.h"
 #include <Dialogs/DeviceParametersDialog.h>
 
 MainWindow::MainWindow(IDevice* device, QWidget* parent)

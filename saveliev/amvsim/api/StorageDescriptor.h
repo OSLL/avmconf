@@ -4,7 +4,6 @@
 #include <string>
 
 // Class that represents any source of data
-
 struct StorageDescriptor {
 public:
     enum StorageDescriptorType {

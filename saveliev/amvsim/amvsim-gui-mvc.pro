@@ -14,21 +14,21 @@ SOURCES += main.cpp\
     api/Container.cpp \
     api/AndroidDevice.cpp \
     api/Saver.cpp \
-    MainWindow.cpp \
     api/Parameter.cpp \
-    Views/ContainerWidget.cpp \
-    Views/ContainerListView.cpp \
-    Views/ContainerDelegate.cpp \
-    Models/ContainerListModel.cpp \
+    MainWindow.cpp \
     Elements/ErrorLabel.cpp \
     Dialogs/NewContainerDialog.cpp \
     Dialogs/ContainerDialog.cpp \
-    Views/ParametersWidget.cpp \
     Dialogs/DeviceParametersDialog.cpp \
-    Views/BoolParameterWidget.cpp \
-    Views/ParameterWidget.cpp \
-    Views/DoubleParameterWithRangeWidget.cpp \
-    Views/OptionsParameterWidget.cpp
+    ParameterWidgets/ParameterWidget.cpp \
+    ParameterWidgets/ParametersWidget.cpp \
+    ParameterWidgets/OptionsParameterWidget.cpp \
+    ParameterWidgets/DoubleParameterWithRangeWidget.cpp \
+    ParameterWidgets/BoolParameterWidget.cpp \
+    ContainerList/ContainerWidget.cpp \
+    ContainerList/ContainerListView.cpp \
+    ContainerList/ContainerListModel.cpp \
+    ContainerList/ContainerDelegate.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -37,25 +37,25 @@ HEADERS  += \
     api/ContainerState.h \
     api/ContainerInfo.h \
     api/Saver.h \
-    MainWindow.h \
     api/NoSuchContainerException.h \
     api/Service.h \
     api/Parameter.h \
     api/IContainer.h \
     api/IDevice.h \
-    Views/ContainerWidget.h \
-    Views/ContainerListView.h \
-    Views/ContainerDelegate.h \
-    Models/ContainerListModel.h \
+    MainWindow.h \
     Elements/ErrorLabel.h \
     Dialogs/NewContainerDialog.h \
     Dialogs/ContainerDialog.h \
-    Views/ParametersWidget.h \
     Dialogs/DeviceParametersDialog.h \
-    Views/BoolParameterWidget.h \
-    Views/ParameterWidget.h \
-    Views/DoubleParameterWithRangeWidget.h \
-    Views/OptionsParameterWidget.h
+    ParameterWidgets/ParameterWidget.h \
+    ParameterWidgets/ParametersWidget.h \
+    ParameterWidgets/OptionsParameterWidget.h \
+    ParameterWidgets/DoubleParameterWithRangeWidget.h \
+    ParameterWidgets/BoolParameterWidget.h \
+    ContainerList/ContainerWidget.h \
+    ContainerList/ContainerListView.h \
+    ContainerList/ContainerListModel.h \
+    ContainerList/ContainerDelegate.h
 
 OTHER_FILES += \
     device.txt

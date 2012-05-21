@@ -2,7 +2,8 @@
 #define DEVICEPARAMETERSDIALOG_H
 
 #include <QDialog>
-#include <Views/ParametersWidget.h>
+
+#include "ParameterWidgets/ParametersWidget.h"
 
 class DeviceParametersDialog : public QDialog
 {

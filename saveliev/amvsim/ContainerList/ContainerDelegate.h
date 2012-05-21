@@ -3,7 +3,7 @@
 
 #include <QStyledItemDelegate>
 
-#include "../Models/ContainerListModel.h"
+#include "ContainerListModel.h"
 
 class ContainerDelegate : public QStyledItemDelegate {
     Q_OBJECT

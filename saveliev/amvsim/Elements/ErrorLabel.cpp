@@ -1,3 +1,4 @@
+
 #include "ErrorLabel.h"
 
 ErrorLabel::ErrorLabel(QWidget *parent) :

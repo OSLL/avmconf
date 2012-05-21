@@ -2,7 +2,7 @@
 #include <QtGui/QApplication>
 
 #include "MainWindow.h"
-#include <API/AndroidDevice.h>
+#include <api/AndroidDevice.h>
 
 int main(int argc, char *argv[])
 {

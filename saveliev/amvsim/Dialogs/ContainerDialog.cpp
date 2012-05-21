@@ -41,6 +41,7 @@ QWidget *ContainerDialog::initButtons()
     m_destroyButton->setStyleSheet("color: red");
     
     m_cancelDestroyButton = new QPushButton("Cancel");
+    m_cancelDestroyButton->setFixedWidth(100);
     m_cancelDestroyButton->setVisible(false);
     
     QWidget *w = new QWidget;

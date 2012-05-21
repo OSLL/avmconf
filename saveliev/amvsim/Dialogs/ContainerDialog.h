@@ -4,8 +4,8 @@
 #include <QDialog>
 #include <QPushButton>
 
-#include "../Views/ParametersWidget.h"
-#include "../Models/ContainerListModel.h"
+#include "ParameterWidgets/ParametersWidget.h"
+#include "ContainerList/ContainerListModel.h"
 
 class ContainerDialog : public QDialog 
 {

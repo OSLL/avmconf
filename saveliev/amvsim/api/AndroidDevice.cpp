@@ -9,7 +9,7 @@ using std::map;
 using std::pair;
 
 
-AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
+AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver() 
 {
     m_saver.restore(m_containers);
     

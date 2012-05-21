@@ -7,9 +7,9 @@
 #include <QLabel>
 
 #include "api/IDevice.h"
-#include "Models/ContainerListModel.h"
-#include "Views/ContainerListView.h"
-#include "Views/ParametersWidget.h"
+#include "ContainerList/ContainerListModel.h"
+#include "ContainerList/ContainerListView.h"
+#include "ParameterWidgets/ParametersWidget.h"
 
 class MainWindow : public QMainWindow
 {
