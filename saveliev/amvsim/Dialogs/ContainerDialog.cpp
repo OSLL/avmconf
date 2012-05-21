@@ -1,6 +1,9 @@
-#include "ContainerDialog.h"
+
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QScrollArea>
+
+#include "ContainerDialog.h"
 
 ContainerDialog::ContainerDialog(ContainerListModel *model, const QString &contName, QWidget *parent)
     : QDialog(parent), m_model(model), m_contName(contName), m_toDestroy(false)
@@ -8,12 +11,13 @@ ContainerDialog::ContainerDialog(ContainerListModel *model, const QString &contN
     setWindowTitle(contName);
     setLayout(new QVBoxLayout);
     setFixedWidth(400);
-    setMaximumHeight(400);
-    layout()->setContentsMargins(7, 7, 7, 7);
-        
+            
     QWidget *parameters = initParameters();
     QWidget *buttons = initButtons();
-      
+    
+    parameters->setFixedHeight(400);
+    
+    ((QVBoxLayout*)layout())->setContentsMargins(0, 0, 0, 0);
     ((QVBoxLayout*)layout())->addWidget(parameters, 0, Qt::AlignTop);      
     ((QVBoxLayout*)layout())->addWidget(buttons, 0, Qt::AlignBottom);     
     
@@ -21,9 +25,11 @@ ContainerDialog::ContainerDialog(ContainerListModel *model, const QString &contN
 }
 
 QWidget *ContainerDialog::initParameters()
-{
-    m_parameters = new ParametersWidget(m_model->getDevice(), m_model->getDevice()->getContainerParametersList());    
-    return m_parameters;
+{    
+    QScrollArea *scrollArea = new QScrollArea;
+    scrollArea->setWidget(new ParametersWidget(m_model->getDevice(), 
+               m_model->getDevice()->getContainerParametersList()));
+    return scrollArea;
 }
 
 QWidget *ContainerDialog::initButtons()
@@ -39,7 +45,7 @@ QWidget *ContainerDialog::initButtons()
     
     QWidget *w = new QWidget;
     w->setLayout(new QHBoxLayout);    
-    ((QHBoxLayout*)w->layout())->setContentsMargins(0, 0, 0, 0);
+    ((QHBoxLayout*)w->layout())->setContentsMargins(15, 0, 15, 15);
     ((QHBoxLayout*)w->layout())->addWidget(m_destroyButton);
     ((QHBoxLayout*)w->layout())->addWidget(m_cancelDestroyButton);
     ((QHBoxLayout*)w->layout())->addWidget(m_doneButton, 0, Qt::AlignRight); 

@@ -20,20 +20,21 @@ public:
 
 private:
     static const int HEIGHT = 600;
-    static const int CONTAINERLIST_HEIGHT = 350;
     static const int WIDTH = 480;
     
     IDevice *m_device;
     ContainerListModel *m_containersModel;
     ContainerListView *m_containersView;
     QPushButton *m_createContainerButton;
+    QPushButton *m_callParametersDialogButton;
     QLabel *m_errorLabel;
     
     QWidget *initContainerList();
-    QWidget *initDeviceParameters();
+    QWidget *initButtons();
     
 public slots:
     void startAddingContainer();
+    void openParametersDialog();
 };
 
 #endif // MAINWINDOW_H

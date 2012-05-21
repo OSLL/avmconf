@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     Elements/ErrorLabel.cpp \
     Dialogs/NewContainerDialog.cpp \
     Dialogs/ContainerDialog.cpp \
-    Views/ParametersWidget.cpp
+    Views/ParametersWidget.cpp \
+    Dialogs/DeviceParametersDialog.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     Elements/ErrorLabel.h \
     Dialogs/NewContainerDialog.h \
     Dialogs/ContainerDialog.h \
-    Views/ParametersWidget.h
+    Views/ParametersWidget.h \
+    Dialogs/DeviceParametersDialog.h
 
 OTHER_FILES += \
     device.txt

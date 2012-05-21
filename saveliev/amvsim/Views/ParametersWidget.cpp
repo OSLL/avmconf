@@ -13,7 +13,7 @@ ParametersWidget::ParametersWidget(IDevice *device, const std::vector<Parameter*
     : QWidget(parent), m_device(device)
 {
     setLayout(new QVBoxLayout);
-    layout()->setContentsMargins(5, 5, 5, 5);
+    layout()->setContentsMargins(15, 15, 15, 15);
     layout()->setSpacing(10);
     
     initWidgetsForParameters(parameters);
