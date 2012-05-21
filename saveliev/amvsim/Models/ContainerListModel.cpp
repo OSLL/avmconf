@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 #include <QDebug>
 #include <QVariant>
 #include <QSize>
@@ -6,7 +7,7 @@
 #include "ContainerListModel.h"
 #include "../api/ContainerInfo.h"
 
-ContainerListModel::ContainerListModel(AndroidDevice* device, QObject* parent) :
+ContainerListModel::ContainerListModel(IDevice* device, QObject* parent) :
     QAbstractListModel(parent),
     m_device(device)
 {
@@ -56,18 +57,18 @@ int ContainerListModel::createContainer(const QString& name, StorageDescriptor& 
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     
-    AndroidDevice::Result result = m_device->createContainer(name.toStdString(), descriptor);
+    IDevice::Result result = m_device->createContainer(name.toStdString(), descriptor);
 
-    if (result == AndroidDevice::CannotSave) {
+    if (result == IDevice::CannotSave) {
         qDebug() << "DeviceModel: Error creating container " << name << ": cannot save containers to file";
     }
-    else if (result == AndroidDevice::CannotLoadImage) {
+    else if (result == IDevice::CannotLoadImage) {
         qDebug() << "DeviceModel: Error creating container " << name << ": cannot load image";
     }
-    else if (result == AndroidDevice::IdAlreadyExists) {
+    else if (result == IDevice::IdAlreadyExists) {
         qDebug() << "DeviceModel: Error creating container " << name << ": container with such id already exists";
     }
-    else if (result == AndroidDevice::Alright) {
+    else if (result == IDevice::Alright) {
         m_ids.push_back(name);
       //  emit(layoutChanged());
       //  emit(created(name)); //? m_device->getContainerInfo(name.toStdString())))
@@ -85,7 +86,7 @@ int ContainerListModel::destroyContainer(const QString& name)
 {
     beginRemoveRows(QModelIndex(), getRow(name), getRow(name));
 
-    AndroidDevice::Result result = m_device->destroyContainer(name.toStdString());
+    IDevice::Result result = m_device->destroyContainer(name.toStdString());
 
     if (result == -1) {
         qDebug() << "Error destroying container: not container with name " << name;
@@ -127,6 +128,11 @@ ContainerInfo ContainerListModel::getContainerInfo(const QString& name)
     return m_device->getContainerInfo(name.toStdString());
 }
 
+IDevice *ContainerListModel::getDevice() const
+{
+    return m_device;
+}
+
 
 int ContainerListModel::getRow(const QString& name) const
 {
@@ -139,6 +145,7 @@ int ContainerListModel::getRow(const QString& name) const
 
     return row;
 }
+
 
 //bool DeviceModel::setData(const QModelIndex &index, const QVariant &value, int role) {
 //    int row = index.row();
@@ -166,3 +173,4 @@ int ContainerListModel::getRow(const QString& name) const
 
 //QModelIndex DeviceModel::parent(const QModelIndex &child) const {
 //}
+

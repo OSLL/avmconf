@@ -4,7 +4,7 @@
 #include <QListView>
 #include <QButtonGroup>
 
-#include "ContainerWidget.h"
+class ContainerWidget;
 
 class ContainerListView : public QListView 
 {
@@ -17,7 +17,7 @@ public:
 private:
     void setWidgets(int start, int end);
     
-    QVector<QPushButton*> m_switchButtons;
+    QMap<QString, ContainerWidget*> m_containerWidgets;
     
     int m_selected;   
     

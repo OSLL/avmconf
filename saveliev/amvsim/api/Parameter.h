@@ -28,11 +28,11 @@ protected:
     std::string m_serviceName;
 };
 
-class DoubleWithRangeParameter : public Parameter {
+class DoubleParameterWithRange : public Parameter {
 public:
     virtual Type getType() { return DoubleWithRange; }
     
-    DoubleWithRangeParameter(const std::string &id, const std::string& name, 
+    DoubleParameterWithRange(const std::string& id, const std::string& name, 
                              const std::string& serviceName, double min, double max)
         : Parameter(id, name, serviceName), m_min(min), m_max(max) { }
     

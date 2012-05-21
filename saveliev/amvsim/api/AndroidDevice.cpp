@@ -13,20 +13,47 @@ AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
 {
     m_saver.restore(m_containers);
     
-    /////////////
+    /////////////////
     // HARD CODED
+    // // services
     Service* service = new Service("outgoingCalls");
     m_services.insert(std::make_pair("outgoingCalls", service));
     Service* service2 = new Service("incomingCalls");
     m_services.insert(std::make_pair("incomingCalls", service2));
-    /////////////
+        
+    // // parameters
+    std::vector<std::string> wifiOptions;
+    wifiOptions.push_back("Point 1");
+    wifiOptions.push_back("Point 2");
+    wifiOptions.push_back("Point 3");
+    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "WiFi", wifiOptions));    
+    std::vector<std::string> wifiOptions2;
+    wifiOptions2.push_back("Access pt");
+    wifiOptions2.push_back("Alalala");
+    wifiOptions2.push_back("Point of access");
+    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points2", "Access points 2", "WiFi", wifiOptions2));
+        
+    m_containerParameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
+    m_containerParameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
+    /////////////////
 }
 
 
 AndroidDevice::~AndroidDevice()
 {
-    for (map<string, Container*>::iterator it = this->m_containers.begin(); it != this->m_containers.end(); ++it) {
+    for (map<string, Container*>::iterator it = this->m_containers.begin();
+         it != this->m_containers.end(); ++it) {
         delete it->second;
+    }
+    
+    for (std::vector<Parameter*>::iterator it = this->m_deviceParameters.begin();
+         it != this->m_deviceParameters.end(); ++it) {
+        delete *it;
+    }
+    
+    for (std::vector<Parameter*>::iterator it = this->m_containerParameters.begin();
+         it != this->m_containerParameters.end(); ++it) {
+        delete *it;
     }
 }
 
@@ -229,50 +256,28 @@ int AndroidDevice::getContainersNumber() const
 //}
 
 
-void AndroidDevice::parameterChanged(int parameterId, Value newValue)
+void AndroidDevice::parameterChanged(int parameterId, Value *newValue)
 {
+    delete newValue;
 }
 
-
-std::vector<Parameter*> AndroidDevice::getContainerParametersList() const
-{ 
-    std::vector<Parameter*> parameters;
-    parameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
-    parameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
-    
-    return parameters;
-}
-
-std::vector<Parameter*> AndroidDevice::getDeviceParametersList() const
+Value *AndroidDevice::getValue(const std::string &parameterId) const
 {
-    std::vector<Parameter*> parameters;
-    
-    std::vector<std::string> wifiOptions;
-    wifiOptions.push_back("Point 1");
-    wifiOptions.push_back("Point 2");
-    wifiOptions.push_back("Point 3");    
-    
-    parameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "Outgoing calls", wifiOptions));
-    
-    return parameters;    
+    if (parameterId == "outgoing_calls_allowed") return new BoolValue(parameterId, true);
+    if (parameterId == "incoming_calls_allowed") return new BoolValue(parameterId, false);
+    if (parameterId == "wifi_access_points")     return new OptionsValue(parameterId, 1);
 }
 
-std::vector<Value*> AndroidDevice::getContainerParametersValues(const std::string &containerId) const
-{
-    std::vector<Value*> values;
-    values.push_back(new BoolValue("outgoing_calls_allowed", true));
-    values.push_back(new BoolValue("incoming_calls_allowed", true));
-    
-    return values;
+const std::vector<Parameter*> &AndroidDevice::getContainerParametersList() const
+{     
+    return m_containerParameters;
 }
 
-std::vector<Value*> AndroidDevice::getDeviceParametersValues() const
+const std::vector<Parameter*> &AndroidDevice::getDeviceParametersList() const
 {
-    std::vector<Value*> values;
-    values.push_back(new OptionsValue("wifi_access_points", 1));
-    
-    return values;
+    return m_deviceParameters;    
 }
+
 
 
 
