@@ -9,6 +9,7 @@
 
 #include "ParametersWidget.h"
 #include "ParameterWidgets.h"
+#include <QButtonGroup>
 
 
 ParametersWidget::ParametersWidget(IDevice *device, const std::vector<Parameter*> &parameters, QWidget *parent)
@@ -73,16 +74,16 @@ QLabel *ParametersWidget::buildServiceLabel(QLabel *label)
 }
 
 ParameterWidget *ParametersWidget::buildBoolean(BoolParameter *par, bool val)
-{    
-    QCheckBox *checkBox = new QCheckBox(par->getName().c_str());
-    checkBox->setChecked(val);
-    
+{        
     BoolParameterWidget *w = new BoolParameterWidget(m_device, par->getId());   
-    w->setLayout(new QVBoxLayout);
+    w->setLayout(new QVBoxLayout());
+    
+    QCheckBox *checkBox = new QCheckBox(par->getName().c_str());
+    checkBox->setChecked(val);    
+    QObject::connect(checkBox, SIGNAL(stateChanged(int)), w, SLOT(checkBoxChanged(int)));
+    
     w->layout()->setContentsMargins(0, 0, 0, 0);
     w->layout()->addWidget(checkBox);
-        
-    QObject::connect(checkBox, SIGNAL(stateChanged(int)), w, SLOT(checkBoxChanged(int)));
     
     return w;
 }
@@ -93,11 +94,22 @@ ParameterWidget *ParametersWidget::buildDoubleWithRange(DoubleParameterWithRange
     w->setLayout(new QHBoxLayout);
     w->layout()->setContentsMargins(0, 0, 0, 0);
     
+    QSlider *slider = new QSlider(Qt::Horizontal);
+    slider->setFixedWidth(200);
+    slider->setTickInterval(1);
+    slider->setRange(par->getMin(), par->getMax());
+    slider->setValue(val);
+    QObject::connect(slider, SIGNAL(sliderMoved(int)), w, SLOT(sliderMoved(int)));
+    
     std::ostringstream strs;
     strs << val;
+    QLineEdit *edit = new QLineEdit(QString::fromStdString(strs.str()));
+    edit->setFixedWidth(50);
+    QObject::connect(edit, SIGNAL(textChanged(QString)), w, SLOT(editChanged(QString)));
     
     w->layout()->addWidget(new QLabel(par->getName().c_str()));
-    w->layout()->addWidget(new QLineEdit(QString::fromStdString(strs.str())));
+    w->layout()->addWidget(edit);
+    w->layout()->addWidget(slider);
     
     return w;
 }
@@ -109,22 +121,23 @@ ParameterWidget *ParametersWidget::buildOptions(OptionsParameter *par, int val)
     w->layout()->setContentsMargins(0, 0, 0, 0);  
     w->layout()->setSpacing(0);
     
-    QLabel *label = new QLabel(par->getName().c_str());
- //   label->setStyleSheet("margin-bottom: -4px");      
-    
+    QLabel *label = new QLabel(par->getName().c_str());  
     w->layout()->addWidget(label);
     
+    QButtonGroup *radios = new QButtonGroup();    
+    QObject::connect(radios, SIGNAL(buttonClicked(int)), w, SLOT(radioSwitched(int)));
     QRadioButton *rb;
     for (int i = 0; i != par->getOptions().size(); ++i) {
         rb = new QRadioButton(par->getOptions()[i].data());
         rb->setStyleSheet("margin-bottom: 5px");  
+        radios->addButton(rb);
         w->layout()->addWidget(rb);
         if (i == val) {
             rb->setChecked(true);
-        }            
+        }
     }
-    rb->setStyleSheet("margin-bottom: 7px");
-    
+    rb->setStyleSheet("margin-bottom: 7px");    
+         
     return w;    
 }
 

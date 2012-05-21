@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <api/Parameter.h>
 #include <api/IDevice.h>
+#include <QLineEdit>
+#include <QSlider>
 
 class ParameterWidget : public QWidget
 {
@@ -37,12 +39,16 @@ public slots:
 class DoubleParameterWithRangeWidget : public ParameterWidget 
 {
     Q_OBJECT
+private:
+    QSlider m_slider;
+    QLineEdit m_edit;
     
 public:
     DoubleParameterWithRangeWidget(IDevice *device, const std::string& parId, QWidget *parent = 0);
     
 public slots:
-    void sliderMoved(double);    
+    void editChanged(const QString&);
+    void sliderMoved(int);    
 };
 
 class OptionsParameterWidget : public ParameterWidget 

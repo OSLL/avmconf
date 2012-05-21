@@ -32,7 +32,9 @@ AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
     wifiOptions2.push_back("Alalala");
     wifiOptions2.push_back("Point of access");
     m_deviceParameters.push_back(new OptionsParameter("wifi_access_points2", "Access points 2", "WiFi", wifiOptions2));
-        
+    m_deviceParameters.push_back(new DoubleParameterWithRange("test_double_param", 
+                          "Double param", "Some service", 0, 100));
+    
     m_containerParameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
     m_containerParameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
     /////////////////
@@ -266,6 +268,8 @@ Value *AndroidDevice::getValue(const std::string &parameterId) const
     if (parameterId == "outgoing_calls_allowed") return new BoolValue(parameterId, true);
     if (parameterId == "incoming_calls_allowed") return new BoolValue(parameterId, false);
     if (parameterId == "wifi_access_points")     return new OptionsValue(parameterId, 1);
+    if (parameterId == "test_double_param")      return new DoubleValue(parameterId, 25);
+    
 }
 
 const std::vector<Parameter*> &AndroidDevice::getContainerParametersList() const
