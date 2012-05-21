@@ -25,11 +25,7 @@ public:
     ParametersWidget(IDevice *device, const std::vector<Parameter*>& parameters, QWidget *parent = 0);
     
 signals:
-    
-public slots:
-    void checkBoxChanged(int val, Parameter *par);   
-    void sliderMoved(double val, Parameter *par);   
-    void radioSwitchedChanged(int val, Parameter *par);    
+     
 };
 
 #endif // CONTAINERPARAMETERSWIDGET_H
