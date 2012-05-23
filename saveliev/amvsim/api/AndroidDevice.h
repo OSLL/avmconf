@@ -30,8 +30,8 @@ public:
     virtual ContainerInfo getContainerInfo(const std::string& name) const;
     virtual std::vector<std::string> getContainersIds() const;
     virtual int getContainersNumber() const;
-     
-    virtual const std::vector<Parameter*> &getContainerParametersList() const;
+    
+    virtual const std::vector<Parameter*> &getContainerParametersList(const std::string &contName) const;
     virtual const std::vector<Parameter*> &getDeviceParametersList() const;     
     virtual void parameterChanged(int parameterId, Value *newValue);
     virtual Value *getValue(const std::string& parameterId) const;
@@ -49,7 +49,7 @@ private:
     ServicesMap m_services;
 
     std::vector<Parameter*> m_deviceParameters;
-    std::vector<Parameter*> m_containerParameters;
+    std::map<std::string, std::vector<Parameter*> > m_parametersForContainers;
     
     Saver m_saver;
 };

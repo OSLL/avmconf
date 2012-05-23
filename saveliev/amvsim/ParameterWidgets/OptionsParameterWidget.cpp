@@ -20,7 +20,7 @@ OptionsParameterWidget::OptionsParameterWidget(IDevice *device, OptionsParameter
     QButtonGroup *radios = new QButtonGroup();    
     QObject::connect(radios, SIGNAL(buttonClicked(int)), this, SLOT(radioSwitched(int)));
     QRadioButton *rb;
-    for (int i = 0; i != par->getOptions().size(); ++i) {
+    for (unsigned i = 0; i != par->getOptions().size(); ++i) {
         rb = new QRadioButton(par->getOptions()[i].data());
         rb->setStyleSheet("margin-bottom: 5px");  
         radios->addButton(rb);

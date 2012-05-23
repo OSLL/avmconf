@@ -3,10 +3,13 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+#include <QToolButton>
 
-#include "../api/ContainerInfo.h"
-#include "../api/ContainerState.h"
+#include "api/ContainerInfo.h"
+#include "api/ContainerState.h"
 #include "ContainerWidget.h"
+#include "PowerButton.h"
+#include "SwitchButton.h"
 
 ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model, 
                                  QWidget *parent, QMap<QString, ContainerWidget*> *anotherContainerWidgets)
@@ -15,21 +18,22 @@ ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model,
       m_model((ContainerListModel*)model),
       m_anotherContainerWidgets(anotherContainerWidgets)      
 {
-    setLayout(new QHBoxLayout);
+    QHBoxLayout *lay = new QHBoxLayout();
+    setLayout(lay);
 
-    m_powerButton = new QPushButton("Run");
-    m_powerButton->setFixedWidth(70);
+    m_powerButton = new TextPowerButton();
+    m_powerButton->setOff();
     QObject::connect(m_powerButton, SIGNAL(pressed()), this, SLOT(powerPressed()));
 
     m_nameLabel = new QLabel(m_contName);
 
-    m_switchButton = new QPushButton("Switch here");
-    m_switchButton->setEnabled(false);
-    QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchHerePressed()));
+    m_switchButton = new SwitchButton();
+    m_switchButton->setStoppedContainerView();
+    QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchPressed()));
     
-    ((QHBoxLayout*)layout())->addWidget(m_powerButton);
-    ((QHBoxLayout*)layout())->addWidget(m_nameLabel);
-    ((QHBoxLayout*)layout())->addWidget(m_switchButton, 0, Qt::AlignRight);
+    lay->addWidget(m_powerButton);
+    lay->addWidget(m_nameLabel);
+    lay->addWidget(m_switchButton, 0, Qt::AlignRight);
         
     setAutoFillBackground(true);
     
@@ -45,19 +49,16 @@ void ContainerWidget::powerPressed()
 {
     if (m_model->getContainerInfo(m_contName).state != StateRunning) {
         m_model->startContainer(m_contName);
-        m_powerButton->setText("Stop");          
-        highlightAsActive();          
-        highlightTheRestRunningAsInactive();
-        
+        m_powerButton->setOn();
+        highlightAsActive();       
+        highlightTheRestRunningAsInactive();        
     } else {        
-        m_model->stopContainer(m_contName);
-        m_powerButton->setText("Run");
-        m_switchButton->setEnabled(false);        
+        m_model->stopContainer(m_contName);        
         highlightAsStopped();
     }
 }
 
-void ContainerWidget::switchHerePressed()
+void ContainerWidget::switchPressed()
 {
     if (m_model->getContainerInfo(m_contName).state == StateRunning) {
         m_model->switchToContainer(m_contName);  
@@ -80,20 +81,22 @@ void ContainerWidget::highlightTheRestRunningAsInactive()
 }
 
 void ContainerWidget::highlightAsActive()
-{
-    m_switchButton->setEnabled(false);   
-    m_nameLabel->setStyleSheet("font-weight: bold"); 
+{ 
+    m_switchButton->setActiveContainerView();
+    m_nameLabel->setStyleSheet("font-weight: bold");
 }
 
 void ContainerWidget::highlightAsStopped()
 {
-    m_nameLabel->setStyleSheet("font-weight: normal");    
+    m_powerButton->setOff();
+    m_switchButton->setStoppedContainerView();
+    m_nameLabel->setStyleSheet("font-weight: normal");
 }
 
 void ContainerWidget::highlightRunningAsInactive()
 {      
     if (m_model->getContainerInfo(m_contName).state == StateRunning) {
-        m_switchButton->setEnabled(true);
+        m_switchButton->setRunningInactiveContainerView();
         m_nameLabel->setStyleSheet("font-weight: normal");
     }
 }

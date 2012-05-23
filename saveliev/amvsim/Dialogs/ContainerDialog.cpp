@@ -12,23 +12,26 @@ ContainerDialog::ContainerDialog(ContainerListModel *model, const QString &contN
     setLayout(new QVBoxLayout);
     setFixedWidth(400);
             
-    QWidget *parameters = initParameters();
+    QWidget *parametersWidget = initParameters();
     QWidget *buttons = initButtons();
     
-    parameters->setFixedHeight(400);
+    parametersWidget->setFixedHeight(400);
     
     ((QVBoxLayout*)layout())->setContentsMargins(0, 0, 0, 0);
-    ((QVBoxLayout*)layout())->addWidget(parameters, 0, Qt::AlignTop);      
+    ((QVBoxLayout*)layout())->addWidget(parametersWidget, 0, Qt::AlignTop);      
     ((QVBoxLayout*)layout())->addWidget(buttons, 0, Qt::AlignBottom);     
     
-    setTabOrder(buttons, parameters);      
+    setTabOrder(buttons, parametersWidget);      
 }
 
 QWidget *ContainerDialog::initParameters()
 {    
     QScrollArea *scrollArea = new QScrollArea;
-    scrollArea->setWidget(new ParametersWidget(m_model->getDevice(), 
-               m_model->getDevice()->getContainerParametersList()));
+    
+    IDevice *device = m_model->getDevice();
+    const std::vector<Parameter*> &ps = device->getContainerParametersList(m_contName.toStdString());
+    ParametersWidget *w = new ParametersWidget(device, ps);
+    scrollArea->setWidget(w);
     return scrollArea;
 }
 
@@ -45,7 +48,7 @@ QWidget *ContainerDialog::initButtons()
     m_cancelDestroyButton->setVisible(false);
     
     QWidget *w = new QWidget;
-    w->setLayout(new QHBoxLayout);    
+    w->setLayout(new QHBoxLayout); 
     ((QHBoxLayout*)w->layout())->setContentsMargins(15, 0, 15, 15);
     ((QHBoxLayout*)w->layout())->addWidget(m_destroyButton);
     ((QHBoxLayout*)w->layout())->addWidget(m_cancelDestroyButton);

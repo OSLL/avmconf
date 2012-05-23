@@ -5,10 +5,13 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QButtonGroup>
+#include <QToolButton>
 
 #include "ContainerListView.h"
 #include "ContainerListModel.h"
 #include "api/ContainerInfo.h"
+#include "PowerButton.h"
+#include "SwitchButton.h"
 
 class ContainerWidget : public QWidget {
     Q_OBJECT
@@ -17,9 +20,9 @@ private:
     QString m_contName;
     ContainerListModel *m_model;
 
-    QPushButton *m_powerButton;
+    TextPowerButton *m_powerButton;
     QLabel *m_nameLabel;
-    QPushButton *m_switchButton;
+    SwitchButton *m_switchButton;
     
     QMap<QString, ContainerWidget*> *m_anotherContainerWidgets;
 
@@ -39,7 +42,7 @@ signals:
 
 public slots:    
     void powerPressed();
-    void switchHerePressed();
+    void switchPressed();
 };
 
 #endif // CONTAINEREDITDELEGATE_H

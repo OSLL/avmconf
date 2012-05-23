@@ -13,7 +13,7 @@ ContainerListModel::ContainerListModel(IDevice* device, QObject* parent) :
     m_device(device)
 {
     std::vector<std::string> ids = device->getContainersIds();
-    for (int i = 0; i != ids.size(); ++i) {
+    for (unsigned i = 0; i != ids.size(); ++i) {
         m_ids.push_back(QString::fromStdString(ids[i]));
     }
 }
@@ -138,7 +138,7 @@ IDevice *ContainerListModel::getDevice() const
 int ContainerListModel::getRow(const QString& name) const
 {
     int row = -1;
-    for (int i = 0; i != m_ids.size(); ++i) {
+    for (unsigned i = 0; i != m_ids.size(); ++i) {
         if (name == m_ids[i]) {
             row = i;
         }

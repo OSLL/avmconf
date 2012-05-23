@@ -26,7 +26,7 @@ void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &p
     typedef std::map<std::string, std::map<std::string, Parameter*> > ParamsByServicesMap;
     ParamsByServicesMap parsByServices;
     
-    for (int pi = 0; pi != pars.size(); ++pi) {
+    for (unsigned pi = 0; pi != pars.size(); ++pi) {
         parsByServices[pars[pi]->getServiceName()][pars[pi]->getId()] = pars[pi];
     }
     
@@ -47,23 +47,26 @@ void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &p
             Parameter::Type type = par->getType();
             value = m_device->getValue(par->getId());
             
-            if (type == Parameter::Bool) { 
-                w = new BoolParameterWidget(m_device, (BoolParameter*)par, ((BoolValue*)value)->getValue());
+            if (value != 0) {                
+                if (type == Parameter::Bool) { 
+                    w = new BoolParameterWidget(m_device, (BoolParameter*)par, ((BoolValue*)value)->getValue());
+                    
+                } else if (type == Parameter::DoubleWithRange) {
+                    w = new DoubleParameterWithRangeWidget(m_device, (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue());
+                    
+                } else if (type == Parameter::Options) {
+                    w = new OptionsParameterWidget(m_device, (OptionsParameter*)par, ((OptionsValue*)value)->getValue());
+                }   
                 
-            } else if (type == Parameter::DoubleWithRange) {
-                w = new DoubleParameterWithRangeWidget(m_device, (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue());
-                
-            } else if (type == Parameter::Options) {
-                w = new OptionsParameterWidget(m_device, (OptionsParameter*)par, ((OptionsValue*)value)->getValue());
-            }   
-            
-            if (w != 0) {
-                ((QVBoxLayout*)parametersForAService->layout())->addWidget(w, 0, Qt::AlignTop); 
+                if (w != 0) {
+                    ((QVBoxLayout*)parametersForAService->layout())->addWidget(w, 0, Qt::AlignTop); 
+                }
             }
         }       
         
-        ((QVBoxLayout*)layout())->addWidget(parametersForAService, 0, Qt::AlignTop);   
-    }   
+        if (si->second.begin() != si->second.end()) {
+            ((QVBoxLayout*)layout())->addWidget(parametersForAService, 0, Qt::AlignTop);   
+    }   }
 }
 
 QLabel *ParametersWidget::buildServiceLabel(QLabel *label)
@@ -71,6 +74,5 @@ QLabel *ParametersWidget::buildServiceLabel(QLabel *label)
     label->setStyleSheet("font-weight: bold");
     return label;
 }
-
 
 

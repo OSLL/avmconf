@@ -21,9 +21,9 @@ private:
     void initWidgetsForParameters(const std::vector<Parameter*> &parameters);
     QLabel *buildServiceLabel(QLabel *label);
     
-    ParameterWidget *buildBoolean        (BoolParameter *par, bool val);
-    ParameterWidget *buildDoubleWithRange(DoubleParameterWithRange *par, double val);
-    ParameterWidget *buildOptions        (OptionsParameter *par, int val);
+ // ParameterWidget *buildBoolean        (BoolParameter *par, bool val);
+ // ParameterWidget *buildDoubleWithRange(DoubleParameterWithRange *par, double val);
+ // ParameterWidget *buildOptions        (OptionsParameter *par, int val);
     
 public:
     ParametersWidget(IDevice *device, const std::vector<Parameter*>& parameters, QWidget *parent = 0);
@@ -31,5 +31,6 @@ public:
 signals:
      
 };
+
 
 #endif // CONTAINERPARAMETERSWIDGET_H

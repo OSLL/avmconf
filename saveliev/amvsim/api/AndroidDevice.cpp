@@ -9,9 +9,13 @@ using std::map;
 using std::pair;
 
 
-AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver() 
+AndroidDevice::AndroidDevice() : m_activeContainer(0)
 {
     m_saver.restore(m_containers);
+    
+    for (ContainersMap::iterator it = m_containers.begin(); it != m_containers.end(); ++it) {
+        m_parametersForContainers.insert(std::make_pair(it->first, std::vector<Parameter*>()));
+    }
     
     /////////////////
     // HARD CODED
@@ -35,8 +39,10 @@ AndroidDevice::AndroidDevice() : m_containers(), m_activeContainer(0), m_saver()
     m_deviceParameters.push_back(new DoubleParameterWithRange("test_double_param", 
                           "Double param", "Some service", 0, 100));
     
-    m_containerParameters.push_back(new BoolParameter("outgoing_calls_allowed", "Allowed", "Outgoing calls"));
-    m_containerParameters.push_back(new BoolParameter("incoming_calls_allowed", "Allowed", "Incoming calls"));
+    std::vector<Parameter*> cont1params;
+    cont1params.push_back(new BoolParameter("outgoing_calls_allowed-cont1", "Allowed", "Outgoing calls"));
+    cont1params.push_back(new BoolParameter("incoming_calls_allowed-cont1", "Allowed", "Incoming calls"));   
+    m_parametersForContainers["cont1"] = cont1params;
     /////////////////
 }
 
@@ -53,9 +59,11 @@ AndroidDevice::~AndroidDevice()
         delete *it;
     }
     
-    for (std::vector<Parameter*>::iterator it = this->m_containerParameters.begin();
-         it != this->m_containerParameters.end(); ++it) {
-        delete *it;
+    for (std::map<std::string, std::vector<Parameter*> >::iterator it = m_parametersForContainers.begin();
+         it != m_parametersForContainers.end(); ++it) {
+        for (std::vector<Parameter*>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt) {
+            delete *jt;
+        }
     }
 }
 
@@ -74,6 +82,7 @@ AndroidDevice::Result AndroidDevice::createContainer(const string & containerNam
             result = CannotLoadImage;
         } else {
             m_containers.insert(pair<string, Container*>(containerName, container));
+            m_parametersForContainers.insert(std::make_pair(containerName, std::vector<Parameter*>()));
 
             if (m_saver.save(m_containers) != 0) {
                 result = CannotSave;
@@ -101,6 +110,7 @@ AndroidDevice::Result AndroidDevice::destroyContainer(const string & containerNa
         }
         delete containerIter->second;
         this->m_containers.erase(containerIter);
+        this->m_parametersForContainers.erase(containerName);
 
         if (m_saver.save(m_containers) != 0) {
             result = CannotSave;
@@ -258,23 +268,29 @@ int AndroidDevice::getContainersNumber() const
 //}
 
 
-void AndroidDevice::parameterChanged(int parameterId, Value *newValue)
+void AndroidDevice::parameterChanged(int, Value* newValue)
 {
     delete newValue;
 }
 
 Value *AndroidDevice::getValue(const std::string &parameterId) const
 {
-    if (parameterId == "outgoing_calls_allowed") return new BoolValue(parameterId, true);
-    if (parameterId == "incoming_calls_allowed") return new BoolValue(parameterId, false);
-    if (parameterId == "wifi_access_points")     return new OptionsValue(parameterId, 1);
-    if (parameterId == "test_double_param")      return new DoubleValue(parameterId, 25);
-    
+    if (parameterId == "wifi_access_points") {
+        return new OptionsValue(parameterId, 1);
+    } else if (parameterId == "test_double_param") {
+        return new DoubleValue(parameterId, 25);  
+    } else if (parameterId == "outgoing_calls_allowed-cont1") {
+        return new BoolValue(parameterId, true);
+    } else if (parameterId == "incoming_calls_allowed-cont1") {
+        return new BoolValue(parameterId, false);    
+    } else { 
+        return 0;
+    }
 }
 
-const std::vector<Parameter*> &AndroidDevice::getContainerParametersList() const
-{     
-    return m_containerParameters;
+const std::vector<Parameter*> &AndroidDevice::getContainerParametersList(const std::string& contName) const
+{   
+    return m_parametersForContainers.at(contName);
 }
 
 const std::vector<Parameter*> &AndroidDevice::getDeviceParametersList() const
