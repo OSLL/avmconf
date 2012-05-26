@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w(device);
     w.show();
-
+    
+    delete device;
     return a.exec();
 }
