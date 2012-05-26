@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     MainWindow w(device);
     w.show();
     
+    int res = a.exec();
     delete device;
-    return a.exec();
+    return res;
 }
