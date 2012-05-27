@@ -26,6 +26,7 @@ private:
     
     QMap<QString, ContainerWidget*> *m_anotherContainerWidgets;
 
+    void highlightAsRunning();
     void highlightTheRestRunningAsInactive();
     void highlightAsActive();
     void highlightAsStopped();

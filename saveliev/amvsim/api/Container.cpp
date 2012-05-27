@@ -20,11 +20,11 @@ int Container::restoreImage(const std::string & imageAddress) {
     return 0;
 }
 
-const ContainerState& Container::getState() const {
+const ContainerState Container::getState() const {
     return m_state;
 }
 
-void Container::setState(const ContainerState& inpState) {
+void Container::setState(const ContainerState inpState) {
     m_state = inpState;
 }
 

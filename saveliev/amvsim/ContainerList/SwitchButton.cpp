@@ -12,6 +12,12 @@ void SwitchButton::setStoppedContainerView()
     //setStyleSheet("background-color: #FFFFFF");
 }
 
+void SwitchButton::setRunningContainerView()
+{
+    setEnabled(true);
+    //setStyleSheet("* { background-color: #0F65FA }");
+}
+
 void SwitchButton::setActiveContainerView()
 {
     setEnabled(false);

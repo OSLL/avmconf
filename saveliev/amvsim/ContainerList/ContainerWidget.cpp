@@ -49,11 +49,10 @@ void ContainerWidget::powerPressed()
 {
     if (m_model->getContainerInfo(m_contName).state != StateRunning) {
         m_model->startContainer(m_contName);
-        m_powerButton->setOn();
-        highlightAsActive();       
-        highlightTheRestRunningAsInactive();        
+        highlightAsRunning();
     } else {        
-        m_model->stopContainer(m_contName);        
+        m_model->stopContainer(m_contName);  
+        m_switchButton->setRunningContainerView();      
         highlightAsStopped();
     }
 }
@@ -61,11 +60,26 @@ void ContainerWidget::powerPressed()
 void ContainerWidget::switchPressed()
 {
     if (m_model->getContainerInfo(m_contName).state == StateRunning) {
-        m_model->switchToContainer(m_contName);  
-        highlightAsActive();
-        highlightTheRestRunningAsInactive();
-    }
+        m_model->switchToContainer(m_contName);      }
 }
+
+void ContainerWidget::highlightAsRunning()
+{    
+    m_powerButton->setOn();
+    m_switchButton->setRunningContainerView();
+    m_nameLabel->setStyleSheet("font-weight: bold");
+}
+
+void ContainerWidget::highlightAsStopped()
+{
+    m_powerButton->setOff();
+    m_switchButton->setStoppedContainerView();
+    m_nameLabel->setStyleSheet("font-weight: normal");
+}
+
+
+
+
 
 void ContainerWidget::highlightTheRestRunningAsInactive()
 {    
@@ -80,18 +94,16 @@ void ContainerWidget::highlightTheRestRunningAsInactive()
     }        
 }
 
+
+
+
+
 void ContainerWidget::highlightAsActive()
 { 
     m_switchButton->setActiveContainerView();
     m_nameLabel->setStyleSheet("font-weight: bold");
 }
 
-void ContainerWidget::highlightAsStopped()
-{
-    m_powerButton->setOff();
-    m_switchButton->setStoppedContainerView();
-    m_nameLabel->setStyleSheet("font-weight: normal");
-}
 
 void ContainerWidget::highlightRunningAsInactive()
 {      
@@ -100,6 +112,4 @@ void ContainerWidget::highlightRunningAsInactive()
         m_nameLabel->setStyleSheet("font-weight: normal");
     }
 }
-
-
 

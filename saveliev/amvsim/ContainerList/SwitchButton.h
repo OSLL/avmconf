@@ -13,6 +13,7 @@ public:
     void setStoppedContainerView();
     void setRunningInactiveContainerView();
     void setActiveContainerView();
+    void setRunningContainerView();
     
 signals:
     
