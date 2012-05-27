@@ -31,7 +31,11 @@ QVariant ContainerListModel::data(const QModelIndex& index, int role) const
     }
 
     if (role == Qt::SizeHintRole) {
+#if defined(DESKTOP)
         return QSize(0, 50);
+#elif defined(SMARTPHONE)
+	return QSize(0, 100);
+#endif
     }
 
     return QVariant();

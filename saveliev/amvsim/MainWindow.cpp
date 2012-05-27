@@ -7,14 +7,62 @@
 #include "ContainerList/ContainerWidget.h"
 #include <Dialogs/DeviceParametersDialog.h>
 
+#ifdef SMARTPHONE
+#include <QWSServer>
+#include <QThread>
+#include <QFile>
+#include <QDir>
+#include <QDebug>
+#include <QTimer>
+
+#include "SupervisorListener.h"
+#endif
+
+#ifdef SMARTPHONE
+
+static QString findBacklightControl() {
+    QDir bd("/sys/class/backlight");
+    if (bd.exists()) {
+	QString brd;
+	foreach (brd, bd.entryList()) {
+	    if (brd.startsWith(".")) {
+		continue;
+	    }
+
+	    QFile br(bd.absolutePath() + "/" + brd + "/brightness");
+	    if (br.exists()) {
+		qDebug() << "Backlight control is at " << br.fileName();
+		return br.fileName();
+	    }	    
+	}
+    } else {
+	qDebug() << "No backlight class\n";
+    }
+
+    return QString();
+}
+#endif
+
 MainWindow::MainWindow(IDevice* device, QWidget* parent)
     : QMainWindow(parent), m_device(device)
 {    
     setWindowTitle("Configurator");
+
+#if defined(DESKTOP)
+
     setWindowFlags((this->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint);
     setFixedHeight(HEIGHT);
     setFixedWidth(WIDTH);
-    setStyleSheet("font-size: 13px;");
+
+#elif defined(SMARTPHONE)
+
+    bf = findBacklightControl();
+    workaroundStartupCounter = 0;
+    
+    setStyleSheet(" QWidget { font-family: sans-serif; font-size: 9px; }");
+    //setFont(QFont("sans", 9));
+
+#endif
     
     QWidget *allWidget = new QWidget;
     allWidget->setLayout(new QVBoxLayout);
@@ -28,6 +76,19 @@ MainWindow::MainWindow(IDevice* device, QWidget* parent)
     ((QVBoxLayout*)allWidget->layout())->addWidget(buttons);
     
     setTabOrder(containersWidget, buttons);
+
+#ifdef SMARTPHONE
+    SupervisorListener* sl = new SupervisorListener();
+    connect(sl, SIGNAL(switchedToRoot()), this, SLOT(doRepaint()));
+    connect(sl, SIGNAL(phoneAdded()), this, SLOT(preventBlanking()));
+    sl->start();
+    lightUp();
+
+    QTimer* waTimer = new QTimer(this);
+    waTimer->setInterval(3000);
+    waTimer->start(3000);
+    connect(waTimer, SIGNAL(timeout()), this, SLOT(workaround()));
+#endif
 }
 
 QWidget *MainWindow::initContainerList()
@@ -73,7 +134,59 @@ void MainWindow::openParametersDialog()
 }
 
 
+#ifdef SMARTPHONE
 
+void MainWindow::doRepaint() {
+    QWSServer* s = QWSServer::instance();
+
+    if (s) {
+	s->refresh();
+    }
+
+    lightUp();
+}
+
+void MainWindow::preventBlanking() {
+    workaroundStartupCounter = 6;
+}
+
+void MainWindow::workaround() {
+    // Android startup screen blanking workaround
+
+    if (workaroundStartupCounter > 0) {
+	qDebug() << "Refreshing screen...";
+	doRepaint();
+	workaroundStartupCounter--;
+	return;
+    }
+
+    // Fix backlight
+
+    if (!bf.isEmpty()) {
+	QFile brc(bf);
+
+	if (brc.open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
+	    if (brc.read(3).toInt() == 0) {
+		qDebug() << "Turning backlight on";
+		brc.write("100");
+	    }
+	} else {
+	    qDebug() << "Failed to read " << brc.fileName();
+	}
+    }    
+}
+
+void MainWindow::lightUp() {
+    QFile brc(bf);
+
+    if (brc.open(QIODevice::WriteOnly | QIODevice::Unbuffered)) {
+	brc.write("100");
+    } else {
+	qDebug() << "Failed to write to " << brc.fileName();
+    }
+}
+
+#endif
 
 
 

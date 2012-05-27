@@ -6,9 +6,10 @@
 
 QT       += core gui
 
-TARGET = AVMSimulator
+TARGET = avmcp
 TEMPLATE = app
 
+DEFINES += DESKTOP
 
 SOURCES += main.cpp\
     api/Container.cpp \
@@ -60,6 +61,12 @@ HEADERS  += \
     ContainerList/ContainerDelegate.h \
     ContainerList/PowerButton.h \
     ContainerList/SwitchButton.h
+
+contains(DEFINES, SMARTPHONE) {
+    SOURCES += api/Smartphone.cpp 
+
+    HEADERS += SupervisorListener.h api/Smartphone.h
+}
 
 OTHER_FILES += \
     device.txt \

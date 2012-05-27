@@ -31,6 +31,20 @@ private:
     
     QWidget *initContainerList();
     QWidget *initButtons();
+
+#ifdef SMARTPHONE
+private:
+    QString bf;
+    int workaroundStartupCounter;
+
+    void lightUp();
+
+private slots:
+    void doRepaint();
+    void preventBlanking();
+    void workaround();
+#endif
+
     
 public slots:
     void startAddingContainer();

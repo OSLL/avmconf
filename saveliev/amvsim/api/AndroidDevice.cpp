@@ -20,10 +20,10 @@ AndroidDevice::AndroidDevice() : m_activeContainer(0)
     /////////////////
     // HARD CODED
     // // services
-    Service* service = new Service("outgoingCalls");
-    m_services.insert(std::make_pair("outgoingCalls", service));
-    Service* service2 = new Service("incomingCalls");
-    m_services.insert(std::make_pair("incomingCalls", service2));
+//    Service* service = new Service("outgoingCalls");
+//    m_services.insert(std::make_pair("outgoingCalls", service));
+//    Service* service2 = new Service("incomingCalls");
+//    m_services.insert(std::make_pair("incomingCalls", service2));
         
     // // parameters
     std::vector<std::string> wifiOptions;
@@ -36,12 +36,24 @@ AndroidDevice::AndroidDevice() : m_activeContainer(0)
     wifiOptions2.push_back("Alalala");
     wifiOptions2.push_back("Point of access");
     m_deviceParameters.push_back(new OptionsParameter("wifi_access_points2", "Access points 2", "WiFi", wifiOptions2));
-    m_deviceParameters.push_back(new DoubleParameterWithRange("test_double_param", 
-                          "Double param", "Some service", 0, 100));
+   
+    std::vector<std::string> powerSaveModes;
+    powerSaveModes.push_back("Conservative");
+    powerSaveModes.push_back("Power save");
+    powerSaveModes.push_back("User space");
+    powerSaveModes.push_back("On demand");
+    powerSaveModes.push_back("Performance");
+    m_deviceParameters.push_back(new OptionsParameter("governors", "Governor", "Power management", powerSaveModes));    
+    
+    m_deviceParameters.push_back(new DoubleParameterWithRange("audio-gain", "Master volume", "Audio", 0, 100));
+    m_deviceParameters.push_back(new DoubleParameterWithRange("flash-level", "Level", "Flashlight", 0, 100));
+    m_deviceParameters.push_back(new BoolParameter("flash-on", "On", "Flashlight"));
     
     std::vector<Parameter*> cont1params;
     cont1params.push_back(new BoolParameter("outgoing_calls_allowed-cont1", "Allowed", "Outgoing calls"));
     cont1params.push_back(new BoolParameter("incoming_calls_allowed-cont1", "Allowed", "Incoming calls"));   
+    cont1params.push_back(new BoolParameter("wifi_allowed-cont1", "Allowed", "WiFi"));   
+    cont1params.push_back(new BoolParameter("sms-allowed-cont1", "Allowed", "SMS"));   
     m_parametersForContainers["cont1"] = cont1params;
     /////////////////
 }
@@ -283,7 +295,19 @@ Value *AndroidDevice::getValue(const std::string &parameterId) const
         return new BoolValue(parameterId, true);
     } else if (parameterId == "incoming_calls_allowed-cont1") {
         return new BoolValue(parameterId, false);    
-    } else { 
+    } else if (parameterId == "wifi_allowed-cont1") {
+        return new BoolValue(parameterId, false);
+    } else if (parameterId == "sms-allowed-cont1") {
+        return new BoolValue(parameterId, true);         
+    } else if (parameterId == "governors") {
+        return new OptionsValue(parameterId, 1);
+    } else if (parameterId == "audio-gain") { 
+        return new DoubleValue(parameterId, 23);
+    } else if (parameterId == "flash-on") {
+        return new BoolValue(parameterId, false);
+    } else if (parameterId == "flash-level") {
+        return new DoubleValue(parameterId, 70);
+    } else {
         return 0;
     }
 }

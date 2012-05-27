@@ -12,8 +12,8 @@ BoolParameterWidget::BoolParameterWidget(IDevice *device, BoolParameter *par, bo
     m_checkBox->setChecked(val);    
     QObject::connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(checkBoxChanged(int)));
     
-    layout()->setContentsMargins(0, 0, 0, 0);
     layout()->addWidget(m_checkBox);
+    layout()->setContentsMargins(0, 0, 0, 0);
 }
 
 void BoolParameterWidget::checkBoxChanged(int newState)

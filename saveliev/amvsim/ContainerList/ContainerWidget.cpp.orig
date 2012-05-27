@@ -30,26 +30,12 @@ ContainerWidget::ContainerWidget(QVariant contName, QAbstractItemModel *model,
 
     m_powerButton = new TextPowerButton();
     m_powerButton->setOff();
-    
-#ifdef SMARTPHONE
-    m_powerButton->setFixedHeight(60);
-#endif
-
     QObject::connect(m_powerButton, SIGNAL(pressed()), this, SLOT(powerPressed()));
 
     m_nameLabel = new QLabel(m_contName);
-    
-#ifdef SMARTPHONE
-    m_nameLabel->setFixedHeight(60);
-#endif
 
     m_switchButton = new SwitchButton();
     m_switchButton->setStoppedContainerView();
-
-#ifdef SMARTPHONE
-    m_switchButton->setFixedHeight(60);
-#endif
-
     QObject::connect(m_switchButton, SIGNAL(pressed()), this, SLOT(switchPressed()));
     
     lay->addWidget(m_powerButton);
@@ -110,6 +96,10 @@ void ContainerWidget::highlightTheRestRunningAsInactive()
         }
     }        
 }
+
+
+
+
 
 void ContainerWidget::highlightAsActive()
 { 

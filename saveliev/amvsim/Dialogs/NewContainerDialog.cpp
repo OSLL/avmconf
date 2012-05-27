@@ -15,7 +15,7 @@ NewContainerDialog::NewContainerDialog(QWidget *parent, ContainerListModel *mode
 
     QObject::connect(ui->chooseButton,    SIGNAL(clicked()), this, SLOT(chooseFile()));
     QObject::connect(ui->loadUrlButton,   SIGNAL(clicked()), this, SLOT(tryCreateHttpFtp()));
-    QObject::connect(ui->loadLocalButton, SIGNAL(clicked()), this, SLOT(tryCreateLocal()));
+    QObject::connect(ui->loadLocalButton, SIGNAL(clicked()), this, SLOT(tryCreateLocal()));   
 }
 
 
@@ -81,7 +81,6 @@ void NewContainerDialog::tryCreateLocal()
         }
     }    
 }
-
 
 void NewContainerDialog::chooseFile()
 {

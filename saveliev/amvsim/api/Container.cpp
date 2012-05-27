@@ -20,7 +20,7 @@ int Container::restoreImage(const std::string & imageAddress) {
     return 0;
 }
 
-const ContainerState Container::getState() const {
+ContainerState Container::getState() const {
     return m_state;
 }
 

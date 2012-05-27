@@ -52,7 +52,8 @@ void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &p
                     w = new BoolParameterWidget(m_device, (BoolParameter*)par, ((BoolValue*)value)->getValue());
                     
                 } else if (type == Parameter::DoubleWithRange) {
-                    w = new DoubleParameterWithRangeWidget(m_device, (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue());
+                    w = new DoubleParameterWithRangeWidget(m_device, 
+                                (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue());
                     
                 } else if (type == Parameter::Options) {
                     w = new OptionsParameterWidget(m_device, (OptionsParameter*)par, ((OptionsValue*)value)->getValue());
@@ -66,7 +67,8 @@ void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &p
         
         if (si->second.begin() != si->second.end()) {
             ((QVBoxLayout*)layout())->addWidget(parametersForAService, 0, Qt::AlignTop);   
-    }   }
+        }
+    }
 }
 
 QLabel *ParametersWidget::buildServiceLabel(QLabel *label)
