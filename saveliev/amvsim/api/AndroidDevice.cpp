@@ -3,6 +3,7 @@
 #include "NoSuchContainerException.h"
 #include "AndroidDevice.h"
 #include "Saver.h"
+#include "NoValueException.h"
 
 using std::string;
 using std::map;
@@ -27,15 +28,11 @@ AndroidDevice::AndroidDevice() : m_activeContainer(0)
         
     // // parameters
     std::vector<std::string> wifiOptions;
-    wifiOptions.push_back("Point 1");
-    wifiOptions.push_back("Point 2");
-    wifiOptions.push_back("Point 3");
+    wifiOptions.push_back("WirelessForAll");
+    wifiOptions.push_back("aptu");
+    wifiOptions.push_back("bioinf2");
+    wifiOptions.push_back("LabNanoPh");
     m_deviceParameters.push_back(new OptionsParameter("wifi_access_points", "Access points", "WiFi", wifiOptions));    
-    std::vector<std::string> wifiOptions2;
-    wifiOptions2.push_back("Access pt");
-    wifiOptions2.push_back("Alalala");
-    wifiOptions2.push_back("Point of access");
-    m_deviceParameters.push_back(new OptionsParameter("wifi_access_points2", "Access points 2", "WiFi", wifiOptions2));
    
     std::vector<std::string> powerSaveModes;
     powerSaveModes.push_back("Conservative");
@@ -46,8 +43,8 @@ AndroidDevice::AndroidDevice() : m_activeContainer(0)
     m_deviceParameters.push_back(new OptionsParameter("governors", "Governor", "Power management", powerSaveModes));    
     
     m_deviceParameters.push_back(new DoubleParameterWithRange("audio-gain", "Master volume", "Audio", 0, 100));
-    m_deviceParameters.push_back(new DoubleParameterWithRange("flash-level", "Level", "Flashlight", 0, 100));
-    m_deviceParameters.push_back(new BoolParameter("flash-on", "On", "Flashlight"));
+//    m_deviceParameters.push_back(new DoubleParameterWithRange("flash-level", "Level", "Flashlight", 0, 100));
+//    m_deviceParameters.push_back(new BoolParameter("flash-on", "On", "Flashlight"));
     
     std::vector<Parameter*> cont1params;
     cont1params.push_back(new BoolParameter("outgoing_calls_allowed-cont1", "Allowed", "Outgoing calls"));
@@ -308,7 +305,7 @@ Value *AndroidDevice::getValue(const std::string &parameterId) const
     } else if (parameterId == "flash-level") {
         return new DoubleValue(parameterId, 70);
     } else {
-        return 0;
+        throw NoValueException(parameterId);
     }
 }
 

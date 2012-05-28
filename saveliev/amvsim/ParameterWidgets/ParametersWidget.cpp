@@ -10,6 +10,7 @@
 #include <QButtonGroup>
 
 #include "ParametersWidget.h"
+#include "ListParameterWidget.h"
 
 ParametersWidget::ParametersWidget(IDevice *device, const std::vector<Parameter*> &parameters, QWidget *parent)
     : QWidget(parent), m_device(device)
@@ -49,15 +50,24 @@ void ParametersWidget::initWidgetsForParameters(const std::vector<Parameter*> &p
             
             if (value != 0) {                
                 if (type == Parameter::Bool) { 
-                    w = new BoolParameterWidget(m_device, (BoolParameter*)par, ((BoolValue*)value)->getValue());
+                    w = new BoolParameterWidget(m_device, 
+                           (BoolParameter*)par, ((BoolValue*)value)->getValue());
                     
                 } else if (type == Parameter::DoubleWithRange) {
                     w = new DoubleParameterWithRangeWidget(m_device, 
-                                (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue());
+                            (DoubleParameterWithRange*)par, ((DoubleValue*)value)->getValue());
                     
                 } else if (type == Parameter::Options) {
-                    w = new OptionsParameterWidget(m_device, (OptionsParameter*)par, ((OptionsValue*)value)->getValue());
-                }   
+                    OptionsParameter *optPar = (OptionsParameter*)par;
+//                  if (optPar->getOptions().size() < 5) {
+                        w = new OptionsParameterWidget(m_device, 
+                               (OptionsParameter*)optPar, ((OptionsValue*)value)->getValue());
+//                  } 
+//                    else {
+//                        w = new ListParameterWidget(m_device, 
+//                               (OptionsParameter*)optPar, ((OptionsValue*)value)->getValue());
+//                    }
+                }
                 
                 if (w != 0) {
                     ((QVBoxLayout*)parametersForAService->layout())->addWidget(w, 0, Qt::AlignTop); 

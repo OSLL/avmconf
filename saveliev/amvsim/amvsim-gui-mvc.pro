@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     ContainerList/ContainerListModel.cpp \
     ContainerList/ContainerDelegate.cpp \
     ContainerList/PowerButton.cpp \
-    ContainerList/SwitchButton.cpp
+    ContainerList/SwitchButton.cpp \
+    ParameterWidgets/ListParameterWidget.cpp
 
 HEADERS  += \
     api/StorageDescriptor.h \
@@ -60,7 +61,9 @@ HEADERS  += \
     ContainerList/ContainerListModel.h \
     ContainerList/ContainerDelegate.h \
     ContainerList/PowerButton.h \
-    ContainerList/SwitchButton.h
+    ContainerList/SwitchButton.h \
+    ParameterWidgets/ListParameterWidget.h \
+    api/NoValueException.h
 
 contains(DEFINES, SMARTPHONE) {
     SOURCES += api/Smartphone.cpp 
