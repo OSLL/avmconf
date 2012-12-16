@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/parallels/!svn/ver/786920/vm/branches/arm/ct/userspace-tools/cp/Dialogs
+END
+ContainerParametersWidget.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Dialogs/ContainerParametersWidget.h
+END
+NewContainerDialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Dialogs/NewContainerDialog.h
+END
+ContainerDialog.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/parallels/!svn/ver/786920/vm/branches/arm/ct/userspace-tools/cp/Dialogs/ContainerDialog.cpp
+END
+ContainerDialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Dialogs/ContainerDialog.h
+END
+NewContainerDialog.ui
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Dialogs/NewContainerDialog.ui
+END
+ContainerParametersWidget.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Dialogs/ContainerParametersWidget.cpp
+END
+NewContainerDialog.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Dialogs/NewContainerDialog.cpp
+END

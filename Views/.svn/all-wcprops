@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/parallels/!svn/ver/786920/vm/branches/arm/ct/userspace-tools/cp/Views
+END
+ContainerDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Views/ContainerDelegate.h
+END
+ContainerWidget.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/parallels/!svn/ver/786920/vm/branches/arm/ct/userspace-tools/cp/Views/ContainerWidget.cpp
+END
+ContainerListView.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Views/ContainerListView.cpp
+END
+ContainerWidget.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Views/ContainerWidget.h
+END
+ContainerDelegate.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Views/ContainerDelegate.cpp
+END
+ContainerListView.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Views/ContainerListView.h
+END

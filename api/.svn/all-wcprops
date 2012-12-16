@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api
+END
+Smartphone.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Smartphone.h
+END
+Saver.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Saver.h
+END
+Parameter.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Parameter.h
+END
+NoSuchContainerException.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/NoSuchContainerException.h
+END
+supervisor.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/supervisor.h
+END
+Container.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Container.h
+END
+ContainerState.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/ContainerState.h
+END
+IContainer.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/IContainer.h
+END
+AndroidDevice.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/AndroidDevice.cpp
+END
+ContainerInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/ContainerInfo.h
+END
+Service.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Service.h
+END
+AndroidDevice.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/AndroidDevice.h
+END
+StorageDescriptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/StorageDescriptor.h
+END
+IDevice.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/IDevice.h
+END
+Smartphone.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Smartphone.cpp
+END
+Saver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Saver.cpp
+END
+Parameter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Parameter.cpp
+END
+Container.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/api/Container.cpp
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Elements
+END
+ErrorLabel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Elements/ErrorLabel.cpp
+END
+ErrorLabel.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Elements/ErrorLabel.h
+END
+SwitchButtons.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Elements/SwitchButtons.cpp
+END
+SwitchButtons.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/parallels/!svn/ver/763678/vm/branches/arm/ct/userspace-tools/cp/Elements/SwitchButtons.h
+END
